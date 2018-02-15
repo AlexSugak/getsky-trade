@@ -17,6 +17,7 @@ var (
 	errInternalServerError = errors.New("Internal Server Error")
 )
 
+// HTTPServer holds http server info
 type HTTPServer struct {
 	log          logrus.FieldLogger
 	httpListener *http.Server
@@ -24,6 +25,7 @@ type HTTPServer struct {
 	done         chan struct{}
 }
 
+// NewHTTPServer creates new http server
 func NewHTTPServer(log logrus.FieldLogger) *HTTPServer {
 	return &HTTPServer{
 		log: log.WithFields(logrus.Fields{
@@ -34,6 +36,7 @@ func NewHTTPServer(log logrus.FieldLogger) *HTTPServer {
 	}
 }
 
+// Run starts http listener and returns error if any
 func (s *HTTPServer) Run() error {
 	log := s.log
 	log.Info("HTTP service start")
@@ -66,6 +69,7 @@ func (s *HTTPServer) Run() error {
 	}
 }
 
+// Shutdown shuts down the http listener
 func (s *HTTPServer) Shutdown() {
 	s.log.Info("HTTP service shutting down")
 	close(s.done)
@@ -87,12 +91,17 @@ func (s *HTTPServer) setupRouter() *mux.Router {
 	return r
 }
 
+// APIInfoResponse holds basic API information
 type APIInfoResponse struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Version     int    `json:"version"`
 }
 
+// APIInfoHandler returns api info
+// Method: GET
+// Content-type: application/json
+// URI: /api
 func APIInfoHandler(s *HTTPServer) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		info := APIInfoResponse{
