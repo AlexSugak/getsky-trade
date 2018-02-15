@@ -13,7 +13,7 @@ Should be an extention of getsky.org with subdomain
 - Go back-end
 - MySql as DB
 - hosted on Linux, where?
-- CI/CD via Travis, existing server?
+- CI/CD via Travis, can use public for public github
 
 * Profile
 ** Login
@@ -129,7 +129,7 @@ checklist
 - rate examples
 *** TODO deduction from balance as a const for posting advert ???
 ** buy
-no custom filds
+no custom fields
 
 * Static content
 ** Header
