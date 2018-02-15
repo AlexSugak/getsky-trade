@@ -1,0 +1,151 @@
+#+STARTUP: indent
+
+* background
+A new website for users to add buy/sell adverts for Skycoin
+
+* vision
+Should be an extention of getsky.org with subdomain
+** TODO domain ? trade.getsky.org ??
+** TODO other currencies like BTC ? should we support multicurrency from start or focus on SKY only ?
+** TODO Stack
+- GitHub for sources, private? 
+- React front-end
+- Go back-end
+- MySql as DB
+- hosted on Linux, where?
+- CI/CD via Travis, existing server?
+
+* Profile
+** Login
+standard functionality with login and password
+*** password recovery
+** Register
+*** captcha
+*** username and password
+*** time zone
+** Logout
+standard functionality, redirect to home
+** Dashboard
+*** TODO counters (clarify what does enquiry means here)
+- how many adverts created (buy and sell)
+- how many Enquiries (??? messages that user sent?)
+- how many new messages
+*** detailed lists
+- buy adverts
+- sell adverts
+- enquiries to buyers
+- enquiries to sellers
+*** links to post new advert
+- buy
+- sell
+
+** Settings
+*** change password
+*** set location
+*** UoM: 
+- distance
+- currency
+*** other
+- email
+  in case email is specified for user, notifications about new messages on advers are sent 
+  
+
+* Browse adverts
+** latest adverts
+*** I want to sell
+*** I want to buy
+*** TODO no paging ? only show last 10 records?
+** search adverts
+*** search criteria
+- country (dropdown)
+- city (autocomplete?)
+- amount
+- currency (dropdown)
+- type of trade (checkboxes)
+*** I want to sell
+- counter
+- [[adverts list]]
+*** I want to buy
+- counter
+- [[adverts list]]
+** adverts list
+*** TODO no sorting required ??
+- Seller/Buyer
+- Will sell/buy
+- Trade options
+- Expires
+- link to details
+
+** advert details
+*** header
+user <name> wants to <buy/sell> Skycoin
+*** Will sell/buy 
+In Fiat currency (e.g. USD)
+*** In SkyCoins
+automatically converted via [[price convertion]]
+*** Buyer/Seller info
+- number of days on site
+- number of adverts
+*** Trade options
+checked list
+*** Other information
+custom text
+*** Location
+- address
+- distance can travel
+*** Expiration date
+the date advert will expire on
+*** Send message
+- free text, multiline
+- limited to N characters
+- if advert owner has email configured, send email about new message
+
+* Create advert
+** TODO price convertion
+where to get latest convertion rates from ?
+https://coinmarketcap.com ?
+** captcha
+** amount
+- ranged
+- single fixed amount
+** trade options
+checklist
+** how far can travel 
+- distance
+- UoM (dropdown)
+** additional information
+- free text
+- limited N characters
+- help note
+** your location
+- Country
+- City
+- Postal Code
+** advert preview
+- short summary info
+** sell
+*** price 
+- percentage to apply to exchange rate price 
+- rate examples
+*** TODO deduction from balance as a const for posting advert ???
+** buy
+no custom filds
+
+* Static content
+** Header
+*** navigation menu
+*** convertion rate 
+using [[price convertion]] rates
+user can select the currency
+user can trigger refresh
+** Why? guide
+** FAQ
+** Contact
+** Terms
+** Privacy
+** Footer
+*** (links to above)
+*** links to create adverts
+*** TODO do we need a donate address ?
+
+
