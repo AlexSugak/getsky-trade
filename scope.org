@@ -2,11 +2,17 @@
 
 * background
 A new website for users to add buy/sell adverts for Skycoin
+don't want "exchange" or "trade" word 
+"swap" ???
+
+no ads
+only donations
 
 * vision
 Should be an extention of getsky.org with subdomain
 ** TODO domain ? trade.getsky.org ??
 ** TODO other currencies like BTC ? should we support multicurrency from start or focus on SKY only ?
+no, only SKY for now
 ** TODO Stack
 - GitHub for sources, private? 
 - React front-end
@@ -14,6 +20,16 @@ Should be an extention of getsky.org with subdomain
 - MySql as DB
 - hosted on Linux, where?
 - CI/CD via Travis, can use public for public github
+
+* Back-office
+** moderate new adverts
+- deleteing adverts
+- block account
+- black list of emails
+** reports
+- count of adverts
+** basic content management, no CMS
+- header text
 
 * Profile
 ** Login
@@ -26,9 +42,9 @@ standard functionality with login and password
 ** Logout
 standard functionality, redirect to home
 ** Dashboard
-*** TODO counters (clarify what does enquiry means here)
+*** counters
 - how many adverts created (buy and sell)
-- how many Enquiries (??? messages that user sent?)
+- how many Enquiries (messages to user adverts)
 - how many new messages
 *** detailed lists
 - buy adverts
@@ -54,7 +70,10 @@ standard functionality, redirect to home
 ** latest adverts
 *** I want to sell
 *** I want to buy
-*** TODO no paging ? only show last 10 records?
+*** Paging: 
+only show last 10 records
+no paging
+infinit scroll later if have time
 ** search adverts
 *** search criteria
 - country (dropdown)
@@ -69,7 +88,7 @@ standard functionality, redirect to home
 - counter
 - [[adverts list]]
 ** adverts list
-*** TODO no sorting required ??
+*** no sorting required
 - Seller/Buyer
 - Will sell/buy
 - Trade options
@@ -101,9 +120,9 @@ the date advert will expire on
 - if advert owner has email configured, send email about new message
 
 * Create advert
-** TODO price convertion
-where to get latest convertion rates from ?
-https://coinmarketcap.com ?
+** price convertion
+get latest convertion rates from
+https://coinmarketcap.com
 ** captcha
 ** amount
 - ranged
@@ -127,11 +146,13 @@ checklist
 *** price 
 - percentage to apply to exchange rate price 
 - rate examples
-*** TODO deduction from balance as a const for posting advert ???
 ** buy
 no custom fields
 
 * Static content
+** localization
+start with english
+prepare for other languages
 ** Header
 *** navigation menu
 *** convertion rate 
@@ -146,6 +167,6 @@ user can trigger refresh
 ** Footer
 *** (links to above)
 *** links to create adverts
-*** TODO do we need a donate address ?
+*** donate address
 
 
