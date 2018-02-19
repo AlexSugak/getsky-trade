@@ -86,8 +86,11 @@ func (s *HTTPServer) setupRouter() *mux.Router {
 	return r
 }
 
-// ErrorHandler allows our handlers to satisfy http.Handler while enabliing return of errors.
-func ErrorHandler(s *HTTPServer, h func(w http.ResponseWriter, r *http.Request) error) http.HandlerFunc {
+// APIHandler is a custom hadler function used internally to define api endpoint handlers
+type APIHandler func(w http.ResponseWriter, r *http.Request) error
+
+// ErrorHandler wraps APIHandler and converts it to http.Handler by handling any returned error
+func ErrorHandler(s *HTTPServer, h APIHandler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := h(w, r)
 		if err != nil {
