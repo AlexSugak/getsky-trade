@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
+	"github.com/AlexSugak/getsky-trade/src/trade"
 	prefixed "github.com/gz-c/logrus-prefixed-formatter"
 	"github.com/sirupsen/logrus"
-	"github.com/skycoin/getsky-trade/src/trade"
 )
 
 func main() {
