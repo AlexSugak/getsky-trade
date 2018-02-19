@@ -3,7 +3,6 @@ package trade
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"os"
 	"os/signal"
@@ -11,10 +10,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
-)
-
-var (
-	errInternalServerError = errors.New("Internal Server Error")
 )
 
 // HTTPServer holds http server info
@@ -70,7 +65,7 @@ func (s *HTTPServer) Run() error {
 }
 
 // Shutdown shuts down the http listener
-func (s *HTTPServer) Shutdown() {
+func (s *HTTPServer) Shutdown() error {
 	s.log.Info("HTTP service shutting down")
 	close(s.done)
 
@@ -80,15 +75,27 @@ func (s *HTTPServer) Shutdown() {
 	defer cancel()
 	// Doesn't block if no connections, but will otherwise wait
 	// until the timeout deadline.
-	s.httpListener.Shutdown(ctx)
+	return s.httpListener.Shutdown(ctx)
 }
 
 func (s *HTTPServer) setupRouter() *mux.Router {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/api", APIInfoHandler(s)).Methods("GET")
+	r.HandleFunc("/api", ErrorHandler(s, APIInfoHandler(s))).Methods("GET")
 
 	return r
+}
+
+// ErrorHandler allows our handlers to satisfy http.Handler while enabliing return of errors.
+func ErrorHandler(s *HTTPServer, h func(w http.ResponseWriter, r *http.Request) error) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		err := h(w, r)
+		if err != nil {
+			// TODO: define custom error type to store HTTP error code
+			s.log.Errorf("Error in handler - %s", err)
+			http.Error(w, err.Error(), 500)
+		}
+	}
 }
 
 // APIInfoResponse holds basic API information
@@ -102,14 +109,14 @@ type APIInfoResponse struct {
 // Method: GET
 // Content-type: application/json
 // URI: /api
-func APIInfoHandler(s *HTTPServer) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func APIInfoHandler(s *HTTPServer) func(w http.ResponseWriter, r *http.Request) error {
+	return func(w http.ResponseWriter, r *http.Request) error {
 		info := APIInfoResponse{
 			Name:        "trade API",
 			Description: "trade API provides endpoints to enable posting and searching Skycoin buy and sell adverts",
 			Version:     1,
 		}
 
-		json.NewEncoder(w).Encode(info)
+		return json.NewEncoder(w).Encode(info)
 	}
 }

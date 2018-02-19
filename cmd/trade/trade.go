@@ -11,7 +11,14 @@ import (
 func main() {
 	log := initLogger()
 	server := trade.NewHTTPServer(log)
-	defer server.Shutdown()
+
+	defer func() {
+		err := server.Shutdown()
+		if err != nil {
+			panic(err.Error())
+		}
+	}()
+
 	if err := server.Run(); err != nil {
 		panic(err.Error())
 	}
