@@ -20,7 +20,7 @@ MySql DB is used to store main portal data (users, adverts, messages etc.)
 
 We handle DB schema using [mattes/migrate](https://github.com/mattes/migrate) package by creating schema migrations that are applied automatically during deployment.
 
-## API development
+## API implementation
 Use basic `net/http` module to build a set of API endpoints to:
 - manage auth tokens
 - manage user profile and settings
@@ -33,12 +33,15 @@ Use following ready modules:
 - built-in `database\sql` package with MySql driver for accessing the DB (**No ORMs** are needed since the app will only use a small number of data requests)
 - use built-in MySql full-text capabilities for search (we do not see a need in a separate search engine as of now) 
 
-## UI development
+## UI implementation
 Both public portal and its admin back-office are implemented as react apps using:
 - [redux](https://github.com/reactjs/redux) for managing state
 - [react-router-dom](https://github.com/ReactTraining/react-router) for routing
 - [react-helmet](https://github.com/nfl/react-helmet) for managing document head
 - [Jest](https://github.com/facebook/jest) for testing
+
+## Local development
+Use docker with ready images for Go/Node/MySql to bootstrap local development environment
 
 ## CI/CD
 [Travis CI](https://travis-ci.org) is used to automate integration builds for both back-end and front-end by running corresponding linters and unit tests on each push to this repository's develop branch.
