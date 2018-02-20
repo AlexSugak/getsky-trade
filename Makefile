@@ -5,8 +5,8 @@ trade: ## Run trade back-end. To add arguments, do 'make ARGS="--foo" trade'.
 	go run cmd/trade/trade.go
 
 test: ## Run tests
-	go test ./cmd/... -timeout=1m -cover
-	go test ./src/... -timeout=1m -cover
+	go test ./cmd/... -timeout=1m -cover -v
+	go test ./src/... -timeout=1m -cover -v 
 
 lint: ## Run linters. Use make install-linters first.
 	vendorcheck ./...
