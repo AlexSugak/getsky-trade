@@ -10,7 +10,7 @@ test: ## Run tests
 
 lint: ## Run linters. Use make install-linters first.
 	vendorcheck ./...
-	gometalinter --deadline=3m -j 2 --disable-all --tests --vendor \
+	gometalinter --deadline=3m -j 2 --disable-all --tests --vendor --skip=db/models \
 		-E deadcode \
 		-E errcheck \
 		-E gas \
