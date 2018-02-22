@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql
+    container_name: mysql
+    restart: always
+    ports: 
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
+      MYSQL_DATABASE: getskytrade
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
