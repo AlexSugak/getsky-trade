@@ -121,32 +121,6 @@ func (s *State) Delete(db XODB) error {
 
 // StateByCode retrieves a row from 'getskytrade.States' as a State.
 //
-// Generated from index 'Code'.
-func StateByCode(db XODB, code string) (*State, error) {
-	var err error
-
-	// sql query
-	const sqlstr = `SELECT ` +
-		`Code, Name ` +
-		`FROM getskytrade.States ` +
-		`WHERE Code = ?`
-
-	// run query
-	XOLog(sqlstr, code)
-	s := State{
-		_exists: true,
-	}
-
-	err = db.QueryRow(sqlstr, code).Scan(&s.Code, &s.Name)
-	if err != nil {
-		return nil, err
-	}
-
-	return &s, nil
-}
-
-// StateByCode retrieves a row from 'getskytrade.States' as a State.
-//
 // Generated from index 'States_Code_pkey'.
 func StateByCode(db XODB, code string) (*State, error) {
 	var err error

@@ -17,8 +17,8 @@ type User struct {
 	Passwordsalt  string        `json:"PasswordSalt"`  // PasswordSalt
 	Passwordhash  string        `json:"PasswordHash"`  // PasswordHash
 	Timezone      string        `json:"Timezone"`      // Timezone
-	Country       string        `json:"Country"`       // Country
-	State         string        `json:"State"`         // State
+	Countrycode   string        `json:"CountryCode"`   // CountryCode
+	Statecode     string        `json:"StateCode"`     // StateCode
 	City          string        `json:"City"`          // City
 	Postalcode    string        `json:"PostalCode"`    // PostalCode
 	Distanceunits string        `json:"DistanceUnits"` // DistanceUnits
@@ -51,14 +51,14 @@ func (u *User) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO getskytrade.Users (` +
-		`UserName, Email, PasswordSalt, PasswordHash, Timezone, Country, State, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt` +
+		`UserName, Email, PasswordSalt, PasswordHash, Timezone, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, u.Username, u.Email, u.Passwordsalt, u.Passwordhash, u.Timezone, u.Country, u.State, u.City, u.Postalcode, u.Distanceunits, u.Currency, u.Status, u.Registeredat)
-	res, err := db.Exec(sqlstr, u.Username, u.Email, u.Passwordsalt, u.Passwordhash, u.Timezone, u.Country, u.State, u.City, u.Postalcode, u.Distanceunits, u.Currency, u.Status, u.Registeredat)
+	XOLog(sqlstr, u.Username, u.Email, u.Passwordsalt, u.Passwordhash, u.Timezone, u.Countrycode, u.Statecode, u.City, u.Postalcode, u.Distanceunits, u.Currency, u.Status, u.Registeredat)
+	res, err := db.Exec(sqlstr, u.Username, u.Email, u.Passwordsalt, u.Passwordhash, u.Timezone, u.Countrycode, u.Statecode, u.City, u.Postalcode, u.Distanceunits, u.Currency, u.Status, u.Registeredat)
 	if err != nil {
 		return err
 	}
@@ -92,12 +92,12 @@ func (u *User) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE getskytrade.Users SET ` +
-		`UserName = ?, Email = ?, PasswordSalt = ?, PasswordHash = ?, Timezone = ?, Country = ?, State = ?, City = ?, PostalCode = ?, DistanceUnits = ?, Currency = ?, Status = ?, RegisteredAt = ?` +
+		`UserName = ?, Email = ?, PasswordSalt = ?, PasswordHash = ?, Timezone = ?, CountryCode = ?, StateCode = ?, City = ?, PostalCode = ?, DistanceUnits = ?, Currency = ?, Status = ?, RegisteredAt = ?` +
 		` WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, u.Username, u.Email, u.Passwordsalt, u.Passwordhash, u.Timezone, u.Country, u.State, u.City, u.Postalcode, u.Distanceunits, u.Currency, u.Status, u.Registeredat, u.ID)
-	_, err = db.Exec(sqlstr, u.Username, u.Email, u.Passwordsalt, u.Passwordhash, u.Timezone, u.Country, u.State, u.City, u.Postalcode, u.Distanceunits, u.Currency, u.Status, u.Registeredat, u.ID)
+	XOLog(sqlstr, u.Username, u.Email, u.Passwordsalt, u.Passwordhash, u.Timezone, u.Countrycode, u.Statecode, u.City, u.Postalcode, u.Distanceunits, u.Currency, u.Status, u.Registeredat, u.ID)
+	_, err = db.Exec(sqlstr, u.Username, u.Email, u.Passwordsalt, u.Passwordhash, u.Timezone, u.Countrycode, u.Statecode, u.City, u.Postalcode, u.Distanceunits, u.Currency, u.Status, u.Registeredat, u.ID)
 	return err
 }
 
@@ -140,18 +140,18 @@ func (u *User) Delete(db XODB) error {
 	return nil
 }
 
-// Country returns the Country associated with the User's Country (Country).
+// Country returns the Country associated with the User's Countrycode (CountryCode).
 //
 // Generated from foreign key 'Users_fk0'.
 func (u *User) Country(db XODB) (*Country, error) {
-	return CountryByCode(db, u.Country)
+	return CountryByCode(db, u.Countrycode)
 }
 
-// State returns the State associated with the User's State (State).
+// State returns the State associated with the User's Statecode (StateCode).
 //
 // Generated from foreign key 'Users_fk1'.
 func (u *User) State(db XODB) (*State, error) {
-	return StateByCode(db, u.State)
+	return StateByCode(db, u.Statecode)
 }
 
 // UserByEmail retrieves a row from 'getskytrade.Users' as a User.
@@ -162,7 +162,7 @@ func UserByEmail(db XODB, email string) (*User, error) {
 
 	// sql query
 	const sqlstr = `SELECT ` +
-		`Id, UserName, Email, PasswordSalt, PasswordHash, Timezone, Country, State, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt ` +
+		`Id, UserName, Email, PasswordSalt, PasswordHash, Timezone, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt ` +
 		`FROM getskytrade.Users ` +
 		`WHERE Email = ?`
 
@@ -172,7 +172,7 @@ func UserByEmail(db XODB, email string) (*User, error) {
 		_exists: true,
 	}
 
-	err = db.QueryRow(sqlstr, email).Scan(&u.ID, &u.Username, &u.Email, &u.Passwordsalt, &u.Passwordhash, &u.Timezone, &u.Country, &u.State, &u.City, &u.Postalcode, &u.Distanceunits, &u.Currency, &u.Status, &u.Registeredat)
+	err = db.QueryRow(sqlstr, email).Scan(&u.ID, &u.Username, &u.Email, &u.Passwordsalt, &u.Passwordhash, &u.Timezone, &u.Countrycode, &u.Statecode, &u.City, &u.Postalcode, &u.Distanceunits, &u.Currency, &u.Status, &u.Registeredat)
 	if err != nil {
 		return nil, err
 	}
@@ -188,7 +188,7 @@ func UserByUsername(db XODB, username string) (*User, error) {
 
 	// sql query
 	const sqlstr = `SELECT ` +
-		`Id, UserName, Email, PasswordSalt, PasswordHash, Timezone, Country, State, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt ` +
+		`Id, UserName, Email, PasswordSalt, PasswordHash, Timezone, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt ` +
 		`FROM getskytrade.Users ` +
 		`WHERE UserName = ?`
 
@@ -198,7 +198,7 @@ func UserByUsername(db XODB, username string) (*User, error) {
 		_exists: true,
 	}
 
-	err = db.QueryRow(sqlstr, username).Scan(&u.ID, &u.Username, &u.Email, &u.Passwordsalt, &u.Passwordhash, &u.Timezone, &u.Country, &u.State, &u.City, &u.Postalcode, &u.Distanceunits, &u.Currency, &u.Status, &u.Registeredat)
+	err = db.QueryRow(sqlstr, username).Scan(&u.ID, &u.Username, &u.Email, &u.Passwordsalt, &u.Passwordhash, &u.Timezone, &u.Countrycode, &u.Statecode, &u.City, &u.Postalcode, &u.Distanceunits, &u.Currency, &u.Status, &u.Registeredat)
 	if err != nil {
 		return nil, err
 	}
@@ -214,7 +214,7 @@ func UserByID(db XODB, id int64) (*User, error) {
 
 	// sql query
 	const sqlstr = `SELECT ` +
-		`Id, UserName, Email, PasswordSalt, PasswordHash, Timezone, Country, State, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt ` +
+		`Id, UserName, Email, PasswordSalt, PasswordHash, Timezone, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt ` +
 		`FROM getskytrade.Users ` +
 		`WHERE Id = ?`
 
@@ -224,7 +224,7 @@ func UserByID(db XODB, id int64) (*User, error) {
 		_exists: true,
 	}
 
-	err = db.QueryRow(sqlstr, id).Scan(&u.ID, &u.Username, &u.Email, &u.Passwordsalt, &u.Passwordhash, &u.Timezone, &u.Country, &u.State, &u.City, &u.Postalcode, &u.Distanceunits, &u.Currency, &u.Status, &u.Registeredat)
+	err = db.QueryRow(sqlstr, id).Scan(&u.ID, &u.Username, &u.Email, &u.Passwordsalt, &u.Passwordhash, &u.Timezone, &u.Countrycode, &u.Statecode, &u.City, &u.Postalcode, &u.Distanceunits, &u.Currency, &u.Status, &u.Registeredat)
 	if err != nil {
 		return nil, err
 	}
@@ -232,21 +232,21 @@ func UserByID(db XODB, id int64) (*User, error) {
 	return &u, nil
 }
 
-// UsersByCountry retrieves a row from 'getskytrade.Users' as a User.
+// UsersByCountrycode retrieves a row from 'getskytrade.Users' as a User.
 //
 // Generated from index 'Users_fk0'.
-func UsersByCountry(db XODB, country string) ([]*User, error) {
+func UsersByCountrycode(db XODB, countrycode string) ([]*User, error) {
 	var err error
 
 	// sql query
 	const sqlstr = `SELECT ` +
-		`Id, UserName, Email, PasswordSalt, PasswordHash, Timezone, Country, State, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt ` +
+		`Id, UserName, Email, PasswordSalt, PasswordHash, Timezone, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt ` +
 		`FROM getskytrade.Users ` +
-		`WHERE Country = ?`
+		`WHERE CountryCode = ?`
 
 	// run query
-	XOLog(sqlstr, country)
-	q, err := db.Query(sqlstr, country)
+	XOLog(sqlstr, countrycode)
+	q, err := db.Query(sqlstr, countrycode)
 	if err != nil {
 		return nil, err
 	}
@@ -260,7 +260,7 @@ func UsersByCountry(db XODB, country string) ([]*User, error) {
 		}
 
 		// scan
-		err = q.Scan(&u.ID, &u.Username, &u.Email, &u.Passwordsalt, &u.Passwordhash, &u.Timezone, &u.Country, &u.State, &u.City, &u.Postalcode, &u.Distanceunits, &u.Currency, &u.Status, &u.Registeredat)
+		err = q.Scan(&u.ID, &u.Username, &u.Email, &u.Passwordsalt, &u.Passwordhash, &u.Timezone, &u.Countrycode, &u.Statecode, &u.City, &u.Postalcode, &u.Distanceunits, &u.Currency, &u.Status, &u.Registeredat)
 		if err != nil {
 			return nil, err
 		}
@@ -271,21 +271,21 @@ func UsersByCountry(db XODB, country string) ([]*User, error) {
 	return res, nil
 }
 
-// UsersByState retrieves a row from 'getskytrade.Users' as a User.
+// UsersByStatecode retrieves a row from 'getskytrade.Users' as a User.
 //
 // Generated from index 'Users_fk1'.
-func UsersByState(db XODB, state string) ([]*User, error) {
+func UsersByStatecode(db XODB, statecode string) ([]*User, error) {
 	var err error
 
 	// sql query
 	const sqlstr = `SELECT ` +
-		`Id, UserName, Email, PasswordSalt, PasswordHash, Timezone, Country, State, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt ` +
+		`Id, UserName, Email, PasswordSalt, PasswordHash, Timezone, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt ` +
 		`FROM getskytrade.Users ` +
-		`WHERE State = ?`
+		`WHERE StateCode = ?`
 
 	// run query
-	XOLog(sqlstr, state)
-	q, err := db.Query(sqlstr, state)
+	XOLog(sqlstr, statecode)
+	q, err := db.Query(sqlstr, statecode)
 	if err != nil {
 		return nil, err
 	}
@@ -299,7 +299,7 @@ func UsersByState(db XODB, state string) ([]*User, error) {
 		}
 
 		// scan
-		err = q.Scan(&u.ID, &u.Username, &u.Email, &u.Passwordsalt, &u.Passwordhash, &u.Timezone, &u.Country, &u.State, &u.City, &u.Postalcode, &u.Distanceunits, &u.Currency, &u.Status, &u.Registeredat)
+		err = q.Scan(&u.ID, &u.Username, &u.Email, &u.Passwordsalt, &u.Passwordhash, &u.Timezone, &u.Countrycode, &u.Statecode, &u.City, &u.Postalcode, &u.Distanceunits, &u.Currency, &u.Status, &u.Registeredat)
 		if err != nil {
 			return nil, err
 		}

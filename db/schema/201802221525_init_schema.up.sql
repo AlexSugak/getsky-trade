@@ -11,8 +11,8 @@ CREATE TABLE `Adverts` (
 	`AdditionalInfo` TEXT NOT NULL,
 	`TravelDistance` bigint NOT NULL,
 	`TravelDistanceUoM` varchar(20) NOT NULL,
-	`Country` varchar(20) NOT NULL,
-	`State` varchar(20),
+	`CountryCode` varchar(20) NOT NULL,
+	`StateCode` varchar(20),
 	`City` varchar(255) NOT NULL,
 	`PostalCode` varchar(255) NOT NULL,
 	`Status` int NOT NULL,
@@ -27,8 +27,8 @@ CREATE TABLE `Users` (
 	`PasswordSalt` varchar(255) NOT NULL,
 	`PasswordHash` varchar(255) NOT NULL,
 	`Timezone` varchar(20) NOT NULL,
-	`Country` varchar(20) NOT NULL,
-	`State` varchar(20) NOT NULL,
+	`CountryCode` varchar(20) NOT NULL,
+	`StateCode` varchar(20) NOT NULL,
 	`City` varchar(255) NOT NULL,
 	`PostalCode` varchar(255) NOT NULL,
 	`DistanceUnits` varchar(20) NOT NULL,
@@ -54,20 +54,20 @@ CREATE TABLE `Countries` (
 );
 
 CREATE TABLE `States` (
-	`Code` varchar(20) NOT NULL UNIQUE,
+	`Code` varchar(20) NOT NULL,
 	`Name` varchar(255) NOT NULL,
 	PRIMARY KEY (`Code`)
 );
 
 ALTER TABLE `Adverts` ADD CONSTRAINT `Adverts_fk0` FOREIGN KEY (`Author`) REFERENCES `Users`(`Id`);
 
-ALTER TABLE `Adverts` ADD CONSTRAINT `Adverts_fk1` FOREIGN KEY (`Country`) REFERENCES `Countries`(`Code`);
+ALTER TABLE `Adverts` ADD CONSTRAINT `Adverts_fk1` FOREIGN KEY (`CountryCode`) REFERENCES `Countries`(`Code`);
 
-ALTER TABLE `Adverts` ADD CONSTRAINT `Adverts_fk2` FOREIGN KEY (`State`) REFERENCES `States`(`Code`);
+ALTER TABLE `Adverts` ADD CONSTRAINT `Adverts_fk2` FOREIGN KEY (`StateCode`) REFERENCES `States`(`Code`);
 
-ALTER TABLE `Users` ADD CONSTRAINT `Users_fk0` FOREIGN KEY (`Country`) REFERENCES `Countries`(`Code`);
+ALTER TABLE `Users` ADD CONSTRAINT `Users_fk0` FOREIGN KEY (`CountryCode`) REFERENCES `Countries`(`Code`);
 
-ALTER TABLE `Users` ADD CONSTRAINT `Users_fk1` FOREIGN KEY (`State`) REFERENCES `States`(`Code`);
+ALTER TABLE `Users` ADD CONSTRAINT `Users_fk1` FOREIGN KEY (`StateCode`) REFERENCES `States`(`Code`);
 
 ALTER TABLE `Messages` ADD CONSTRAINT `Messages_fk0` FOREIGN KEY (`Author`) REFERENCES `Users`(`Id`);
 
