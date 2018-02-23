@@ -8,12 +8,14 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/AlexSugak/getsky-trade/db"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
 
 // HTTPServer holds http server info
 type HTTPServer struct {
+	db           db.DB
 	log          logrus.FieldLogger
 	httpListener *http.Server
 	quit         chan os.Signal
@@ -21,8 +23,9 @@ type HTTPServer struct {
 }
 
 // NewHTTPServer creates new http server
-func NewHTTPServer(log logrus.FieldLogger) *HTTPServer {
+func NewHTTPServer(db db.DB, log logrus.FieldLogger) *HTTPServer {
 	return &HTTPServer{
+		db: db,
 		log: log.WithFields(logrus.Fields{
 			"prefix": "trade.http",
 		}),
@@ -82,6 +85,7 @@ func (s *HTTPServer) setupRouter() *mux.Router {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/api", ErrorHandler(s, APIInfoHandler(s))).Methods("GET")
+	r.HandleFunc("/api/adverts/latest", ErrorHandler(s, LatestAdvertsHandler(s))).Methods("GET")
 
 	return r
 }
@@ -121,5 +125,20 @@ func APIInfoHandler(s *HTTPServer) func(w http.ResponseWriter, r *http.Request) 
 		}
 
 		return json.NewEncoder(w).Encode(info)
+	}
+}
+
+// LatestAdvertsHandler returns 10 latest adverts
+// Method: GET
+// Content-type: application/json
+// URI: /api/adverts/latest
+func LatestAdvertsHandler(s *HTTPServer) func(w http.ResponseWriter, r *http.Request) error {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		adverts, err := s.db.GetLatestAdverts()
+		if err != nil {
+			return err
+		}
+
+		return json.NewEncoder(w).Encode(adverts)
 	}
 }

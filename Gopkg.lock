@@ -8,6 +8,12 @@
   version = "v1.1.0"
 
 [[projects]]
+  name = "github.com/go-sql-driver/mysql"
+  packages = ["."]
+  revision = "a0583e0143b1624142adab07e0e97fe106d99561"
+  version = "v1.3"
+
+[[projects]]
   name = "github.com/gorilla/context"
   packages = ["."]
   revision = "1ea25387ff6f684839d82767c1733ff4d4d15d0a"
@@ -24,6 +30,12 @@
   packages = ["."]
   revision = "3f60c5b6f7ebd01d3bbda8ccc53c7bebd881caee"
   version = "v0.7.1"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/knq/dburl"
+  packages = ["."]
+  revision = "2406b5c3c3d0d9ed027c66db23ff3f271c370c69"
 
 [[projects]]
   name = "github.com/mattn/go-colorable"
@@ -82,6 +94,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "06c12e73bf621ec620c8f978d86c3c1c01c53cb2dc27a8ea045332bd196ed54a"
+  inputs-digest = "2ab0453ae29fa1b93032a348386231f6b5e6063739d2766e5517f1591ef2105c"
   solver-name = "gps-cdcl"
   solver-version = 1

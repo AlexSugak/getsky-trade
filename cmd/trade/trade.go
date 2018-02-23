@@ -3,14 +3,23 @@ package main
 import (
 	"os"
 
+	"github.com/AlexSugak/getsky-trade/db"
 	"github.com/AlexSugak/getsky-trade/src/trade"
+	_ "github.com/go-sql-driver/mysql"
 	prefixed "github.com/gz-c/logrus-prefixed-formatter"
+	"github.com/knq/dburl"
 	"github.com/sirupsen/logrus"
 )
 
 func main() {
 	log := initLogger()
-	server := trade.NewHTTPServer(log)
+
+	db, err := initDb()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	server := trade.NewHTTPServer(*db, log)
 
 	defer func() {
 		err := server.Shutdown()
@@ -22,6 +31,15 @@ func main() {
 	if err := server.Run(); err != nil {
 		panic(err.Error())
 	}
+}
+
+func initDb() (*db.DB, error) {
+	d, err := dburl.Open("mysql://root:root@localhost:3306/getskytrade?parseTime=true")
+	if err != nil {
+		return nil, err
+	}
+
+	return &db.DB{XO: d}, nil
 }
 
 func initLogger() logrus.FieldLogger {
