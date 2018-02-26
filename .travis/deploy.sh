@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 eval "$(ssh-agent -s)" # Start ssh-agent cache
 chmod 600 .travis/id_rsa # Allow read access to the private key
