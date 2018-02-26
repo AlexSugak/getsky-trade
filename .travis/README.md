@@ -16,5 +16,5 @@ $ chown apps:deploy -R getsky-trade; chmod g+rw -R getsky-trade
 ```sh
 $ travis encrypt-file id_rsa --add
 ```
-- copy both private (encrypted!) and public keys to `.travis` folder of repository. DO NOT copy private key to repository!
+- copy both private (encrypted!) and public keys to `.travis` folder of repository. **DO NOT** copy private key to repository!
 - add/update Travis environment variables `IP`, `PORT` and `DEPLOY_DIR` to corresponding values
