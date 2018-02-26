@@ -39,3 +39,4 @@ chrome-user-data
 .vscode
 *.swp
 *.swo
+mysql_data/**

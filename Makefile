@@ -3,7 +3,15 @@
 
 trade: ## Run trade back-end. To add arguments, do 'make ARGS="--foo" trade'.
 	go run cmd/trade/trade.go
-
+run-local: ## Run DB, API and react dev server
+	docker-compose up -d mysql
+	go run cmd/trade/trade.go&
+	cd web; npm start
+run-docker: ## Run all containers
+	docker-compose kill
+	cd web; yarn install
+	cd web; npm run build
+	docker-compose up -d
 test: ## Run tests
 	go test ./cmd/... -timeout=1m -cover -v
 	go test ./src/... -timeout=1m -cover -v 
