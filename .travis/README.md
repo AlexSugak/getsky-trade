@@ -18,3 +18,4 @@ $ travis encrypt-file id_rsa --add
 ```
 - copy both private (encrypted!) and public keys to `.travis` folder of repository. **DO NOT** copy private key to repository!
 - add/update Travis environment variables `IP`, `PORT` and `DEPLOY_DIR` to corresponding values
+- install [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-from-a-package) and [docker-compose](https://docs.docker.com/compose/install/#install-compose)
