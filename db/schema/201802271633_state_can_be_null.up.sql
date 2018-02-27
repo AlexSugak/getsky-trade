@@ -1,0 +1,1 @@
+ALTER TABLE `Users` MODIFY COLUMN `StateCode` varchar(20) NULL;

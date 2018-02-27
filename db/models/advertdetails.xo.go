@@ -9,24 +9,27 @@ import (
 
 // AdvertDetails represents a row from '[custom advert_details]'.
 type AdvertDetails struct {
-	ID                   int64     // Id
-	Type                 int       // Type
-	Author               string    // Author
-	Tradeoptions         string    // TradeOptions
-	Amountfrom           float64   // AmountFrom
-	Amountto             float64   // AmountTo
-	Fixedprice           float64   // FixedPrice
-	Percentageadjustment float64   // PercentageAdjustment
-	Currency             string    // Currency
-	Additionalinfo       string    // AdditionalInfo
-	Traveldistance       int64     // TravelDistance
-	Traveldistanceuom    string    // TravelDistanceUoM
-	Countrycode          string    // CountryCode
-	Statecode            string    // StateCode
-	City                 string    // City
-	Postalcode           string    // PostalCode
-	Status               int       // Status
-	Createdat            time.Time // CreatedAt
+	ID                    int64     // Id
+	Type                  int       // Type
+	Author                string    // Author
+	Tradecashinperson     bool      // TradeCashInPerson
+	Tradecashbymail       bool      // TradeCashByMail
+	Trademoneyorderbymail bool      // TradeMoneyOrderByMail
+	Tradeother            bool      // TradeOther
+	Amountfrom            float64   // AmountFrom
+	Amountto              float64   // AmountTo
+	Fixedprice            float64   // FixedPrice
+	Percentageadjustment  float64   // PercentageAdjustment
+	Currency              string    // Currency
+	Additionalinfo        string    // AdditionalInfo
+	Traveldistance        int64     // TravelDistance
+	Traveldistanceuom     string    // TravelDistanceUoM
+	Countrycode           string    // CountryCode
+	Statecode             string    // StateCode
+	City                  string    // City
+	Postalcode            string    // PostalCode
+	Status                int       // Status
+	Createdat             time.Time // CreatedAt
 }
 
 // GetAdvertDetails runs a custom query, returning results as AdvertDetails.
@@ -38,7 +41,10 @@ func GetAdvertDetails(db XODB) ([]*AdvertDetails, error) {
 		`    a.Id,` +
 		`	a.Type,` +
 		`	u.UserName as Author,` +
-		`	a.TradeOptions,` +
+		`	a.TradeCashInPerson, ` +
+		`    a.TradeCashByMail, ` +
+		`    a.TradeMoneyOrderByMail, ` +
+		`    a.TradeOther,` +
 		`	a.AmountFrom,` +
 		`	a.AmountTo,` +
 		`	a.FixedPrice,` +
@@ -71,7 +77,7 @@ func GetAdvertDetails(db XODB) ([]*AdvertDetails, error) {
 		ad := AdvertDetails{}
 
 		// scan
-		err = q.Scan(&ad.ID, &ad.Type, &ad.Author, &ad.Tradeoptions, &ad.Amountfrom, &ad.Amountto, &ad.Fixedprice, &ad.Percentageadjustment, &ad.Currency, &ad.Additionalinfo, &ad.Traveldistance, &ad.Traveldistanceuom, &ad.Countrycode, &ad.Statecode, &ad.City, &ad.Postalcode, &ad.Status, &ad.Createdat)
+		err = q.Scan(&ad.ID, &ad.Type, &ad.Author, &ad.Tradecashinperson, &ad.Tradecashbymail, &ad.Trademoneyorderbymail, &ad.Tradeother, &ad.Amountfrom, &ad.Amountto, &ad.Fixedprice, &ad.Percentageadjustment, &ad.Currency, &ad.Additionalinfo, &ad.Traveldistance, &ad.Traveldistanceuom, &ad.Countrycode, &ad.Statecode, &ad.City, &ad.Postalcode, &ad.Status, &ad.Createdat)
 		if err != nil {
 			return nil, err
 		}

@@ -17,9 +17,14 @@ run-local: ## Run DB, API and react dev server
 	go run cmd/trade/trade.go&
 	cd web; npm start
 
+db-schema: ## migrates DB schema to latest version, run docker-up or run-local first
+	migrate -database "mysql://root:root@(localhost:3306)/getskytrade" -source file://db/schema up
+
 test: ## Run tests
 	go test ./cmd/... -timeout=1m -cover -v
 	go test ./src/... -timeout=1m -cover -v 
+
+	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 
 lint: ## Run linters. Use make install-linters first.
 	vendorcheck ./...

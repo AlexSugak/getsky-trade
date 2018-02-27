@@ -11,24 +11,27 @@ import (
 
 // Advert represents a row from 'getskytrade.Adverts'.
 type Advert struct {
-	ID                   int64           `json:"Id"`                   // Id
-	Type                 int             `json:"Type"`                 // Type
-	Author               int64           `json:"Author"`               // Author
-	Tradeoptions         string          `json:"TradeOptions"`         // TradeOptions
-	Amountfrom           float64         `json:"AmountFrom"`           // AmountFrom
-	Amountto             sql.NullFloat64 `json:"AmountTo"`             // AmountTo
-	Fixedprice           float64         `json:"FixedPrice"`           // FixedPrice
-	Percentageadjustment float64         `json:"PercentageAdjustment"` // PercentageAdjustment
-	Currency             string          `json:"Currency"`             // Currency
-	Additionalinfo       string          `json:"AdditionalInfo"`       // AdditionalInfo
-	Traveldistance       int64           `json:"TravelDistance"`       // TravelDistance
-	Traveldistanceuom    string          `json:"TravelDistanceUoM"`    // TravelDistanceUoM
-	Countrycode          string          `json:"CountryCode"`          // CountryCode
-	Statecode            sql.NullString  `json:"StateCode"`            // StateCode
-	City                 string          `json:"City"`                 // City
-	Postalcode           string          `json:"PostalCode"`           // PostalCode
-	Status               int             `json:"Status"`               // Status
-	Createdat            time.Time       `json:"CreatedAt"`            // CreatedAt
+	ID                    int64           `json:"Id"`                    // Id
+	Type                  int             `json:"Type"`                  // Type
+	Author                int64           `json:"Author"`                // Author
+	Amountfrom            float64         `json:"AmountFrom"`            // AmountFrom
+	Amountto              sql.NullFloat64 `json:"AmountTo"`              // AmountTo
+	Fixedprice            sql.NullFloat64 `json:"FixedPrice"`            // FixedPrice
+	Percentageadjustment  sql.NullFloat64 `json:"PercentageAdjustment"`  // PercentageAdjustment
+	Currency              string          `json:"Currency"`              // Currency
+	Additionalinfo        string          `json:"AdditionalInfo"`        // AdditionalInfo
+	Traveldistance        int64           `json:"TravelDistance"`        // TravelDistance
+	Traveldistanceuom     string          `json:"TravelDistanceUoM"`     // TravelDistanceUoM
+	Countrycode           string          `json:"CountryCode"`           // CountryCode
+	Statecode             sql.NullString  `json:"StateCode"`             // StateCode
+	City                  string          `json:"City"`                  // City
+	Postalcode            string          `json:"PostalCode"`            // PostalCode
+	Status                int             `json:"Status"`                // Status
+	Createdat             time.Time       `json:"CreatedAt"`             // CreatedAt
+	Tradecashinperson     sql.NullBool    `json:"TradeCashInPerson"`     // TradeCashInPerson
+	Tradecashbymail       sql.NullBool    `json:"TradeCashByMail"`       // TradeCashByMail
+	Trademoneyorderbymail sql.NullBool    `json:"TradeMoneyOrderByMail"` // TradeMoneyOrderByMail
+	Tradeother            sql.NullBool    `json:"TradeOther"`            // TradeOther
 
 	// xo fields
 	_exists, _deleted bool
@@ -55,14 +58,14 @@ func (a *Advert) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO getskytrade.Adverts (` +
-		`Type, Author, TradeOptions, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, CreatedAt` +
+		`Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, CreatedAt, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, a.Type, a.Author, a.Tradeoptions, a.Amountfrom, a.Amountto, a.Fixedprice, a.Percentageadjustment, a.Currency, a.Additionalinfo, a.Traveldistance, a.Traveldistanceuom, a.Countrycode, a.Statecode, a.City, a.Postalcode, a.Status, a.Createdat)
-	res, err := db.Exec(sqlstr, a.Type, a.Author, a.Tradeoptions, a.Amountfrom, a.Amountto, a.Fixedprice, a.Percentageadjustment, a.Currency, a.Additionalinfo, a.Traveldistance, a.Traveldistanceuom, a.Countrycode, a.Statecode, a.City, a.Postalcode, a.Status, a.Createdat)
+	XOLog(sqlstr, a.Type, a.Author, a.Amountfrom, a.Amountto, a.Fixedprice, a.Percentageadjustment, a.Currency, a.Additionalinfo, a.Traveldistance, a.Traveldistanceuom, a.Countrycode, a.Statecode, a.City, a.Postalcode, a.Status, a.Createdat, a.Tradecashinperson, a.Tradecashbymail, a.Trademoneyorderbymail, a.Tradeother)
+	res, err := db.Exec(sqlstr, a.Type, a.Author, a.Amountfrom, a.Amountto, a.Fixedprice, a.Percentageadjustment, a.Currency, a.Additionalinfo, a.Traveldistance, a.Traveldistanceuom, a.Countrycode, a.Statecode, a.City, a.Postalcode, a.Status, a.Createdat, a.Tradecashinperson, a.Tradecashbymail, a.Trademoneyorderbymail, a.Tradeother)
 	if err != nil {
 		return err
 	}
@@ -96,12 +99,12 @@ func (a *Advert) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE getskytrade.Adverts SET ` +
-		`Type = ?, Author = ?, TradeOptions = ?, AmountFrom = ?, AmountTo = ?, FixedPrice = ?, PercentageAdjustment = ?, Currency = ?, AdditionalInfo = ?, TravelDistance = ?, TravelDistanceUoM = ?, CountryCode = ?, StateCode = ?, City = ?, PostalCode = ?, Status = ?, CreatedAt = ?` +
+		`Type = ?, Author = ?, AmountFrom = ?, AmountTo = ?, FixedPrice = ?, PercentageAdjustment = ?, Currency = ?, AdditionalInfo = ?, TravelDistance = ?, TravelDistanceUoM = ?, CountryCode = ?, StateCode = ?, City = ?, PostalCode = ?, Status = ?, CreatedAt = ?, TradeCashInPerson = ?, TradeCashByMail = ?, TradeMoneyOrderByMail = ?, TradeOther = ?` +
 		` WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, a.Type, a.Author, a.Tradeoptions, a.Amountfrom, a.Amountto, a.Fixedprice, a.Percentageadjustment, a.Currency, a.Additionalinfo, a.Traveldistance, a.Traveldistanceuom, a.Countrycode, a.Statecode, a.City, a.Postalcode, a.Status, a.Createdat, a.ID)
-	_, err = db.Exec(sqlstr, a.Type, a.Author, a.Tradeoptions, a.Amountfrom, a.Amountto, a.Fixedprice, a.Percentageadjustment, a.Currency, a.Additionalinfo, a.Traveldistance, a.Traveldistanceuom, a.Countrycode, a.Statecode, a.City, a.Postalcode, a.Status, a.Createdat, a.ID)
+	XOLog(sqlstr, a.Type, a.Author, a.Amountfrom, a.Amountto, a.Fixedprice, a.Percentageadjustment, a.Currency, a.Additionalinfo, a.Traveldistance, a.Traveldistanceuom, a.Countrycode, a.Statecode, a.City, a.Postalcode, a.Status, a.Createdat, a.Tradecashinperson, a.Tradecashbymail, a.Trademoneyorderbymail, a.Tradeother, a.ID)
+	_, err = db.Exec(sqlstr, a.Type, a.Author, a.Amountfrom, a.Amountto, a.Fixedprice, a.Percentageadjustment, a.Currency, a.Additionalinfo, a.Traveldistance, a.Traveldistanceuom, a.Countrycode, a.Statecode, a.City, a.Postalcode, a.Status, a.Createdat, a.Tradecashinperson, a.Tradecashbymail, a.Trademoneyorderbymail, a.Tradeother, a.ID)
 	return err
 }
 
@@ -173,7 +176,7 @@ func AdvertByID(db XODB, id int64) (*Advert, error) {
 
 	// sql query
 	const sqlstr = `SELECT ` +
-		`Id, Type, Author, TradeOptions, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, CreatedAt ` +
+		`Id, Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, CreatedAt, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther ` +
 		`FROM getskytrade.Adverts ` +
 		`WHERE Id = ?`
 
@@ -183,7 +186,7 @@ func AdvertByID(db XODB, id int64) (*Advert, error) {
 		_exists: true,
 	}
 
-	err = db.QueryRow(sqlstr, id).Scan(&a.ID, &a.Type, &a.Author, &a.Tradeoptions, &a.Amountfrom, &a.Amountto, &a.Fixedprice, &a.Percentageadjustment, &a.Currency, &a.Additionalinfo, &a.Traveldistance, &a.Traveldistanceuom, &a.Countrycode, &a.Statecode, &a.City, &a.Postalcode, &a.Status, &a.Createdat)
+	err = db.QueryRow(sqlstr, id).Scan(&a.ID, &a.Type, &a.Author, &a.Amountfrom, &a.Amountto, &a.Fixedprice, &a.Percentageadjustment, &a.Currency, &a.Additionalinfo, &a.Traveldistance, &a.Traveldistanceuom, &a.Countrycode, &a.Statecode, &a.City, &a.Postalcode, &a.Status, &a.Createdat, &a.Tradecashinperson, &a.Tradecashbymail, &a.Trademoneyorderbymail, &a.Tradeother)
 	if err != nil {
 		return nil, err
 	}
@@ -199,7 +202,7 @@ func AdvertsByAuthor(db XODB, author int64) ([]*Advert, error) {
 
 	// sql query
 	const sqlstr = `SELECT ` +
-		`Id, Type, Author, TradeOptions, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, CreatedAt ` +
+		`Id, Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, CreatedAt, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther ` +
 		`FROM getskytrade.Adverts ` +
 		`WHERE Author = ?`
 
@@ -219,7 +222,7 @@ func AdvertsByAuthor(db XODB, author int64) ([]*Advert, error) {
 		}
 
 		// scan
-		err = q.Scan(&a.ID, &a.Type, &a.Author, &a.Tradeoptions, &a.Amountfrom, &a.Amountto, &a.Fixedprice, &a.Percentageadjustment, &a.Currency, &a.Additionalinfo, &a.Traveldistance, &a.Traveldistanceuom, &a.Countrycode, &a.Statecode, &a.City, &a.Postalcode, &a.Status, &a.Createdat)
+		err = q.Scan(&a.ID, &a.Type, &a.Author, &a.Amountfrom, &a.Amountto, &a.Fixedprice, &a.Percentageadjustment, &a.Currency, &a.Additionalinfo, &a.Traveldistance, &a.Traveldistanceuom, &a.Countrycode, &a.Statecode, &a.City, &a.Postalcode, &a.Status, &a.Createdat, &a.Tradecashinperson, &a.Tradecashbymail, &a.Trademoneyorderbymail, &a.Tradeother)
 		if err != nil {
 			return nil, err
 		}
@@ -238,7 +241,7 @@ func AdvertsByCountrycode(db XODB, countrycode string) ([]*Advert, error) {
 
 	// sql query
 	const sqlstr = `SELECT ` +
-		`Id, Type, Author, TradeOptions, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, CreatedAt ` +
+		`Id, Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, CreatedAt, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther ` +
 		`FROM getskytrade.Adverts ` +
 		`WHERE CountryCode = ?`
 
@@ -258,7 +261,7 @@ func AdvertsByCountrycode(db XODB, countrycode string) ([]*Advert, error) {
 		}
 
 		// scan
-		err = q.Scan(&a.ID, &a.Type, &a.Author, &a.Tradeoptions, &a.Amountfrom, &a.Amountto, &a.Fixedprice, &a.Percentageadjustment, &a.Currency, &a.Additionalinfo, &a.Traveldistance, &a.Traveldistanceuom, &a.Countrycode, &a.Statecode, &a.City, &a.Postalcode, &a.Status, &a.Createdat)
+		err = q.Scan(&a.ID, &a.Type, &a.Author, &a.Amountfrom, &a.Amountto, &a.Fixedprice, &a.Percentageadjustment, &a.Currency, &a.Additionalinfo, &a.Traveldistance, &a.Traveldistanceuom, &a.Countrycode, &a.Statecode, &a.City, &a.Postalcode, &a.Status, &a.Createdat, &a.Tradecashinperson, &a.Tradecashbymail, &a.Trademoneyorderbymail, &a.Tradeother)
 		if err != nil {
 			return nil, err
 		}
@@ -277,7 +280,7 @@ func AdvertsByStatecode(db XODB, statecode sql.NullString) ([]*Advert, error) {
 
 	// sql query
 	const sqlstr = `SELECT ` +
-		`Id, Type, Author, TradeOptions, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, CreatedAt ` +
+		`Id, Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, CreatedAt, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther ` +
 		`FROM getskytrade.Adverts ` +
 		`WHERE StateCode = ?`
 
@@ -297,7 +300,7 @@ func AdvertsByStatecode(db XODB, statecode sql.NullString) ([]*Advert, error) {
 		}
 
 		// scan
-		err = q.Scan(&a.ID, &a.Type, &a.Author, &a.Tradeoptions, &a.Amountfrom, &a.Amountto, &a.Fixedprice, &a.Percentageadjustment, &a.Currency, &a.Additionalinfo, &a.Traveldistance, &a.Traveldistanceuom, &a.Countrycode, &a.Statecode, &a.City, &a.Postalcode, &a.Status, &a.Createdat)
+		err = q.Scan(&a.ID, &a.Type, &a.Author, &a.Amountfrom, &a.Amountto, &a.Fixedprice, &a.Percentageadjustment, &a.Currency, &a.Additionalinfo, &a.Traveldistance, &a.Traveldistanceuom, &a.Countrycode, &a.Statecode, &a.City, &a.Postalcode, &a.Status, &a.Createdat, &a.Tradecashinperson, &a.Tradecashbymail, &a.Trademoneyorderbymail, &a.Tradeother)
 		if err != nil {
 			return nil, err
 		}

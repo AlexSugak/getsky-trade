@@ -11,20 +11,20 @@ import (
 
 // User represents a row from 'getskytrade.Users'.
 type User struct {
-	ID            int64         `json:"Id"`            // Id
-	Username      string        `json:"UserName"`      // UserName
-	Email         string        `json:"Email"`         // Email
-	Passwordsalt  string        `json:"PasswordSalt"`  // PasswordSalt
-	Passwordhash  string        `json:"PasswordHash"`  // PasswordHash
-	Timezone      string        `json:"Timezone"`      // Timezone
-	Countrycode   string        `json:"CountryCode"`   // CountryCode
-	Statecode     string        `json:"StateCode"`     // StateCode
-	City          string        `json:"City"`          // City
-	Postalcode    string        `json:"PostalCode"`    // PostalCode
-	Distanceunits string        `json:"DistanceUnits"` // DistanceUnits
-	Currency      string        `json:"Currency"`      // Currency
-	Status        sql.NullInt64 `json:"Status"`        // Status
-	Registeredat  time.Time     `json:"RegisteredAt"`  // RegisteredAt
+	ID            int64          `json:"Id"`            // Id
+	Username      string         `json:"UserName"`      // UserName
+	Email         string         `json:"Email"`         // Email
+	Passwordsalt  string         `json:"PasswordSalt"`  // PasswordSalt
+	Passwordhash  string         `json:"PasswordHash"`  // PasswordHash
+	Timezone      string         `json:"Timezone"`      // Timezone
+	Countrycode   string         `json:"CountryCode"`   // CountryCode
+	Statecode     sql.NullString `json:"StateCode"`     // StateCode
+	City          string         `json:"City"`          // City
+	Postalcode    string         `json:"PostalCode"`    // PostalCode
+	Distanceunits string         `json:"DistanceUnits"` // DistanceUnits
+	Currency      string         `json:"Currency"`      // Currency
+	Status        sql.NullInt64  `json:"Status"`        // Status
+	Registeredat  time.Time      `json:"RegisteredAt"`  // RegisteredAt
 
 	// xo fields
 	_exists, _deleted bool
@@ -151,7 +151,7 @@ func (u *User) Country(db XODB) (*Country, error) {
 //
 // Generated from foreign key 'Users_fk1'.
 func (u *User) State(db XODB) (*State, error) {
-	return StateByCode(db, u.Statecode)
+	return StateByCode(db, u.Statecode.String)
 }
 
 // UserByEmail retrieves a row from 'getskytrade.Users' as a User.
@@ -274,7 +274,7 @@ func UsersByCountrycode(db XODB, countrycode string) ([]*User, error) {
 // UsersByStatecode retrieves a row from 'getskytrade.Users' as a User.
 //
 // Generated from index 'Users_fk1'.
-func UsersByStatecode(db XODB, statecode string) ([]*User, error) {
+func UsersByStatecode(db XODB, statecode sql.NullString) ([]*User, error) {
 	var err error
 
 	// sql query

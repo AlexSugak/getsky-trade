@@ -39,7 +39,7 @@ func NewHTTPServer(binding string, db db.DB, log logrus.FieldLogger) *HTTPServer
 // Run starts http listener and returns error if any
 func (s *HTTPServer) Run() error {
 	log := s.log
-	log.Info("HTTP service start")
+	log.Infof("HTTP service start at %s", s.binding)
 	defer log.Info("HTTP service stop")
 	signal.Notify(s.quit, os.Interrupt)
 
