@@ -1,14 +1,14 @@
 .DEFAULT_GOAL := help
-.PHONY: trade test lint check help
+.PHONY: trade test lint check help stop-docker build-client run-docker
 
 build-client: ## Restores packages and builds client app
 	cd web; yarn install
 	cd web; npm run build
 stop-docker: ## Stops all docker containers
 	docker-compose kill
-run-docker: ## Run all containers
+docker-up: ## Starts docker containers
 	docker-compose up -d
-.PHONY: stop-docker build-client run-docker
+run-docker: stop-docker build-client docker-up ## Run all containers
 
 trade: ## Run trade back-end. To add arguments, do 'make ARGS="--foo" trade'.
 	go run cmd/trade/trade.go ${ARGS}
