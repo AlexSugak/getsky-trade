@@ -39,9 +39,9 @@ services:
       - NGINX_HOST=getskytrade
       - NGINX_PORT=80
     volumes:
-      - ./nginx-config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./.nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./web/build/:/usr/share/nginx/html
-      - ./nginx-config/vhost.d/proxy.conf:/etc/nginx/vhost.d/proxy.conf
+      - ./.nginx/vhost.d/proxy.conf:/etc/nginx/vhost.d/proxy.conf
       - /var/run/docker.sock:/var/run/docker.sock:ro
     command: /bin/bash -c "rm -rf /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
 
