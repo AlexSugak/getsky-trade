@@ -11,7 +11,7 @@ import (
 type AdvertDetails struct {
 	ID                   int64     // Id
 	Type                 int       // Type
-	Author               int64     // Author
+	Author               string    // Author
 	Tradeoptions         string    // TradeOptions
 	Amountfrom           float64   // AmountFrom
 	Amountto             float64   // AmountTo
@@ -34,7 +34,27 @@ func GetAdvertDetails(db XODB) ([]*AdvertDetails, error) {
 	var err error
 
 	// sql query
-	const sqlstr = `SELECT * FROM getskytrade.Adverts ` +
+	const sqlstr = `SELECT ` +
+		`    a.Id,` +
+		`	a.Type,` +
+		`	u.UserName as Author,` +
+		`	a.TradeOptions,` +
+		`	a.AmountFrom,` +
+		`	a.AmountTo,` +
+		`	a.FixedPrice,` +
+		`	a.PercentageAdjustment,` +
+		`	a.Currency,` +
+		`	a.AdditionalInfo,` +
+		`	a.TravelDistance,` +
+		`	a.TravelDistanceUoM,` +
+		`	a.CountryCode,` +
+		`	a.StateCode,` +
+		`	a.City,` +
+		`	a.PostalCode,` +
+		`	a.Status,` +
+		`	a.CreatedAt ` +
+		`FROM getskytrade.Adverts a ` +
+		`LEFT JOIN getskytrade.Users u ON a.Author = u.Id ` +
 		`ORDER BY CreatedAt LIMIT 10`
 
 	// run query
