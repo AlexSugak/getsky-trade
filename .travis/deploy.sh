@@ -9,14 +9,21 @@ ssh-add .travis/id_rsa # add the private key to SSH
 # prevent authenticity confirmations 
 ssh-keyscan $IP >> ~/.ssh/known_hosts
 
+# shut down any currently running containers to prevent file locking when pushing new version
+ssh apps@$IP -p -t $PORT <<EOF
+  cd $DEPLOY_DIR
+  sudo docker-compose kill
+EOF
+
 # push latest changes to test server's remote repo
 git config --global push.default matching
 git remote add deploy ssh://git@$IP:$PORT$DEPLOY_DIR
 git push deploy master
 
-# run the deploy cmd under apps user
-ssh apps@$IP -p $PORT <<EOF
+# start updated services
+ssh apps@$IP -p -t $PORT <<EOF
   cd $DEPLOY_DIR
-  # TODO deploy command, e.g. make trade
+  sudo service docker restart # restart docker service to prevent "timeout" errors (https://github.com/docker/compose/issues/3633#issuecomment-254194717)
+  sudo make run-docker
 EOF
 
