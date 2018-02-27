@@ -1,17 +1,22 @@
 .DEFAULT_GOAL := help
 .PHONY: trade test lint check help
 
+build-client: ## Restores packages and builds client app
+	cd web; yarn install
+	cd web; npm run build
+stop-docker: ## Stops all docker containers
+	docker-compose kill
+run-docker: ## Run all containers
+	docker-compose up -d
+.PHONY: stop-docker build-client run-docker
+
 trade: ## Run trade back-end. To add arguments, do 'make ARGS="--foo" trade'.
-	go run cmd/trade/trade.go
+	go run cmd/trade/trade.go ${ARGS}
 run-local: ## Run DB, API and react dev server
 	docker-compose up -d mysql
 	go run cmd/trade/trade.go&
 	cd web; npm start
-run-docker: ## Run all containers
-	docker-compose kill
-	cd web; yarn install
-	cd web; npm run build
-	docker-compose up -d
+
 test: ## Run tests
 	go test ./cmd/... -timeout=1m -cover -v
 	go test ./src/... -timeout=1m -cover -v 

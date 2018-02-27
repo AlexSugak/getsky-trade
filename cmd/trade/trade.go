@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"os"
 
 	"github.com/AlexSugak/getsky-trade/db"
@@ -12,6 +13,9 @@ import (
 )
 
 func main() {
+	bindingFlag := flag.String("binding", "0.0.0.0:8081", "HTTP server binding")
+	flag.Parse()
+
 	log := initLogger()
 
 	db, err := initDb()
@@ -19,7 +23,7 @@ func main() {
 		panic(err.Error())
 	}
 
-	server := trade.NewHTTPServer(*db, log)
+	server := trade.NewHTTPServer(*bindingFlag, *db, log)
 
 	defer func() {
 		err := server.Shutdown()

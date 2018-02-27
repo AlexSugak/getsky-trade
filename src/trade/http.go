@@ -15,6 +15,7 @@ import (
 
 // HTTPServer holds http server info
 type HTTPServer struct {
+	binding      string
 	db           db.DB
 	log          logrus.FieldLogger
 	httpListener *http.Server
@@ -23,9 +24,10 @@ type HTTPServer struct {
 }
 
 // NewHTTPServer creates new http server
-func NewHTTPServer(db db.DB, log logrus.FieldLogger) *HTTPServer {
+func NewHTTPServer(binding string, db db.DB, log logrus.FieldLogger) *HTTPServer {
 	return &HTTPServer{
-		db: db,
+		binding: binding,
+		db:      db,
 		log: log.WithFields(logrus.Fields{
 			"prefix": "trade.http",
 		}),
@@ -44,7 +46,7 @@ func (s *HTTPServer) Run() error {
 	r := s.setupRouter()
 
 	s.httpListener = &http.Server{
-		Addr:         "0.0.0.0:8081",
+		Addr:         s.binding,
 		WriteTimeout: time.Second * 15,
 		ReadTimeout:  time.Second * 15,
 		IdleTimeout:  time.Second * 15,
