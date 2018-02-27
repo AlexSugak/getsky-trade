@@ -33,9 +33,13 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/knq/dburl"
-  packages = ["."]
-  revision = "2406b5c3c3d0d9ed027c66db23ff3f271c370c69"
+  name = "github.com/jmoiron/sqlx"
+  packages = [
+    ".",
+    "reflectx",
+    "types"
+  ]
+  revision = "05cef0741ade10ca668982355b3f3f0bcf0ff0a8"
 
 [[projects]]
   name = "github.com/mattn/go-colorable"
@@ -94,6 +98,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "2ab0453ae29fa1b93032a348386231f6b5e6063739d2766e5517f1591ef2105c"
+  inputs-digest = "231fa7e1ce2a3b2304b4fe786ac00bd9764473e36f699e86fecb7dfa33cb8d55"
   solver-name = "gps-cdcl"
   solver-version = 1

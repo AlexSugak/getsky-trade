@@ -24,6 +24,7 @@
 #   go-tests = true
 #   unused-packages = true
 
+required = ["github.com/jmoiron/sqlx/types"]
 
 [[constraint]]
   name = "github.com/gorilla/mux"
@@ -52,3 +53,7 @@
 [[constraint]]
   name = "github.com/go-sql-driver/mysql"
   version = "1.3.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/jmoiron/sqlx"

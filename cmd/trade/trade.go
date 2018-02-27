@@ -8,7 +8,7 @@ import (
 	"github.com/AlexSugak/getsky-trade/src/trade"
 	_ "github.com/go-sql-driver/mysql"
 	prefixed "github.com/gz-c/logrus-prefixed-formatter"
-	"github.com/knq/dburl"
+	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
 )
 
@@ -37,13 +37,13 @@ func main() {
 	}
 }
 
-func initDb() (*db.DB, error) {
-	d, err := dburl.Open("mysql://root:root@localhost:3306/getskytrade?parseTime=true")
+func initDb() (*db.Storage, error) {
+	d, err := sqlx.Connect("mysql", "root:root@(0.0.0.0:3306)/getskytrade?parseTime=true")
 	if err != nil {
 		return nil, err
 	}
 
-	return &db.DB{XO: d}, nil
+	return &db.Storage{DB: d}, nil
 }
 
 func initLogger() logrus.FieldLogger {

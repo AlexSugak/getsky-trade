@@ -8,7 +8,7 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/AlexSugak/getsky-trade/db"
+	"github.com/AlexSugak/getsky-trade/src/board"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
@@ -16,7 +16,7 @@ import (
 // HTTPServer holds http server info
 type HTTPServer struct {
 	binding      string
-	db           db.DB
+	board        board.Board
 	log          logrus.FieldLogger
 	httpListener *http.Server
 	quit         chan os.Signal
@@ -24,10 +24,10 @@ type HTTPServer struct {
 }
 
 // NewHTTPServer creates new http server
-func NewHTTPServer(binding string, db db.DB, log logrus.FieldLogger) *HTTPServer {
+func NewHTTPServer(binding string, board board.Board, log logrus.FieldLogger) *HTTPServer {
 	return &HTTPServer{
 		binding: binding,
-		db:      db,
+		board:   board,
 		log: log.WithFields(logrus.Fields{
 			"prefix": "trade.http",
 		}),
@@ -87,7 +87,8 @@ func (s *HTTPServer) setupRouter() *mux.Router {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/api", ErrorHandler(s, APIInfoHandler(s))).Methods("GET")
-	r.HandleFunc("/api/adverts/latest", ErrorHandler(s, LatestAdvertsHandler(s))).Methods("GET")
+	r.HandleFunc("/api/adverts/sell/latest", ErrorHandler(s, LatestSellAdvertsHandler(s))).Methods("GET")
+	r.HandleFunc("/api/adverts/buy/latest", ErrorHandler(s, LatestBuyAdvertsHandler(s))).Methods("GET")
 
 	return r
 }
@@ -130,13 +131,28 @@ func APIInfoHandler(s *HTTPServer) func(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
-// LatestAdvertsHandler returns 10 latest adverts
+// LatestSellAdvertsHandler returns 10 latest sell adverts
 // Method: GET
 // Content-type: application/json
-// URI: /api/adverts/latest
-func LatestAdvertsHandler(s *HTTPServer) func(w http.ResponseWriter, r *http.Request) error {
+// URI: /api/adverts/sell/latest
+func LatestSellAdvertsHandler(s *HTTPServer) func(w http.ResponseWriter, r *http.Request) error {
 	return func(w http.ResponseWriter, r *http.Request) error {
-		adverts, err := s.db.GetLatestAdverts()
+		adverts, err := s.board.GetLatestAdverts(board.Sell, 10)
+		if err != nil {
+			return err
+		}
+
+		return json.NewEncoder(w).Encode(adverts)
+	}
+}
+
+// LatestBuyAdvertsHandler returns 10 latest buy adverts
+// Method: GET
+// Content-type: application/json
+// URI: /api/adverts/buy/latest
+func LatestBuyAdvertsHandler(s *HTTPServer) func(w http.ResponseWriter, r *http.Request) error {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		adverts, err := s.board.GetLatestAdverts(board.Buy, 10)
 		if err != nil {
 			return err
 		}

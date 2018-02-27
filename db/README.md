@@ -2,7 +2,7 @@
 
 We use MySql as a main database, storing all adverts, users, messages etc.
 The DB schema is managed using [migrate](https://github.com/mattes/migrate) <br/>
-The DB access code is generated using [xo](https://github.com/xo/xo) 
+The DB access code is implemented using [sqlx](https://github.com/jmoiron/sqlx) 
 
 ## Changing schema
 
@@ -33,16 +33,3 @@ $ go build -tags 'mysql' -o /usr/local/bin/migrate github.com/mattes/migrate/cli
 ```sh
 $ migrate -database "mysql://root:root@(localhost:3306)/getskytrade" -source file://db/schema up
 ```
-
-## Generating DB access code
-More details on how to use xo [here](https://github.com/xo/xo).
-
-### Install xo:
-```sh
-$ go get -tags mysql -u github.com/knq/xo
-```
-### Generate models code:
-```sh
-$ xo "mysql://root:root@localhost:3306/getskytrade?parseTime=true" -o db/models
-```
-Note the missing brakets in the server address
