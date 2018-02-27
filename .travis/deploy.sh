@@ -10,7 +10,7 @@ ssh-add .travis/id_rsa # add the private key to SSH
 ssh-keyscan $IP >> ~/.ssh/known_hosts
 
 # shut down any currently running containers to prevent file locking when pushing new version
-ssh apps@$IP -p -t $PORT <<EOF
+ssh apps@$IP -p $PORT -t <<EOF
   cd $DEPLOY_DIR
   sudo docker-compose kill
 EOF
@@ -21,7 +21,7 @@ git remote add deploy ssh://git@$IP:$PORT$DEPLOY_DIR
 git push deploy master
 
 # start updated services
-ssh apps@$IP -p -t $PORT <<EOF
+ssh apps@$IP -p $PORT -t <<EOF
   cd $DEPLOY_DIR
   sudo service docker restart # restart docker service to prevent "timeout" errors (https://github.com/docker/compose/issues/3633#issuecomment-254194717)
   sudo make run-docker
