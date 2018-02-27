@@ -24,11 +24,9 @@ test: ## Run tests
 	go test ./cmd/... -timeout=1m -cover -v
 	go test ./src/... -timeout=1m -cover -v 
 
-	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-
 lint: ## Run linters. Use make install-linters first.
 	vendorcheck ./...
-	gometalinter --deadline=3m -j 2 --disable-all --tests --vendor --skip=db/models \
+	gometalinter --deadline=3m -j 2 --disable-all --tests --vendor \
 		-E deadcode \
 		-E errcheck \
 		-E gas \

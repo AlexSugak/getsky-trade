@@ -12,8 +12,8 @@ type Storage struct {
 }
 
 // GetLatestAdverts returns 10 latest adverts
-func (s Storage) GetLatestAdverts(t board.AdvertType, limit int) ([]models.AdvertDetailsShort, error) {
-	adverts := []models.AdvertDetailsShort{}
+func (s Storage) GetLatestAdverts(t board.AdvertType, limit int) ([]models.AdvertDetails, error) {
+	adverts := []models.AdvertDetails{}
 	err := s.DB.Select(&adverts,
 		`SELECT `+
 			` a.Id,`+

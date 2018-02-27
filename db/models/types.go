@@ -5,20 +5,21 @@ import (
 	"encoding/json"
 )
 
-type JsonNullFloat64 struct {
+// JSONNullFloat64 wraps sql.NullFloat64 to provide JSON-friendly marshaling
+type JSONNullFloat64 struct {
 	sql.NullFloat64
 }
 
-func (v JsonNullFloat64) MarshalJSON() ([]byte, error) {
+// MarshalJSON converts JSONNullFloat64 value to json
+func (v JSONNullFloat64) MarshalJSON() ([]byte, error) {
 	if v.Valid {
 		return json.Marshal(v.Float64)
-	} else {
-		return json.Marshal(nil)
 	}
+	return json.Marshal(nil)
 }
 
-func (v *JsonNullFloat64) UnmarshalJSON(data []byte) error {
-	// Unmarshalling into a pointer will let us detect null
+// UnmarshalJSON converts json value to JSONNullFloat64
+func (v *JSONNullFloat64) UnmarshalJSON(data []byte) error {
 	var x *float64
 	if err := json.Unmarshal(data, &x); err != nil {
 		return err
@@ -32,20 +33,21 @@ func (v *JsonNullFloat64) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-type JsonNullString struct {
+// JSONNullString wraps sql.NullString to provide JSON-friendly marshaling
+type JSONNullString struct {
 	sql.NullString
 }
 
-func (v JsonNullString) MarshalJSON() ([]byte, error) {
+// MarshalJSON converts JSONNullString value to json
+func (v JSONNullString) MarshalJSON() ([]byte, error) {
 	if v.Valid {
 		return json.Marshal(v.String)
-	} else {
-		return json.Marshal(nil)
 	}
+	return json.Marshal(nil)
 }
 
-func (v *JsonNullString) UnmarshalJSON(data []byte) error {
-	// Unmarshalling into a pointer will let us detect null
+// UnmarshalJSON converts json value to JSONNullString
+func (v *JSONNullString) UnmarshalJSON(data []byte) error {
 	var x *string
 	if err := json.Unmarshal(data, &x); err != nil {
 		return err
