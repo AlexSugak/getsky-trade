@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 
 	"github.com/AlexSugak/getsky-trade/db"
@@ -14,11 +15,12 @@ import (
 
 func main() {
 	bindingFlag := flag.String("binding", "0.0.0.0:8081", "HTTP server binding")
+	mysqlFlag := flag.String("mysql", "0.0.0.0:3306", "HTTP server binding")
 	flag.Parse()
 
 	log := initLogger()
 
-	db, err := initDb()
+	db, err := initDb(*mysqlFlag)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -30,8 +32,8 @@ func main() {
 	}
 }
 
-func initDb() (*db.Storage, error) {
-	d, err := sqlx.Connect("mysql", "root:root@(0.0.0.0:3306)/getskytrade?parseTime=true")
+func initDb(addr string) (*db.Storage, error) {
+	d, err := sqlx.Connect("mysql", fmt.Sprintf("root:root@(%s)/getskytrade?parseTime=true", addr))
 	if err != nil {
 		return nil, err
 	}

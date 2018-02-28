@@ -21,12 +21,14 @@ services:
     restart: always
     ports:
       - "8081:8081"
+    environment:
+      TRADE_MYSQL: "mysql:3306"
     volumes:
       - ./cmd:/usr/local/go/src/github.com/AlexSugak/getsky-trade/cmd
       - ./db:/usr/local/go/src/github.com/AlexSugak/getsky-trade/db
       - ./src:/usr/local/go/src/github.com/AlexSugak/getsky-trade/src
       - ./vendor:/usr/local/go/src/github.com/AlexSugak/getsky-trade/vendor
-    command: /bin/bash -c 'cd /usr/local/go/src/github.com/AlexSugak/getsky-trade/cmd/trade/ && go run ./trade.go -binding 0.0.0.0:8081'
+    command: /bin/bash -c 'cd /usr/local/go/src/github.com/AlexSugak/getsky-trade/cmd/trade/ && go run ./trade.go -binding=0.0.0.0:8081 -mysql=mysql:3306'
   web:
     image: nginx
     restart: always
