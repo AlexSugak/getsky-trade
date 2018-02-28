@@ -6,7 +6,7 @@ import "github.com/AlexSugak/getsky-trade/db/models"
 type AdvertType int
 
 const (
-	//Sell advert type
+	// Sell advert type
 	Sell AdvertType = iota + 1
 	// Buy advert type
 	Buy

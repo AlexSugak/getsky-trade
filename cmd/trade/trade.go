@@ -25,13 +25,6 @@ func main() {
 
 	server := trade.NewHTTPServer(*bindingFlag, *db, log)
 
-	defer func() {
-		err := server.Shutdown()
-		if err != nil {
-			panic(err.Error())
-		}
-	}()
-
 	if err := server.Run(); err != nil {
 		panic(err.Error())
 	}

@@ -1,24 +1,31 @@
 .DEFAULT_GOAL := help
-.PHONY: trade test lint check help stop-docker build-client run-docker
+.PHONY: trade test lint check db-schema stop-docker build-client run-client run-mysql run-docker help
 
 build-client: ## Restores packages and builds client app
 	cd web; yarn install
 	cd web; npm run build
+
+run-client: ## Runs web client locally
+	cd web; npm start
+
 stop-docker: ## Stops all docker containers
 	docker-compose kill
+
 docker-up: ## Starts docker containers
 	docker-compose up -d
+
 run-docker: stop-docker build-client docker-up ## Run all containers
 
 trade: ## Run trade back-end. To add arguments, do 'make ARGS="--foo" trade'.
-	go run cmd/trade/trade.go ${ARGS}
-run-local: ## Run DB, API and react dev server
-	docker-compose up -d mysql
-	go run cmd/trade/trade.go&
-	cd web; npm start
+	go run cmd/trade/trade.go ${ARGS}&
 
 db-schema: ## migrates DB schema to latest version, run docker-up or run-local first
-	migrate -database "mysql://root:root@(localhost:3306)/getskytrade" -source file://db/schema up
+	cd db; sh migrate.sh
+
+run-mysql: ## Run mysql in docker
+	docker-compose up -d mysql
+
+run-local: run-mysql db-schema trade ## Start DB and apply schema changes, run API
 
 test: ## Run tests
 	go test ./cmd/... -timeout=1m -cover -v

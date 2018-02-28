@@ -65,7 +65,7 @@ func (s *HTTPServer) Run() error {
 	case err := <-errorC:
 		return err
 	case <-s.quit:
-		return nil
+		return s.Shutdown()
 	}
 }
 
@@ -75,7 +75,7 @@ func (s *HTTPServer) Shutdown() error {
 	close(s.done)
 
 	// Create a deadline to wait for.
-	wait := time.Second * 15
+	wait := time.Second * 5
 	ctx, cancel := context.WithTimeout(context.Background(), wait)
 	defer cancel()
 	// Doesn't block if no connections, but will otherwise wait
@@ -119,7 +119,7 @@ type APIInfoResponse struct {
 // Method: GET
 // Content-type: application/json
 // URI: /api
-func APIInfoHandler(s *HTTPServer) func(w http.ResponseWriter, r *http.Request) error {
+func APIInfoHandler(s *HTTPServer) APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		info := APIInfoResponse{
 			Name:        "trade API",
@@ -135,7 +135,7 @@ func APIInfoHandler(s *HTTPServer) func(w http.ResponseWriter, r *http.Request) 
 // Method: GET
 // Content-type: application/json
 // URI: /api/adverts/sell/latest
-func LatestSellAdvertsHandler(s *HTTPServer) func(w http.ResponseWriter, r *http.Request) error {
+func LatestSellAdvertsHandler(s *HTTPServer) APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		adverts, err := s.board.GetLatestAdverts(board.Sell, 10)
 		if err != nil {
@@ -150,7 +150,7 @@ func LatestSellAdvertsHandler(s *HTTPServer) func(w http.ResponseWriter, r *http
 // Method: GET
 // Content-type: application/json
 // URI: /api/adverts/buy/latest
-func LatestBuyAdvertsHandler(s *HTTPServer) func(w http.ResponseWriter, r *http.Request) error {
+func LatestBuyAdvertsHandler(s *HTTPServer) APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		adverts, err := s.board.GetLatestAdverts(board.Buy, 10)
 		if err != nil {
