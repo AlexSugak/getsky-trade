@@ -92,8 +92,10 @@ func (s *HTTPServer) setupRouter() http.Handler {
 	}
 
 	r.HandleFunc("/api", ErrorHandler(s, APIInfoHandler(s))).Methods("GET")
-	r.HandleFunc("/api/adverts/sell/latest", API(LatestSellAdvertsHandler)).Methods("GET")
-	r.HandleFunc("/api/adverts/buy/latest", API(LatestBuyAdvertsHandler)).Methods("GET")
+
+	// NOTE: we should not use "adverts" word in the api path since it can be blocked by AdBlock or similar software
+	r.HandleFunc("/api/postings/sell/latest", API(LatestSellAdvertsHandler)).Methods("GET")
+	r.HandleFunc("/api/postings/buy/latest", API(LatestBuyAdvertsHandler)).Methods("GET")
 
 	// TODO: enable CORS
 	originsOk := handlers.AllowedOrigins([]string{"*"})
