@@ -155,7 +155,7 @@ func APIInfoHandler(s *HTTPServer) APIHandler {
 // LatestSellAdvertsHandler returns 10 latest sell adverts
 // Method: GET
 // Content-type: application/json
-// URI: /api/adverts/sell/latest
+// URI: /api/postings/sell/latest
 func LatestSellAdvertsHandler(s *HTTPServer) APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		adverts, err := s.board.GetLatestAdverts(board.Sell, 10)
@@ -170,7 +170,7 @@ func LatestSellAdvertsHandler(s *HTTPServer) APIHandler {
 // LatestBuyAdvertsHandler returns 10 latest buy adverts
 // Method: GET
 // Content-type: application/json
-// URI: /api/adverts/buy/latest
+// URI: /api/postings/buy/latest
 func LatestBuyAdvertsHandler(s *HTTPServer) APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		adverts, err := s.board.GetLatestAdverts(board.Buy, 10)
