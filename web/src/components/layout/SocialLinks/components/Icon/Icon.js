@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { injectGlobal } from 'styled-components';
 import findIndex from 'lodash/findIndex';
 import PropTypes from 'prop-types';
@@ -40,7 +39,7 @@ const Icon = styled.i`
         font-weight: 400;
         font-variant: normal;
         text-transform: none;
-        line-height: inherit!important;
+        line-height: inherit !important;
         speak: none;
         transition: .3s ease;
     }

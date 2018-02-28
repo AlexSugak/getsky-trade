@@ -20,7 +20,7 @@ const NavItem = styled.li`
 `;
 
 const NavLink = styled(Link)`
-    color: #fff;
+    color: ${props => props.theme.colors.white};
     text-decoration: none;
     
     &:hover {

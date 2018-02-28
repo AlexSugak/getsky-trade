@@ -24,24 +24,24 @@ const getSkyLink = 'https://www.getsky.org/';
 const skycoinLink = 'http://www.skycoin.org/';
 
 const Promo = styled.section`
-    border-bottom: 1px solid #fff;
-    background: #000;
-    color: #fff;
+    border-bottom: 1px solid ${props => props.theme.colors.white};
+    background: ${props => props.theme.colors.black};
+    color: ${props => props.theme.colors.white};
     text-align: center;
 `;
 
 const PromoButton = styled(Link)`
     display: inline-block;
-    border: 4px solid #fff;
+    border: 4px solid ${props => props.theme.colors.white};
     margin: 0 10px;
     padding: 10px 34px;
     transition: 200ms all ease-in-out;
-    background: #fff;
-    color: #000;
+    background: ${props => props.theme.colors.white};
+    color: ${props => props.theme.colors.black};
     
     &:hover {
-        color: #fff;
-        background: #000;
+        color: ${props => props.theme.white};
+        background: ${props => props.theme.colors.black};
     }
     
     span {
@@ -57,8 +57,8 @@ const PromoButton = styled(Link)`
 `;
 
 const Subfooter = styled.div`
-    background: #000;
-    color: #fff;
+    background: ${props => props.theme.colors.black};
+    color: ${props => props.theme.colors.white};
     
     .descr {
         margin: 0;
@@ -71,7 +71,7 @@ const Subfooter = styled.div`
         display: block;
         font-size: 17px;
         line-height: 1.4;
-        color: #fff;
+        color: ${props => props.theme.colors.white};
     }
 `;
 
@@ -79,7 +79,7 @@ const Footer = styled.footer`
     font-size: 17px;
     
     a {
-        font-family: 'skycoin-bold';        
+        font-family: ${props => props.theme.fontBold};        
     }
 `;
 

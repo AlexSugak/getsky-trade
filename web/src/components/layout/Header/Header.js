@@ -6,11 +6,11 @@ import Nav from '../Nav';
 import SocialMenu from '../SocialLinks';
 
 const SubHeaderWrapper = styled.div`
-    background: #fff;
+    background: ${props => props.theme.colors.white};
 `;
 
 const HeaderWrapper = styled.div`
-    background: #000;
+    background: ${props => props.theme.colors.black};
 `;
 
 export default () => (
