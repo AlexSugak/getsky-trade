@@ -87,8 +87,8 @@ func (s *HTTPServer) setupRouter() *mux.Router {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/api", ErrorHandler(s, APIInfoHandler(s))).Methods("GET")
-	r.HandleFunc("/api/adverts/sell/latest", ErrorHandler(s, LatestSellAdvertsHandler(s))).Methods("GET")
-	r.HandleFunc("/api/adverts/buy/latest", ErrorHandler(s, LatestBuyAdvertsHandler(s))).Methods("GET")
+	r.HandleFunc("/api/adverts/sell/latest", JSONHandler(ErrorHandler(s, LatestSellAdvertsHandler(s)))).Methods("GET")
+	r.HandleFunc("/api/adverts/buy/latest", JSONHandler(ErrorHandler(s, LatestBuyAdvertsHandler(s)))).Methods("GET")
 
 	return r
 }
@@ -105,6 +105,14 @@ func ErrorHandler(s *HTTPServer, h APIHandler) http.HandlerFunc {
 			s.log.Errorf("Error in handler - %s", err)
 			http.Error(w, err.Error(), 500)
 		}
+	}
+}
+
+// JSONHandler wraps Handler and adds json content type
+func JSONHandler(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		h(w, r)
 	}
 }
 

@@ -24,6 +24,7 @@ git push deploy master
 ssh apps@$IP -p $PORT sudo -iu apps <<EOF
   cd $DEPLOY_DIR
   sudo service docker restart # restart docker service to prevent "timeout" errors (https://github.com/docker/compose/issues/3633#issuecomment-254194717)
+  sleep 5
   sudo make run-docker
   # run migrations
   docker exec -ti backend sh -c "cd /usr/local/go/src/github.com/AlexSugak/getsky-trade/db/ && bash ./migrate.sh"
