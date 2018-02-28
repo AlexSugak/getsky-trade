@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/AlexSugak/getsky-trade/src/board"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
@@ -83,14 +84,24 @@ func (s *HTTPServer) Shutdown() error {
 	return s.httpListener.Shutdown(ctx)
 }
 
-func (s *HTTPServer) setupRouter() *mux.Router {
+func (s *HTTPServer) setupRouter() http.Handler {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/api", ErrorHandler(s, APIInfoHandler(s))).Methods("GET")
-	r.HandleFunc("/api/adverts/sell/latest", JSONHandler(ErrorHandler(s, LatestSellAdvertsHandler(s)))).Methods("GET")
-	r.HandleFunc("/api/adverts/buy/latest", JSONHandler(ErrorHandler(s, LatestBuyAdvertsHandler(s)))).Methods("GET")
+	API := func(h func(*HTTPServer) APIHandler) http.HandlerFunc {
+		return JSONHandler(ErrorHandler(s, h(s)))
+	}
 
-	return r
+	r.HandleFunc("/api", ErrorHandler(s, APIInfoHandler(s))).Methods("GET")
+	r.HandleFunc("/api/adverts/sell/latest", API(LatestSellAdvertsHandler)).Methods("GET")
+	r.HandleFunc("/api/adverts/buy/latest", API(LatestBuyAdvertsHandler)).Methods("GET")
+
+	// TODO: enable CORS
+	originsOk := handlers.AllowedOrigins([]string{"*"})
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
+
+	h := handlers.CORS(originsOk, headersOk, methodsOk)(r)
+	return h
 }
 
 // APIHandler is a custom hadler function used internally to define api endpoint handlers
