@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import styled, { injectGlobal, ThemeProvider } from 'styled-components';
 import { Flex } from 'grid-styled';
 import Routes from './routes/Routes';
-import Container from './layout/Container';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
 import theme from './theme';
@@ -53,9 +52,7 @@ const Root = ({locale, ...props}) => (
     <ThemeProvider theme={theme}>
         <Wrapper className="app" flexDirection="column">
             <Header/>
-            <Container flex='1 0 auto' flexDirection="column" py={4}>
-                <Routes {...props} />
-            </Container>
+            <Routes {...props} />
             <Footer />
         </Wrapper>
     </ThemeProvider>

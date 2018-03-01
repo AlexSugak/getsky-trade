@@ -40,7 +40,7 @@ const PromoButton = styled(Link)`
     color: ${props => props.theme.colors.black};
     
     &:hover {
-        color: ${props => props.theme.white};
+        color: ${props => props.theme.colors.white};
         background: ${props => props.theme.colors.black};
     }
     
