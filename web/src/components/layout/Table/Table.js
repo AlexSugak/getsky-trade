@@ -6,11 +6,13 @@ const Table = styled.table`
     width: 100%;
     margin: 10px 0;
     border-collapse: collapse;
+    table-layout: fixed;
     vertical-align: middle;
 `;
 const TableHead = styled.thead`
     td, th {
         border-bottom: 3px solid ${props => props.theme.colors.black};
+        font-family: ${props => props.theme.fontBold};
         text-transform: capitalize;
     }
 `;
@@ -22,6 +24,7 @@ const TableBody = styled.tbody`
 export const TableRow = styled.tr``;
 export const TableCell = styled.td`
     padding: 10px 15px;
+    line-height: 1.4;
 `;
 
 export default ({ columns, rowComponent: RowComponent, rowData }) => (

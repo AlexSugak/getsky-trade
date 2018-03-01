@@ -55,6 +55,7 @@ const Tab = styled(UnstyledTab)`
     font-size: ${props => props.theme.fontSizes[1]}px;
     text-align: center;
     cursor: pointer;
+    user-select: none;
     
     strong {
         display: block;
@@ -96,7 +97,7 @@ const buyAdvertsColumns = [
 const BuyAdvertRow = (advert) => (
     <TableRow>
         <TableCell><AuthorCell advert={advert} /></TableCell>
-        <TableCell>{advert.amountFrom} - {advert.amountTo || '?'} {advert.currency}</TableCell>
+        <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} {advert.currency}</TableCell>
         <TableCell>{getTradeOptionsText(advert)}</TableCell>
         <TableCell>{moment(advert.createdAt).format('DD MMMM YY')}</TableCell>
     </TableRow>
@@ -112,7 +113,7 @@ const sellAdvertsColumns = [
 const SellAdvertRow = (advert) => (
     <TableRow>
         <TableCell><AuthorCell advert={advert} /></TableCell>
-        <TableCell>{advert.amountFrom} - {advert.amountTo || '?'} {advert.currency}</TableCell>
+        <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} {advert.currency}</TableCell>
         <TableCell>{getTradeOptionsText(advert)}</TableCell>
         <TableCell>{moment(advert.createdAt).format('DD MMMM YY')}</TableCell>
     </TableRow>
