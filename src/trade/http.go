@@ -3,12 +3,16 @@ package trade
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
+	"github.com/AlexSugak/getsky-trade/src/auth"
 	"github.com/AlexSugak/getsky-trade/src/board"
+	"github.com/AlexSugak/getsky-trade/src/util/httputil"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
@@ -16,19 +20,21 @@ import (
 
 // HTTPServer holds http server info
 type HTTPServer struct {
-	binding      string
-	board        board.Board
-	log          logrus.FieldLogger
-	httpListener *http.Server
-	quit         chan os.Signal
-	done         chan struct{}
+	binding       string
+	board         board.Board
+	authenticator auth.Authenticator
+	log           logrus.FieldLogger
+	httpListener  *http.Server
+	quit          chan os.Signal
+	done          chan struct{}
 }
 
 // NewHTTPServer creates new http server
-func NewHTTPServer(binding string, board board.Board, log logrus.FieldLogger) *HTTPServer {
+func NewHTTPServer(binding string, board board.Board, auth auth.Authenticator, log logrus.FieldLogger) *HTTPServer {
 	return &HTTPServer{
-		binding: binding,
-		board:   board,
+		binding:       binding,
+		board:         board,
+		authenticator: auth,
 		log: log.WithFields(logrus.Fields{
 			"prefix": "trade.http",
 		}),
@@ -87,13 +93,20 @@ func (s *HTTPServer) Shutdown() error {
 func (s *HTTPServer) setupRouter() http.Handler {
 	r := mux.NewRouter()
 
-	API := func(h func(*HTTPServer) APIHandler) http.HandlerFunc {
-		return JSONHandler(ErrorHandler(s, h(s)))
+	API := func(h func(*HTTPServer) httputil.APIHandler) http.HandlerFunc {
+		return httputil.JSONHandler(httputil.ErrorHandler(s.log, h(s)))
 	}
 
-	r.HandleFunc("/api", ErrorHandler(s, APIInfoHandler(s))).Methods("GET")
+	Secure := func(h http.HandlerFunc) http.HandlerFunc {
+		return auth.Middleware(h)
+	}
 
-	// NOTE: we should not use "adverts" word in the api path since it can be blocked by AdBlock or similar software
+	r.HandleFunc("/api", httputil.ErrorHandler(s.log, APIInfoHandler(s))).Methods("GET")
+
+	r.HandleFunc("/api/users/authenticate", API(AuthenticateHandler)).Methods("POST")
+	r.HandleFunc("/api/me", Secure(API(MeHandler))).Methods("GET")
+
+	// NOTE: we should not use "adverts" word as part of api path since it can be blocked by AdBlock or similar browser extention
 	r.HandleFunc("/api/postings/sell/latest", API(LatestSellAdvertsHandler)).Methods("GET")
 	r.HandleFunc("/api/postings/buy/latest", API(LatestBuyAdvertsHandler)).Methods("GET")
 
@@ -104,29 +117,6 @@ func (s *HTTPServer) setupRouter() http.Handler {
 
 	h := handlers.CORS(originsOk, headersOk, methodsOk)(r)
 	return h
-}
-
-// APIHandler is a custom hadler function used internally to define api endpoint handlers
-type APIHandler func(w http.ResponseWriter, r *http.Request) error
-
-// ErrorHandler wraps APIHandler and converts it to http.Handler by handling any returned error
-func ErrorHandler(s *HTTPServer, h APIHandler) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		err := h(w, r)
-		if err != nil {
-			// TODO: define custom error type to store HTTP error code
-			s.log.Errorf("Error in handler - %s", err)
-			http.Error(w, err.Error(), 500)
-		}
-	}
-}
-
-// JSONHandler wraps Handler and adds json content type
-func JSONHandler(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		h(w, r)
-	}
 }
 
 // APIInfoResponse holds basic API information
@@ -140,7 +130,7 @@ type APIInfoResponse struct {
 // Method: GET
 // Content-type: application/json
 // URI: /api
-func APIInfoHandler(s *HTTPServer) APIHandler {
+func APIInfoHandler(s *HTTPServer) httputil.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		info := APIInfoResponse{
 			Name:        "trade API",
@@ -152,11 +142,91 @@ func APIInfoHandler(s *HTTPServer) APIHandler {
 	}
 }
 
+// AuthenticateRequest holds auth data
+type AuthenticateRequest struct {
+	UserName string `json:"username"`
+	Password string `json:"password"`
+}
+
+// AuthenticateResponse holds generated token response
+type AuthenticateResponse struct {
+	Token string `json:"token"`
+}
+
+// AuthenticateHandler handles user authentication
+// Method: POST
+// Accept: application/json
+// URI: /api/users/authenticate
+// Args:
+//    {"username": "...", "password": "..."}
+func AuthenticateHandler(s *HTTPServer) httputil.APIHandler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+
+		w.Header().Set("Accept", "application/json")
+
+		if err := httputil.ValidateContentType(r, "application/json"); err != nil {
+			return err
+		}
+
+		req := AuthenticateRequest{}
+		decoder := json.NewDecoder(r.Body)
+		if err := decoder.Decode(&req); err != nil {
+			err = fmt.Errorf("Invalid json request body: %v", err)
+			return httputil.StatusError{
+				Err:  err,
+				Code: http.StatusBadRequest,
+			}
+		}
+
+		valid, err := s.authenticator.VerifyPassword(req.UserName, req.Password)
+		if err != nil {
+			return err
+		}
+
+		if valid != true {
+			return httputil.StatusError{
+				Err:  errors.New("invalid username of password"),
+				Code: http.StatusUnauthorized,
+			}
+		}
+
+		token, err := auth.GetToken(req.UserName)
+		if err != nil {
+			return err
+		}
+
+		resp := AuthenticateResponse{
+			Token: token,
+		}
+
+		return json.NewEncoder(w).Encode(resp)
+	}
+}
+
+// MeResponse holds basic logged in user intofation
+type MeResponse struct {
+	UserName string `json:"username"`
+}
+
+// MeHandler returns currently logged in user info
+// Method: GET
+// Content-type: application/json
+// URI: /api/me
+func MeHandler(s *HTTPServer) httputil.APIHandler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		info := APIInfoResponse{
+			Name: "todo",
+		}
+
+		return json.NewEncoder(w).Encode(info)
+	}
+}
+
 // LatestSellAdvertsHandler returns 10 latest sell adverts
 // Method: GET
 // Content-type: application/json
 // URI: /api/postings/sell/latest
-func LatestSellAdvertsHandler(s *HTTPServer) APIHandler {
+func LatestSellAdvertsHandler(s *HTTPServer) httputil.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		adverts, err := s.board.GetLatestAdverts(board.Sell, 10)
 		if err != nil {
@@ -171,7 +241,7 @@ func LatestSellAdvertsHandler(s *HTTPServer) APIHandler {
 // Method: GET
 // Content-type: application/json
 // URI: /api/postings/buy/latest
-func LatestBuyAdvertsHandler(s *HTTPServer) APIHandler {
+func LatestBuyAdvertsHandler(s *HTTPServer) httputil.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		adverts, err := s.board.GetLatestAdverts(board.Buy, 10)
 		if err != nil {

@@ -11,6 +11,11 @@ type Storage struct {
 	DB *sqlx.DB
 }
 
+// NewStorage creates new Storage
+func NewStorage(db *sqlx.DB) Storage {
+	return Storage{db}
+}
+
 // GetLatestAdverts returns 10 latest adverts
 func (s Storage) GetLatestAdverts(t board.AdvertType, limit int) ([]models.AdvertDetails, error) {
 	adverts := []models.AdvertDetails{}
@@ -46,4 +51,19 @@ func (s Storage) GetLatestAdverts(t board.AdvertType, limit int) ([]models.Adver
 	}
 
 	return adverts, nil
+}
+
+// Authenticator implements Auth interface using data stored in MySql DB
+type Authenticator struct {
+	DB *sqlx.DB
+}
+
+// NewAuthenticator creates new Authenticator
+func NewAuthenticator(db *sqlx.DB) Authenticator {
+	return Authenticator{db}
+}
+
+// VerifyPassword tryes to locate user in DB and check password against the hash stored in DB
+func (da Authenticator) VerifyPassword(string, string) (bool, error) {
+	return false, nil
 }
