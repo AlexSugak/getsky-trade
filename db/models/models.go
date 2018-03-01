@@ -13,7 +13,7 @@ type AdvertDetails struct {
 	Author                string          `db:"Author" json:"author"`
 	TradeCashInPerson     types.BitBool   `db:"TradeCashInPerson" json:"tradeCashInPerson"`
 	TradeCashByMail       types.BitBool   `db:"TradeCashByMail" json:"tradeCashByMail"`
-	TradeMoneyOrderByMail types.BitBool   `db:"TradeMoneyOrderByMail" json:"TradeMoneyOrderByMail"`
+	TradeMoneyOrderByMail types.BitBool   `db:"TradeMoneyOrderByMail" json:"tradeMoneyOrderByMail"`
 	TradeOther            types.BitBool   `db:"TradeOther" json:"tradeOther"`
 	AmountFrom            float64         `db:"AmountFrom" json:"amountFrom"`
 	AmountTo              JSONNullFloat64 `db:"AmountTo" json:"amountTo"`
