@@ -93,22 +93,22 @@ func (s *HTTPServer) Shutdown() error {
 func (s *HTTPServer) setupRouter() http.Handler {
 	r := mux.NewRouter()
 
-	API := func(h func(*HTTPServer) httputil.APIHandler) http.HandlerFunc {
+	API := func(h func(*HTTPServer) httputil.APIHandler) http.Handler {
 		return httputil.JSONHandler(httputil.ErrorHandler(s.log, h(s)))
 	}
 
-	Secure := func(h http.HandlerFunc) http.HandlerFunc {
+	Secure := func(h http.Handler) http.Handler {
 		return auth.Middleware(h)
 	}
 
-	r.HandleFunc("/api", httputil.ErrorHandler(s.log, APIInfoHandler(s))).Methods("GET")
+	r.Handle("/api", httputil.ErrorHandler(s.log, APIInfoHandler(s))).Methods("GET")
 
-	r.HandleFunc("/api/users/authenticate", API(AuthenticateHandler)).Methods("POST")
-	r.HandleFunc("/api/me", Secure(API(MeHandler))).Methods("GET")
+	r.Handle("/api/users/authenticate", API(AuthenticateHandler)).Methods("POST")
+	r.Handle("/api/me", Secure(API(MeHandler))).Methods("GET")
 
-	// NOTE: we should not use "adverts" word as part of api path since it can be blocked by AdBlock or similar browser extention
-	r.HandleFunc("/api/postings/sell/latest", API(LatestSellAdvertsHandler)).Methods("GET")
-	r.HandleFunc("/api/postings/buy/latest", API(LatestBuyAdvertsHandler)).Methods("GET")
+	// NOTE: we should not use "adverts" word as part of api path since it can be blocked by AdBlock or similar browser extension
+	r.Handle("/api/postings/sell/latest", API(LatestSellAdvertsHandler)).Methods("GET")
+	r.Handle("/api/postings/buy/latest", API(LatestBuyAdvertsHandler)).Methods("GET")
 
 	// TODO: enable CORS
 	originsOk := handlers.AllowedOrigins([]string{"*"})
@@ -183,7 +183,7 @@ func AuthenticateHandler(s *HTTPServer) httputil.APIHandler {
 			return err
 		}
 
-		if valid != true {
+		if !valid {
 			return httputil.StatusError{
 				Err:  errors.New("invalid username of password"),
 				Code: http.StatusUnauthorized,

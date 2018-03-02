@@ -33,23 +33,23 @@ func TestAPIInfoHandler(t *testing.T) {
 		expectedBody   string
 	}{
 		{
-			name:           "success",
-			method:         "GET",
-			url:            "/api",
-			expectedStatus: 200,
-			expectedBody:   `{"name":"trade API","description":"trade API provides endpoints to enable posting and searching Skycoin buy and sell adverts","version":1}`,
-		},
-		{
-			name:           "wrong method",
+			name:           "should not accept wrong method",
 			method:         "POST",
 			url:            "/api",
 			expectedStatus: 405,
 			expectedBody:   "",
 		},
+		{
+			name:           "should return api info",
+			method:         "GET",
+			url:            "/api",
+			expectedStatus: 200,
+			expectedBody:   `{"name":"trade API","description":"trade API provides endpoints to enable posting and searching Skycoin buy and sell adverts","version":1}`,
+		},
 	}
 
 	for _, tc := range tests {
-		name := fmt.Sprintf("test case: %s", tc.name)
+		name := fmt.Sprintf("test case: APIInfoHandler %s", tc.name)
 		req, err := http.NewRequest(tc.method, tc.url, nil)
 
 		require.NoError(t, err)
@@ -107,7 +107,7 @@ func TestAuthenticateHandler(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		name := fmt.Sprintf("test case: %s", tc.name)
+		name := fmt.Sprintf("test case: AuthenticateHandler %s", tc.name)
 		req, err := http.NewRequest(tc.method, tc.url, strings.NewReader(tc.body))
 		require.NoError(t, err)
 		req.Header.Set("Content-Type", tc.contentType)

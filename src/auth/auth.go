@@ -37,20 +37,26 @@ func VerifyToken(tokenString string) (jwt.Claims, error) {
 }
 
 // Middleware checks auth token before calling next http handler
-func Middleware(next http.HandlerFunc) http.HandlerFunc {
+func Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		tokenString := r.Header.Get("Authorization")
 		if len(tokenString) == 0 {
 			w.WriteHeader(http.StatusUnauthorized)
-			w.Write([]byte("Missing Authorization Header"))
+			_, err := w.Write([]byte("Missing Authorization Header"))
+			if err != nil {
+				http.Error(w, err.Error(), 500)
+			}
 			return
 		}
 		tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
 		claims, err := VerifyToken(tokenString)
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
-			w.Write([]byte("Error verifying JWT token: " + err.Error()))
+			_, err = w.Write([]byte("Error verifying JWT token: " + err.Error()))
+			if err != nil {
+				http.Error(w, err.Error(), 500)
+			}
 			return
 		}
 		name := claims.(jwt.MapClaims)["name"].(string)
