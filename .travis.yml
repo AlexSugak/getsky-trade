@@ -2,8 +2,8 @@ language: go
 go:
 - 1.9
 install:
-- sudo go get -t ./...
-- sudo make install-linters
+- go get -t ./...
+- make install-linters
 services:
 - mysql
 addons:
