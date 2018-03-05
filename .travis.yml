@@ -2,18 +2,30 @@ language: go
 go:
 - 1.9
 install:
-- go get -t ./...
-- make install-linters
+- sudo go get -t ./...
+- sudo make install-linters
 services:
 - mysql
+addons:
+  apt:
+    sources:
+      - mysql-5.7-trusty
+    packages:
+      - mysql-server
+      - mysql-client
+dist: trusty
+sudo: required
 script:
-- make check
+- sudo make check
 notifications:
   slack:
     secure: KT8ru7EHSsCtL9WLvKC9d0+qibwBlIptvckHZMM64G/FIeOcaXBMcF15CBtYkYViGaa/rzjVIlJie1BUtFaGzN+7Qn5sMdZGo8DIPdkZnSBlII95kSPItqP+dAsQaZZp4mJeawJRUIHzpTtzOvTwrONsPUVh6PKMkdE/EtDLxalJ3hYMLt4/A/mgOfImqIwp/LTtiMcVDNnUX+ySe5qqrnlZwqjSUdzd5t/FPMH6cre7gbq7x8kFqtn1FCYEYlaO9uf+1kFNGjD99nX4IBRTadCR9ekU4QeH0kkFELAE4shRpQ20F2JM26mS7JvF3C3C44H4dSYdzbJEO4P4u30hNfosKbgCt2v3WpEsRIjq6aLX0ZXNb0l/xR+zmhKXUS+X5KSZeG46J5MdTdQjSXk/i/EWVqf/wBjGEiCdeiEl85y9J/zz26ON19tOB8HGneOX7GbNc4Es2LjclpptoqL/WnEynyPFBfUVqEynj6zAd4pSyoHwDtpbNdSqY+dADIxmmZqNxBynSUXY8sY9c77H6EIvgayEOQL1uPSPOtXouuHZrAjNhkO6HEHLOeGeX/LyJr0gnhBE5lJAH5EM5vsJ+OhwRQV/YHr6kswXB4c3C8+4S2Zn0k6lpp9HI89svLAp8U/6kXbSYnJ3vhhjQ0jVAtSAEw7xIM7y+d/8ff20EHs=
 before_install:
-- mysql -e 'CREATE DATABASE IF NOT EXISTS getskytrade;'
-- openssl aes-256-cbc -K $encrypted_030e0fd46f2d_key -iv $encrypted_030e0fd46f2d_iv
+- sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('root') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
+- sudo mysql_upgrade
+- sudo service mysql restart
+- sudo mysql -e 'CREATE DATABASE IF NOT EXISTS getskytrade;'
+- sudo openssl aes-256-cbc -K $encrypted_030e0fd46f2d_key -iv $encrypted_030e0fd46f2d_iv
   -in .travis/id_rsa.enc -out .travis/id_rsa -d
 after_success:
 - sh .travis/deploy.sh
