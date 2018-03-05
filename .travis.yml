@@ -24,7 +24,7 @@ before_install:
 - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('root') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
 - sudo mysql_upgrade --password=root
 - sudo service mysql restart
-- sudo mysql -p "root" -e 'CREATE DATABASE IF NOT EXISTS getskytrade;'
+- sudo mysql --password=root -e 'CREATE DATABASE IF NOT EXISTS getskytrade;'
 - sudo openssl aes-256-cbc -K $encrypted_030e0fd46f2d_key -iv $encrypted_030e0fd46f2d_iv
   -in .travis/id_rsa.enc -out .travis/id_rsa -d
 after_success:
