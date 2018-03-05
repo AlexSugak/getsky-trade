@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"time"
 
 	"github.com/AlexSugak/getsky-trade/db/models"
@@ -115,6 +116,7 @@ func (s *HTTPServer) setupRouter() http.Handler {
 	r.Handle("/api/me", Secure(API(MeHandler))).Methods("GET")
 
 	// NOTE: we should not use "adverts" word as part of api path since it can be blocked by AdBlock or similar browser extension
+	r.Handle("/api/postings/{id}", API(AdvertDetailsHandler)).Methods("GET")
 	r.Handle("/api/postings/sell/latest", API(LatestSellAdvertsHandler)).Methods("GET")
 	r.Handle("/api/postings/buy/latest", API(LatestBuyAdvertsHandler)).Methods("GET")
 
@@ -322,5 +324,31 @@ func LatestBuyAdvertsHandler(s *HTTPServer) httputil.APIHandler {
 		}
 
 		return json.NewEncoder(w).Encode(adverts)
+	}
+}
+
+// AdvertDetailsHandler returns advert deatails by its id
+// Method: GET
+// Content-type: application/json
+// URI: /api/postings/{id}
+func AdvertDetailsHandler(s *HTTPServer) httputil.APIHandler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		vars := mux.Vars(r)
+		advertID, err := strconv.ParseInt(vars["id"], 10, 64)
+
+		if err != nil {
+			return err
+		}
+
+		advert, err := s.board.GetAdvertDetails(advertID)
+
+		if err != nil {
+			return err
+		} else if advert == (models.AdvertDetails{}) {
+			http.Error(w, "advert with such id doesn't exist", http.StatusNotFound)
+			return nil
+		}
+
+		return json.NewEncoder(w).Encode(advert)
 	}
 }
