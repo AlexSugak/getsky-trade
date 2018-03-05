@@ -75,11 +75,7 @@ func (da Authenticator) VerifyPassword(userName string, password string) error {
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 // Users implement Users interface by using DB

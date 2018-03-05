@@ -13,7 +13,6 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	tradedb "github.com/AlexSugak/getsky-trade/db"
-	"github.com/AlexSugak/getsky-trade/db/models"
 	"github.com/AlexSugak/getsky-trade/src/util/logger"
 	"github.com/mattes/migrate"
 	"github.com/mattes/migrate/database/mysql"
@@ -33,18 +32,6 @@ func (fa *FakeAuthenticator) VerifyPassword(username string, password string) er
 	}
 
 	return errors.New("wrong user or password")
-}
-
-type FakeUsers struct {
-	mock.Mock
-}
-
-func (fu *FakeUsers) Get(userName string) (*models.UserDetails, error) {
-	return nil, errors.New("not implememted")
-}
-
-func (fu *FakeUsers) Register(user models.User, password string) error {
-	return nil
 }
 
 var db *sql.DB
@@ -92,12 +79,19 @@ func ensureTables() {
 	fmt.Println(err) // TODO: why migrate returns err if no change in schema?
 }
 
+func execSQL(cmd string) {
+	_, err := db.Exec("DELETE FROM `getskytrade`.`Adverts`;")
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
 func clearTables() {
 	fmt.Println("clearing tables")
-	db.Exec("DELETE FROM `getskytrade`.`Adverts`;")
-	db.Exec("DELETE FROM `getskytrade`.`Users`;")
-	db.Exec("ALTER TABLE `getskytrade`.`Adverts` AUTO_INCREMENT = 1;")
-	db.Exec("ALTER TABLE `getskytrade`.`Users` AUTO_INCREMENT = 1;")
+	execSQL("DELETE FROM `getskytrade`.`Adverts`;")
+	execSQL("DELETE FROM `getskytrade`.`Users`;")
+	execSQL("ALTER TABLE `getskytrade`.`Adverts` AUTO_INCREMENT = 1;")
+	execSQL("ALTER TABLE `getskytrade`.`Users` AUTO_INCREMENT = 1;")
 }
 
 func TestAPIInfoHandler(t *testing.T) {
