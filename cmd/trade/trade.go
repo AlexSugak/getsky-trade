@@ -25,7 +25,8 @@ func main() {
 
 	auth := db.NewAuthenticator(sqlDb)
 	storage := db.NewStorage(sqlDb)
-	server := trade.NewHTTPServer(*bindingFlag, storage, auth, log)
+	users := db.NewUsers(sqlDb)
+	server := trade.NewHTTPServer(*bindingFlag, storage, users, auth, log)
 
 	if err := server.Run(); err != nil {
 		panic(err.Error())

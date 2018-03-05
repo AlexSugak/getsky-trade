@@ -39,10 +39,10 @@ func ErrorHandler(log logrus.FieldLogger, h APIHandler) http.HandlerFunc {
 		if err != nil {
 			switch e := err.(type) {
 			case StatusError:
-				log.Errorf("HTTP %d - %s", e.Code, e)
+				log.Errorf("%s: HTTP %d - %s", r.URL, e.Code, e)
 				http.Error(w, e.Error(), e.Code)
 			default:
-				log.Errorf("Error in handler - %s", err)
+				log.Errorf("Error in handler %s - %s", r.URL, err)
 				http.Error(w, http.StatusText(http.StatusInternalServerError),
 					http.StatusInternalServerError)
 			}

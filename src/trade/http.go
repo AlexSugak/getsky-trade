@@ -10,19 +10,24 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/AlexSugak/getsky-trade/db/models"
 	"github.com/AlexSugak/getsky-trade/src/auth"
 	"github.com/AlexSugak/getsky-trade/src/board"
+	"github.com/AlexSugak/getsky-trade/src/user"
 	"github.com/AlexSugak/getsky-trade/src/util/httputil"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
+	"gopkg.in/go-playground/validator.v9"
 )
 
 // HTTPServer holds http server info
 type HTTPServer struct {
 	binding       string
 	board         board.Board
+	users         user.Users
 	authenticator auth.Authenticator
+	validate      *validator.Validate
 	log           logrus.FieldLogger
 	httpListener  *http.Server
 	quit          chan os.Signal
@@ -30,11 +35,13 @@ type HTTPServer struct {
 }
 
 // NewHTTPServer creates new http server
-func NewHTTPServer(binding string, board board.Board, auth auth.Authenticator, log logrus.FieldLogger) *HTTPServer {
+func NewHTTPServer(binding string, board board.Board, users user.Users, auth auth.Authenticator, log logrus.FieldLogger) *HTTPServer {
 	return &HTTPServer{
 		binding:       binding,
 		board:         board,
+		users:         users,
 		authenticator: auth,
+		validate:      validator.New(),
 		log: log.WithFields(logrus.Fields{
 			"prefix": "trade.http",
 		}),
@@ -103,6 +110,7 @@ func (s *HTTPServer) setupRouter() http.Handler {
 
 	r.Handle("/api", httputil.ErrorHandler(s.log, APIInfoHandler(s))).Methods("GET")
 
+	r.Handle("/api/users", API(RegisterHandler)).Methods("POST")
 	r.Handle("/api/users/authenticate", API(AuthenticateHandler)).Methods("POST")
 	r.Handle("/api/me", Secure(API(MeHandler))).Methods("GET")
 
@@ -178,12 +186,8 @@ func AuthenticateHandler(s *HTTPServer) httputil.APIHandler {
 			}
 		}
 
-		valid, err := s.authenticator.VerifyPassword(req.UserName, req.Password)
+		err := s.authenticator.VerifyPassword(req.UserName, req.Password)
 		if err != nil {
-			return err
-		}
-
-		if !valid {
 			return httputil.StatusError{
 				Err:  errors.New("invalid username of password"),
 				Code: http.StatusUnauthorized,
@@ -200,6 +204,75 @@ func AuthenticateHandler(s *HTTPServer) httputil.APIHandler {
 		}
 
 		return json.NewEncoder(w).Encode(resp)
+	}
+}
+
+// RegisterRequest holds auth data
+type RegisterRequest struct {
+	UserName      string                `json:"username" validate:"required"`
+	Password      string                `json:"password" validate:"required"`
+	Email         string                `json:"email" validate:"required,email"`
+	Timezone      string                `json:"timezone" validate:"required"`
+	CountryCode   string                `json:"countryCode" validate:"required"`
+	StateCode     models.JSONNullString `json:"stateCode"`
+	City          string                `json:"city" validate:"required"`
+	PostalCode    string                `json:"postalCode" validate:"required"`
+	DistanceUnits string                `json:"distanceUnits" validate:"required"`
+	Currency      string                `json:"currency" validate:"required"`
+}
+
+// RegisterHandler handles user authentication
+// Method: POST
+// Accept: application/json
+// URI: /api/users
+func RegisterHandler(s *HTTPServer) httputil.APIHandler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+
+		w.Header().Set("Accept", "application/json")
+
+		if err := httputil.ValidateContentType(r, "application/json"); err != nil {
+			return err
+		}
+
+		req := RegisterRequest{}
+		decoder := json.NewDecoder(r.Body)
+		if err := decoder.Decode(&req); err != nil {
+			err = fmt.Errorf("Invalid json request body: %v", err)
+			return httputil.StatusError{
+				Err:  err,
+				Code: http.StatusBadRequest,
+			}
+		}
+
+		err := s.validate.Struct(req)
+		if err != nil {
+			return httputil.StatusError{
+				Err:  fmt.Errorf("User info not valid: %s", err),
+				Code: http.StatusBadRequest,
+			}
+		}
+
+		user := models.User{
+			UserName:      req.UserName,
+			Email:         req.Email,
+			Timezone:      req.Timezone,
+			CountryCode:   req.CountryCode,
+			StateCode:     req.StateCode,
+			City:          req.City,
+			PostalCode:    req.PostalCode,
+			DistanceUnits: req.DistanceUnits,
+			Currency:      req.Currency,
+		}
+
+		err = s.users.Register(user, req.Password)
+		if err != nil {
+			return httputil.StatusError{
+				Err:  fmt.Errorf("Failed to register user: %s", err.Error()),
+				Code: http.StatusBadRequest,
+			}
+		}
+
+		return nil
 	}
 }
 

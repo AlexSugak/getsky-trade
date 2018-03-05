@@ -9,7 +9,7 @@ import (
 
 // Authenticator provides authentication methods
 type Authenticator interface {
-	VerifyPassword(string, string) (bool, error)
+	VerifyPassword(string, string) error
 }
 
 // GetToken creates new JWT token from user name
