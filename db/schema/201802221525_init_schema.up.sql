@@ -1,3 +1,4 @@
+START TRANSACTION;
 CREATE TABLE `Adverts` (
 	`Id` bigint NOT NULL AUTO_INCREMENT,
 	`Type` int NOT NULL,
@@ -72,3 +73,4 @@ ALTER TABLE `Users` ADD CONSTRAINT `Users_fk1` FOREIGN KEY (`StateCode`) REFEREN
 ALTER TABLE `Messages` ADD CONSTRAINT `Messages_fk0` FOREIGN KEY (`Author`) REFERENCES `Users`(`Id`);
 
 ALTER TABLE `Messages` ADD CONSTRAINT `Messages_fk1` FOREIGN KEY (`AdvertId`) REFERENCES `Adverts`(`Id`);
+COMMIT;

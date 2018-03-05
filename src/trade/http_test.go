@@ -34,6 +34,8 @@ func (fa *FakeAuthenticator) VerifyPassword(username string, password string) er
 	return errors.New("wrong user or password")
 }
 
+const dbName = "getskytrade"
+
 var db *sql.DB
 
 func getEnv(key, fallback string) string {
@@ -48,11 +50,11 @@ func TestMain(m *testing.M) {
 	user := getEnv("MYSQL_USER", "root")
 	password := getEnv("MYSQL_PASSWORD", "root")
 	host := getEnv("MYSQL_HOST", "0.0.0.0:3306")
-	constr := fmt.Sprintf("%s:%s@(%s)/getskytrade?parseTime=true", user, password, host)
+	constr := fmt.Sprintf("%s:%s@(%s)/%s?parseTime=true&multiStatements=true", user, password, host, dbName)
 	db = initDb(constr)
 	ensureTables()
-	code := m.Run()
 	clearTables()
+	code := m.Run()
 
 	os.Exit(code)
 }
@@ -65,8 +67,17 @@ func initDb(constr string) *sql.DB {
 	return d
 }
 
+func execSQL(cmd string, args ...interface{}) {
+	c := fmt.Sprintf(cmd, args...)
+	_, err := db.Exec(c)
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
 func ensureTables() {
 	fmt.Println("creating schema")
+
 	driver, err := mysql.WithInstance(db, &mysql.Config{})
 	if err != nil {
 		panic(err.Error())
@@ -79,19 +90,12 @@ func ensureTables() {
 	fmt.Println(err) // TODO: why migrate returns err if no change in schema?
 }
 
-func execSQL(cmd string) {
-	_, err := db.Exec("DELETE FROM `getskytrade`.`Adverts`;")
-	if err != nil {
-		panic(err.Error())
-	}
-}
-
 func clearTables() {
 	fmt.Println("clearing tables")
-	execSQL("DELETE FROM `getskytrade`.`Adverts`;")
-	execSQL("DELETE FROM `getskytrade`.`Users`;")
-	execSQL("ALTER TABLE `getskytrade`.`Adverts` AUTO_INCREMENT = 1;")
-	execSQL("ALTER TABLE `getskytrade`.`Users` AUTO_INCREMENT = 1;")
+	execSQL("DELETE FROM `%s`.`Adverts`;", dbName)
+	execSQL("DELETE FROM `%s`.`Users`;", dbName)
+	execSQL("ALTER TABLE `%s`.`Adverts` AUTO_INCREMENT = 1;", dbName)
+	execSQL("ALTER TABLE `%s`.`Users` AUTO_INCREMENT = 1;", dbName)
 }
 
 func TestAPIInfoHandler(t *testing.T) {
@@ -239,9 +243,9 @@ func TestRegisterHandler(t *testing.T) {
 			method:         "POST",
 			contentType:    "application/json",
 			url:            "/api/users",
-			body:           `{"email":"foo@bar.baz","username":"foo","password":"1","timezone":"1","countryCode":"US","city":"1","postalCode":"1","distanceUnits":"1","currency":"USD"}`,
+			body:           `{"email":"foo1@bar.baz","username":"foo1","password":"1","timezone":"1","countryCode":"US","city":"1","postalCode":"1","distanceUnits":"1","currency":"USD"}`,
 			expectedStatus: http.StatusOK,
-			username:       "foo",
+			username:       "foo1",
 		},
 	}
 
@@ -267,7 +271,8 @@ func TestRegisterHandler(t *testing.T) {
 			user := &struct {
 				UserName string `db:"UserName"`
 			}{}
-			err := sql.Get(user, "SELECT u.UserName FROM getskytrade.Users u WHERE u.UserName = ?", tc.username)
+			cmd := fmt.Sprintf("SELECT u.UserName FROM %s.Users u WHERE u.UserName = ?", dbName)
+			err := sql.Get(user, cmd, tc.username)
 			require.NoError(t, err)
 			require.Equal(t, tc.username, user.UserName)
 		}

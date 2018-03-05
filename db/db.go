@@ -45,8 +45,8 @@ func (s Storage) GetLatestAdverts(t board.AdvertType, limit int) ([]models.Adver
 			` a.PostalCode,`+
 			` a.Status,`+
 			` a.CreatedAt`+
-			` FROM getskytrade.Adverts a`+
-			` LEFT JOIN getskytrade.Users u ON a.Author = u.Id`+
+			` FROM Adverts a`+
+			` LEFT JOIN Users u ON a.Author = u.Id`+
 			` WHERE a.Type = ?`+
 			` ORDER BY CreatedAt LIMIT ?`, t, limit)
 	if err != nil {
@@ -69,7 +69,7 @@ func NewAuthenticator(db *sqlx.DB) Authenticator {
 // VerifyPassword tries to locate user in DB and check password against the hash stored in DB
 func (da Authenticator) VerifyPassword(userName string, password string) error {
 	user := &models.User{}
-	err := da.DB.Get(&user, "SELECT * FROM getskytrade.Users u WHERE u.UserName = ?", userName)
+	err := da.DB.Get(&user, "SELECT * FROM Users u WHERE u.UserName = ?", userName)
 	if err != nil {
 		return fmt.Errorf("User not found, %s", err)
 	}
@@ -91,7 +91,7 @@ func NewUsers(db *sqlx.DB) Users {
 // Get tries to find a user record in DB by userName and returns error if not found
 func (u Users) Get(userName string) (*models.UserDetails, error) {
 	user := &models.UserDetails{}
-	err := u.DB.Get(&user, "SELECT * FROM getskytrade.Users u WHERE u.UserName = ?", userName)
+	err := u.DB.Get(&user, "SELECT * FROM Users u WHERE u.UserName = ?", userName)
 
 	return user, err
 }
@@ -103,7 +103,7 @@ func (u Users) Register(user models.User, password string) error {
 		return err
 	}
 
-	cmd := ` INSERT INTO getskytrade.Users` +
+	cmd := ` INSERT INTO Users` +
 		` (UserName,` +
 		`  Email,` +
 		`  PasswordHash,` +
