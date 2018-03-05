@@ -49,8 +49,19 @@ func (fu *FakeUsers) Register(user models.User, password string) error {
 
 var db *sql.DB
 
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
+}
+
 func TestMain(m *testing.M) {
-	constr := fmt.Sprintf("%s:%s@(%s)/getskytrade?parseTime=true", "root", "root", "0.0.0.0:3306")
+	// user fallback to local mysql in docker, ENV VARs for testing on Travis
+	user := getEnv("MYSQL_USER", "root")
+	password := getEnv("MYSQL_PASSWORD", "root")
+	host := getEnv("MYSQL_HOST", "0.0.0.0:3306")
+	constr := fmt.Sprintf("%s:%s@(%s)/getskytrade?parseTime=true", user, password, host)
 	db = initDb(constr)
 	ensureTables()
 	code := m.Run()
