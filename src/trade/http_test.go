@@ -75,6 +75,22 @@ func execSQL(cmd string, args ...interface{}) {
 	}
 }
 
+func insertSQL(cmd string, args ...interface{}) int64 {
+	c := fmt.Sprintf(cmd, args...)
+
+	res, err := db.Exec(c)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return id
+}
+
 func ensureTables() {
 	fmt.Println("creating schema")
 
@@ -310,8 +326,8 @@ func TestAdvertDetailsHandler(t *testing.T) {
 		},
 	}
 
-	execSQL(`INSERT INTO getskytrade.Users (Id, UserName, Email, PasswordHash, Timezone, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES (1, "bob", "bob@bob.com", "foo", "WST", "US", "CA", "Los Angeles", "", "mi", "USD", 1)`)
-	execSQL(`INSERT INTO getskytrade.Adverts (Id, Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt) VALUES (1, 2, 1, 100, null, null, null, "EUR", "", 25, "km", "GR", null, "Athens", "", 1, 1, 1, 1, 0, "2018-03-06");`)
+	userID := insertSQL(`INSERT INTO getskytrade.Users (UserName, Email, PasswordHash, Timezone, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ("bob", "bob@bob.com", "foo", "WST", "US", "CA", "Los Angeles", "", "mi", "USD", 1)`)
+	execSQL(fmt.Sprintf(`INSERT INTO getskytrade.Adverts (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt) VALUES (2, %d, 100, null, null, null, "EUR", "", 25, "km", "GR", null, "Athens", "", 1, 1, 1, 1, 0, "2018-03-06");`, userID))
 
 	for _, tc := range tests {
 		name := fmt.Sprintf("test case: AdvertDetailsHandler %s", tc.name)
@@ -331,6 +347,5 @@ func TestAdvertDetailsHandler(t *testing.T) {
 		require.Equal(t, tc.expectedBody, actualBody, name)
 	}
 
-	execSQL(`DELETE FROM getskytrade.Adverts WHERE Id = 1`)
-	execSQL(`DELETE FROM getskytrade.Users WHERE Id = 1`)
+	clearTables()
 }
