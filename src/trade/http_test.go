@@ -278,3 +278,59 @@ func TestRegisterHandler(t *testing.T) {
 		}
 	}
 }
+
+func TestAdvertDetailsHandler(t *testing.T) {
+	tests := []struct {
+		name           string
+		method         string
+		url            string
+		expectedBody   string
+		expectedStatus int
+	}{
+		{
+			name:           "should return response when request is valid",
+			method:         "GET",
+			url:            "/api/postings/1",
+			expectedStatus: http.StatusOK,
+			expectedBody:   `{"id":1,"type":2,"author":"bob","tradeCashInPerson":true,"tradeCashByMail":true,"tradeMoneyOrderByMail":true,"tradeOther":false,"amountFrom":100,"amountTo":null,"fixedPrice":null,"percentageAdjustment":null,"currency":"EUR","additionalInfo":"","travelDistance":25,"travelDistanceUoM":"km","countryCode":"GR","stateCode":null,"city":"Athens","postalCode":"","status":1,"createdAt":"2018-03-06T00:00:00Z"}`,
+		},
+		{
+			name:           "should return 400 when id is not valid",
+			method:         "GET",
+			url:            "/api/postings/asd",
+			expectedStatus: http.StatusBadRequest,
+			expectedBody:   "id is not valid. id should be a number",
+		},
+		{
+			name:           "should return 404 when advert doesn't exist",
+			method:         "GET",
+			url:            "/api/postings/0",
+			expectedStatus: http.StatusNotFound,
+			expectedBody:   "advert with such id doesn't exist",
+		},
+	}
+
+	execSQL(`INSERT INTO getskytrade.Users (Id, UserName, Email, PasswordHash, Timezone, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES (1, "bob", "bob@bob.com", "foo", "WST", "US", "CA", "Los Angeles", "", "mi", "USD", 1)`)
+	execSQL(`INSERT INTO getskytrade.Adverts (Id, Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt) VALUES (1, 2, 1, 100, null, null, null, "EUR", "", 25, "km", "GR", null, "Athens", "", 1, 1, 1, 1, 0, "2018-03-06");`)
+
+	for _, tc := range tests {
+		name := fmt.Sprintf("test case: AdvertDetailsHandler %s", tc.name)
+		req, err := http.NewRequest(tc.method, tc.url, nil)
+
+		require.NoError(t, err)
+
+		sql := sqlx.NewDb(db, "mysql")
+		s := tradedb.NewStorage(sql)
+		w := httptest.NewRecorder()
+		server := &HTTPServer{board: s}
+		handler := server.setupRouter()
+
+		handler.ServeHTTP(w, req)
+		actualBody := strings.TrimSuffix(w.Body.String(), "\n")
+		require.Equal(t, tc.expectedStatus, w.Code, name)
+		require.Equal(t, tc.expectedBody, actualBody, name)
+	}
+
+	execSQL(`DELETE FROM getskytrade.Adverts WHERE Id = 1`)
+	execSQL(`DELETE FROM getskytrade.Users WHERE Id = 1`)
+}
