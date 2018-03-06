@@ -326,8 +326,8 @@ func TestAdvertDetailsHandler(t *testing.T) {
 		},
 	}
 
-	userID := insertSQL(`INSERT INTO getskytrade.Users (UserName, Email, PasswordHash, Timezone, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ("bob", "bob@bob.com", "foo", "WST", "US", "CA", "Los Angeles", "", "mi", "USD", 1)`)
-	execSQL(fmt.Sprintf(`INSERT INTO getskytrade.Adverts (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt) VALUES (2, %d, 100, null, null, null, "EUR", "", 25, "km", "GR", null, "Athens", "", 1, 1, 1, 1, 0, "2018-03-06");`, userID))
+	userID := insertSQL("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, Timezone, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('bob', 'bob@bob.com', 'foo', 'WST', 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName)
+	execSQL("INSERT INTO `%s`.`Adverts` (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt) VALUES (2, %d, 100, null, null, null, 'EUR', '', 25, 'km', 'GR', null, 'Athens', '', 1, 1, 1, 1, 0, '2018-03-06')", dbName, userID)
 
 	for _, tc := range tests {
 		name := fmt.Sprintf("test case: AdvertDetailsHandler %s", tc.name)
