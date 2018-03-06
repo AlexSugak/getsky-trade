@@ -315,7 +315,7 @@ func TestLatestSellAdvertsHandler(t *testing.T) {
 	execSQL("INSERT INTO `%s`.`Adverts` (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt) VALUES (2, %d, 100, null, null, null, 'USD', '', 30, 'km', 'GR', null, 'Athens', '', 1, 1, 1, 1, 0, '2018-03-06')", dbName, userID)
 
 	for _, tc := range tests {
-		name := fmt.Sprintf("test case: LatestBuyAdvertsHandler %s", tc.name)
+		name := fmt.Sprintf("test case: LatestSellAdvertsHandler %s", tc.name)
 		req, err := http.NewRequest(tc.method, tc.url, nil)
 
 		require.NoError(t, err)
