@@ -75,10 +75,8 @@ func execSQL(cmd string, args ...interface{}) {
 	}
 }
 
-func insertSQL(cmd string, args ...interface{}) int64 {
-	c := fmt.Sprintf(cmd, args...)
-
-	res, err := db.Exec(c)
+func insertSQL(cmd string) int64 {
+	res, err := db.Exec(cmd)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -326,7 +324,7 @@ func TestAdvertDetailsHandler(t *testing.T) {
 		},
 	}
 
-	userID := insertSQL("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, Timezone, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('bob', 'bob@bob.com', 'foo', 'WST', 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName)
+	userID := insertSQL(fmt.Sprintf("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, Timezone, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('bob', 'bob@bob.com', 'foo', 'WST', 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName))
 	execSQL("INSERT INTO `%s`.`Adverts` (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt) VALUES (2, %d, 100, null, null, null, 'EUR', '', 25, 'km', 'GR', null, 'Athens', '', 1, 1, 1, 1, 0, '2018-03-06')", dbName, userID)
 
 	for _, tc := range tests {
