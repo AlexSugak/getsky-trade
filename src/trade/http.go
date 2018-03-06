@@ -337,7 +337,8 @@ func AdvertDetailsHandler(s *HTTPServer) httputil.APIHandler {
 		advertID, err := strconv.ParseInt(vars["id"], 10, 64)
 
 		if err != nil {
-			return err
+			http.Error(w, "id is not valid. id should be a number", http.StatusBadRequest)
+			return nil
 		}
 
 		advert, err := s.board.GetAdvertDetails(advertID)
