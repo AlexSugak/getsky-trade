@@ -18,7 +18,6 @@ ALTER TABLE `getskytrade`.`Users` AUTO_INCREMENT = 1;
 INSERT INTO `getskytrade`.`Users`
 (`UserName`,
 `Email`,
-`PasswordSalt`,
 `PasswordHash`,
 `Timezone`,
 `CountryCode`,
@@ -29,8 +28,8 @@ INSERT INTO `getskytrade`.`Users`
 `Currency`,
 `Status`)
 VALUES
-("bob", "bob@bob.com", "foo", "foo", "WST", "US", "CA", "Los Angeles", "", "mi", "USD", 1),
-("sam", "sam@sam.com", "foo", "foo", "CET", "GR", null, "Athens", "", "km", "EUR", 1);
+("bob", "bob@bob.com", "foo", "WST", "US", "CA", "Los Angeles", "", "mi", "USD", 1),
+("sam", "sam@sam.com", "foo", "CET", "GR", null, "Athens", "", "km", "EUR", 1);
 
 ALTER TABLE `getskytrade`.`Adverts` AUTO_INCREMENT = 1;
 INSERT INTO `getskytrade`.`Adverts`
