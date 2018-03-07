@@ -185,8 +185,7 @@ func (u Users) Update(userDetails models.UserDetails) error {
 		`  City = :City,` +
 		`  PostalCode = :PostalCode,` +
 		`  DistanceUnits = :DistanceUnits,` +
-		`  Currency = :Currency,` +
-		`  Status = :Status ` +
+		`  Currency = :Currency` +
 		`  WHERE UserName = :UserName`
 
 	_, err := u.DB.NamedExec(cmd, &userDetails)

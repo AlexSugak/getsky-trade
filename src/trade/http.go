@@ -114,6 +114,7 @@ func (s *HTTPServer) setupRouter() http.Handler {
 	r.Handle("/api/users", API(RegisterHandler)).Methods("POST")
 	r.Handle("/api/users/authenticate", API(AuthenticateHandler)).Methods("POST")
 	r.Handle("/api/me", Secure(API(MeHandler))).Methods("GET")
+	r.Handle("/api/me/settings", Secure(API(UpdateUserSettingsHandler))).Methods("POST")
 
 	// NOTE: we should not use "adverts" word as part of api path since it can be blocked by AdBlock or similar browser extension
 	r.Handle("/api/postings/{id}", API(AdvertDetailsHandler)).Methods("GET")
@@ -272,6 +273,70 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 				Err:  fmt.Errorf("Failed to register user: %s", err.Error()),
 				Code: http.StatusBadRequest,
 			}
+		}
+
+		return nil
+	}
+}
+
+type UpdateSettings struct {
+	ID            int64                 `json:"Id" validate:"required"`
+	UserName      string                `json:"username" validate:"required"`
+	Timezone      string                `json:"timezone" validate:"required"`
+	CountryCode   string                `json:"countryCode" validate:"required"`
+	StateCode     models.JSONNullString `json:"stateCode"`
+	City          string                `json:"city" validate:"required"`
+	PostalCode    string                `json:"postalCode" validate:"required"`
+	DistanceUnits string                `json:"distanceUnits" validate:"required"`
+	Currency      string                `json:"currency" validate:"required"`
+}
+
+// UpdateUserSettingsHandler updates user's settings
+// Method: POST
+// Accept: application/json
+// URI: /api/me/settings
+func UpdateUserSettingsHandler(s *HTTPServer) httputil.APIHandler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		w.Header().Set("Accept", "application/json")
+
+		req := UpdateSettings{}
+		decoder := json.NewDecoder(r.Body)
+		if err := decoder.Decode(&req); err != nil {
+			return httputil.StatusError{
+				Err:  fmt.Errorf("Invalid json request body: %v", err),
+				Code: http.StatusBadRequest,
+			}
+		}
+
+		err := s.validate.Struct(req)
+		if err != nil {
+			return httputil.StatusError{
+				Err:  fmt.Errorf("User info not valid: %s", err),
+				Code: http.StatusBadRequest,
+			}
+		}
+
+		_, err = s.users.Get(req.UserName)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("the user with the userName: '%s' doesn't exist", req.UserName), http.StatusNotFound)
+			return nil
+		}
+
+		userDetails := models.UserDetails{
+			ID:            req.ID,
+			UserName:      req.UserName,
+			Timezone:      req.Timezone,
+			CountryCode:   req.CountryCode,
+			StateCode:     req.StateCode,
+			City:          req.City,
+			PostalCode:    req.PostalCode,
+			DistanceUnits: req.DistanceUnits,
+			Currency:      req.Currency,
+		}
+
+		err = s.users.Update(userDetails)
+		if err != nil {
+			return err
 		}
 
 		return nil
