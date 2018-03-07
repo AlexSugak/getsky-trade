@@ -271,6 +271,7 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 	}
 }
 
+// UpdateSettings holds userDetails properties that should be updated
 type UpdateSettings struct {
 	ID            int64                 `json:"Id" validate:"required"`
 	UserName      string                `json:"username" validate:"required"`
@@ -327,11 +328,7 @@ func UpdateUserSettingsHandler(s *HTTPServer) httputil.APIHandler {
 		}
 
 		err = s.users.Update(userDetails)
-		if err != nil {
-			return err
-		}
-
-		return nil
+		return err
 	}
 }
 

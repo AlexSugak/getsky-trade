@@ -18,7 +18,7 @@ func (se StatusError) Error() string {
 	return se.Err.Error()
 }
 
-// APIHandler is a custom hadler function used internally to define api endpoint handlers
+// APIHandler is a custom handler function used internally to define api endpoint handlers
 type APIHandler func(w http.ResponseWriter, r *http.Request) error
 
 // ValidateContentType validates request's Content-Type and returns error if it does not match expected value
@@ -63,7 +63,10 @@ func AcceptJSONHandler(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "GET" && r.Header.Get("Content-Type") != "application/json" {
 			w.WriteHeader(http.StatusUnsupportedMediaType)
-			w.Write([]byte("Invalid content type, expected application/json"))
+			_, err := w.Write([]byte("Invalid content type, expected application/json"))
+			if err != nil {
+				return
+			}
 		}
 
 		h(w, r)
