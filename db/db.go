@@ -139,7 +139,7 @@ func (u Users) Get(userName string) (*models.UserDetails, error) {
 	return &user, err
 }
 
-// Register iserts new user record in DB and returns error if failed to do so
+// Register inserts new user record in DB and returns error if failed to do so
 func (u Users) Register(user models.User, password string) error {
 	hashedPwd, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -173,5 +173,22 @@ func (u Users) Register(user models.User, password string) error {
 
 	_, err = u.DB.NamedExec(
 		cmd, &user)
+	return err
+}
+
+// Update updates user details
+func (u Users) Update(userDetails models.UserDetails) error {
+	cmd := `UPDATE Users SET` +
+		`  Timezone = :Timezone,` +
+		`  CountryCode = :CountryCode,` +
+		`  StateCode = :StateCode,` +
+		`  City = :City,` +
+		`  PostalCode = :PostalCode,` +
+		`  DistanceUnits = :DistanceUnits,` +
+		`  Currency = :Currency,` +
+		`  Status = :Status ` +
+		`  WHERE UserName = :UserName`
+
+	_, err := u.DB.NamedExec(cmd, &userDetails)
 	return err
 }
