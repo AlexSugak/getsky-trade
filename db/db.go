@@ -110,8 +110,9 @@ func NewAuthenticator(db *sqlx.DB) Authenticator {
 
 // VerifyPassword tries to locate user in DB and check password against the hash stored in DB
 func (da Authenticator) VerifyPassword(userName string, password string) error {
-	user := &models.User{}
+	user := models.User{}
 	err := da.DB.Get(&user, "SELECT * FROM Users u WHERE u.UserName = ?", userName)
+
 	if err != nil {
 		return fmt.Errorf("User not found, %s", err)
 	}
@@ -132,10 +133,10 @@ func NewUsers(db *sqlx.DB) Users {
 
 // Get tries to find a user record in DB by userName and returns error if not found
 func (u Users) Get(userName string) (*models.UserDetails, error) {
-	user := &models.UserDetails{}
-	err := u.DB.Get(&user, "SELECT * FROM Users u WHERE u.UserName = ?", userName)
+	user := models.UserDetails{}
+	err := u.DB.Get(&user, "SELECT Id, UserName, Email, Timezone, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt FROM Users u WHERE u.UserName = ?", userName)
 
-	return user, err
+	return &user, err
 }
 
 // Register iserts new user record in DB and returns error if failed to do so
