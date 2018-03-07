@@ -102,7 +102,7 @@ func (s *HTTPServer) setupRouter() http.Handler {
 	r := mux.NewRouter()
 
 	API := func(h func(*HTTPServer) httputil.APIHandler) http.Handler {
-		return httputil.JSONHandler(httputil.ErrorHandler(s.log, h(s)))
+		return httputil.AcceptJSONHandler(httputil.JSONHandler(httputil.ErrorHandler(s.log, h(s))))
 	}
 
 	Secure := func(h http.Handler) http.Handler {
@@ -175,10 +175,6 @@ func AuthenticateHandler(s *HTTPServer) httputil.APIHandler {
 
 		w.Header().Set("Accept", "application/json")
 
-		if err := httputil.ValidateContentType(r, "application/json"); err != nil {
-			return err
-		}
-
 		req := AuthenticateRequest{}
 		decoder := json.NewDecoder(r.Body)
 		if err := decoder.Decode(&req); err != nil {
@@ -232,10 +228,6 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 
 		w.Header().Set("Accept", "application/json")
-
-		if err := httputil.ValidateContentType(r, "application/json"); err != nil {
-			return err
-		}
 
 		req := RegisterRequest{}
 		decoder := json.NewDecoder(r.Body)

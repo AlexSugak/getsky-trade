@@ -57,3 +57,15 @@ func JSONHandler(h http.HandlerFunc) http.HandlerFunc {
 		h(w, r)
 	}
 }
+
+// AcceptJSONHandler wraps Handler and declines requests with not supported content-type
+func AcceptJSONHandler(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "GET" && r.Header.Get("Content-Type") != "application/json" {
+			w.WriteHeader(http.StatusUnsupportedMediaType)
+			w.Write([]byte("Invalid content type, expected application/json"))
+		}
+
+		h(w, r)
+	}
+}
