@@ -10,10 +10,13 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/AlexSugak/getsky-trade/db/models"
+
 	"github.com/jmoiron/sqlx"
 
 	tradedb "github.com/AlexSugak/getsky-trade/db"
 	"github.com/AlexSugak/getsky-trade/src/util/logger"
+	"github.com/AlexSugak/getsky-trade/src/util/test"
 	"github.com/mattes/migrate"
 	"github.com/mattes/migrate/database/mysql"
 	_ "github.com/mattes/migrate/source/file"
@@ -144,7 +147,7 @@ func TestAPIInfoHandler(t *testing.T) {
 
 		w := httptest.NewRecorder()
 		server := &HTTPServer{}
-		handler := server.setupRouter()
+		handler := server.setupRouter(test.StubSecure)
 
 		handler.ServeHTTP(w, req)
 		require.Equal(t, tc.expectedStatus, w.Code, name)
@@ -204,7 +207,7 @@ func TestAuthenticateHandler(t *testing.T) {
 
 		w := httptest.NewRecorder()
 		server := &HTTPServer{authenticator: a, log: logger.InitLogger()}
-		handler := server.setupRouter()
+		handler := server.setupRouter(test.StubSecure)
 
 		handler.ServeHTTP(w, req)
 		require.Equal(t, tc.expectedStatus, w.Code, name)
@@ -276,7 +279,7 @@ func TestRegisterHandler(t *testing.T) {
 		w := httptest.NewRecorder()
 		server := &HTTPServer{authenticator: a, users: u, log: logger.InitLogger()}
 		server.validate = validator.New()
-		handler := server.setupRouter()
+		handler := server.setupRouter(test.StubSecure)
 
 		handler.ServeHTTP(w, req)
 		require.Equal(t, tc.expectedStatus, w.Code, name)
@@ -361,10 +364,119 @@ func TestAdverts(t *testing.T) {
 		s := tradedb.NewStorage(sql)
 		w := httptest.NewRecorder()
 		server := &HTTPServer{board: s}
-		handler := server.setupRouter()
+		handler := server.setupRouter(test.StubSecure)
 
 		handler.ServeHTTP(w, req)
 		require.Equal(t, tc.expectedStatus, w.Code, name)
 		require.Equal(t, tc.expectedBody, strings.TrimSuffix(w.Body.String(), "\n"), name)
+	}
+}
+
+func setupUpdateUserTests() func() {
+	execSQL("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, Timezone, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('bob', 'bob@bob.com', 'foo', 'WST', 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName)
+
+	return func() {
+		clearTables()
+	}
+}
+
+func TestUpdateUserSettings(t *testing.T) {
+	tests := []struct {
+		name                 string
+		method               string
+		url                  string
+		contentType          string
+		body                 string
+		expectedStatus       int
+		expectedBody         string
+		expectedUserSettings models.UserSettings
+	}{
+		{
+			name:           "should validate content type",
+			method:         "POST",
+			contentType:    "application/xml",
+			url:            "/api/me/settings",
+			expectedStatus: http.StatusUnsupportedMediaType,
+			expectedBody:   "Invalid content type, expected application/jsonInvalid json request body: EOF",
+		},
+		{
+			name:           "should return 400 when json body is not valid",
+			method:         "POST",
+			contentType:    "application/json",
+			url:            "/api/me/settings",
+			body:           "<foo />",
+			expectedStatus: http.StatusBadRequest,
+			expectedBody:   "Invalid json request body: invalid character '<' looking for beginning of value",
+		},
+		{
+			name:           "should return 400 when UpdateSettingsRequest entity doesn't have one of required fields",
+			method:         "POST",
+			contentType:    "application/json",
+			url:            "/api/me/settings",
+			body:           `{"timezone":"CET","countryCode":"GR","city":"Athens","postalCode":"0000","distanceUnits":"Athens","currency":"EUR"}`,
+			expectedStatus: http.StatusBadRequest,
+			expectedBody:   `User info not valid: Key: 'UpdateSettingsRequest.UserName' Error:Field validation for 'UserName' failed on the 'required' tag`,
+		},
+		{
+			name:           "should return 404 when the user doesn't exist",
+			method:         "POST",
+			contentType:    "application/json",
+			url:            "/api/me/settings",
+			body:           `{"Id":2,"username":"foo","email":"foo@foo.com","timezone":"CET","countryCode":"GR","city": "Athens","postalCode": "0000","distanceUnits":"Athens","currency": "USD"}`,
+			expectedStatus: http.StatusNotFound,
+			expectedBody:   "the user with the userName: 'foo' doesn't exist",
+		},
+		{
+			name:           "should return 200 when operation successful",
+			method:         "POST",
+			contentType:    "application/json",
+			url:            "/api/me/settings",
+			body:           `{"username":"bob","timezone":"WST","countryCode":"US","city":"New York","postalCode":"9999","distanceUnits":"Athens","currency":"USD","stateCode":null}`,
+			expectedStatus: http.StatusOK,
+			expectedBody:   "",
+			expectedUserSettings: models.UserSettings{
+				UserName:      "bob",
+				Timezone:      "WST",
+				CountryCode:   "US",
+				City:          "New York",
+				PostalCode:    "9999",
+				DistanceUnits: "Athens",
+				Currency:      "USD",
+				StateCode:     models.JSONNullString{},
+			},
+		},
+	}
+
+	teardownTests := setupUpdateUserTests()
+	defer teardownTests()
+
+	for _, tc := range tests {
+		name := fmt.Sprintf("test case: TestUpdateUserSettings %s", tc.name)
+		req, err := http.NewRequest(tc.method, tc.url, strings.NewReader(tc.body))
+		req.Header.Set("Content-Type", tc.contentType)
+
+		require.NoError(t, err)
+
+		sql := sqlx.NewDb(db, "mysql")
+		u := tradedb.NewUsers(sql)
+
+		w := httptest.NewRecorder()
+		server := &HTTPServer{users: u, log: logger.InitLogger()}
+		server.validate = validator.New()
+
+		handler := server.setupRouter(test.StubSecure)
+		handler.ServeHTTP(w, req)
+
+		require.Equal(t, tc.expectedStatus, w.Code, name)
+		require.Equal(t, tc.expectedBody, strings.TrimSuffix(w.Body.String(), "\n"), name)
+
+		if tc.expectedUserSettings != (models.UserSettings{}) {
+			userSettingds := &models.UserSettings{}
+
+			cmd := fmt.Sprintf("SELECT u.UserName, u.Timezone, u.CountryCode, u.StateCode, u.City, u.PostalCode, u.DistanceUnits, u.Currency FROM %s.Users u WHERE u.UserName = ?", dbName)
+			err := sql.Get(userSettingds, cmd, "bob")
+			require.NoError(t, err)
+			require.Equal(t, tc.expectedUserSettings, *userSettingds)
+		}
 	}
 }
