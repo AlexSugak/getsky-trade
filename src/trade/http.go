@@ -271,8 +271,8 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 	}
 }
 
-// UpdateSettings holds userDetails properties that should be updated
-type UpdateSettings struct {
+// UpdateSettingsRequest holds userDetails properties that should be updated
+type UpdateSettingsRequest struct {
 	ID            int64                 `json:"Id" validate:"required"`
 	UserName      string                `json:"username" validate:"required"`
 	Timezone      string                `json:"timezone" validate:"required"`
@@ -292,7 +292,7 @@ func UpdateUserSettingsHandler(s *HTTPServer) httputil.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		w.Header().Set("Accept", "application/json")
 
-		req := UpdateSettings{}
+		req := UpdateSettingsRequest{}
 		decoder := json.NewDecoder(r.Body)
 		if err := decoder.Decode(&req); err != nil {
 			return httputil.StatusError{
