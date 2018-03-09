@@ -212,10 +212,10 @@ func AuthenticateHandler(s *HTTPServer) httputil.APIHandler {
 
 // RegisterRequest holds auth data
 type RegisterRequest struct {
-	UserName      string                `json:"username" validate:"required"`
-	Password      string                `json:"password" validate:"required"`
-	Email         string                `json:"email" validate:"required,email"`
-	Timezone      string                `json:"timezone" validate:"required"`
+	UserName string `json:"username" validate:"required"`
+	Password string `json:"password" validate:"required"`
+	Email    string `json:"email" validate:"required,email"`
+	Timezone string `json:"timezone" validate:"required"`
 }
 
 // RegisterHandler handles user authentication
@@ -246,9 +246,9 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 		}
 
 		user := models.User{
-			UserName:      req.UserName,
-			Email:         req.Email,
-			Timezone:      req.Timezone,
+			UserName: req.UserName,
+			Email:    req.Email,
+			Timezone: req.Timezone,
 		}
 
 		err = s.users.Register(user, req.Password)
