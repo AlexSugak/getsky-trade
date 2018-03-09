@@ -1,11 +1,11 @@
 .DEFAULT_GOAL := help
-.PHONY: trade test lint check db-schema stop-docker build-client run-client run-mysql run-docker help
+.PHONY: trade test-api lint check db-schema stop-docker build-web run-web run-mysql run-docker help
 
-build-client: ## Restores packages and builds client app
+build-web: ## Restores packages and builds web app
 	cd web; yarn install
 	cd web; npm run build
 
-run-client: ## Runs web client locally
+run-web: ## Runs web app locally
 	cd web; npm start
 
 stop-docker: ## Stops all docker containers
@@ -14,7 +14,7 @@ stop-docker: ## Stops all docker containers
 docker-up: ## Starts docker containers
 	docker-compose up -d
 
-run-docker: build-client docker-up ## Run all containers
+run-docker: build-web docker-up ## Run all containers
 
 trade: ## Run trade back-end. To add arguments, do 'make ARGS="--foo" trade'.
 	go run cmd/trade/trade.go ${ARGS}&
@@ -27,9 +27,13 @@ run-mysql: ## Run mysql in docker
 
 run-local: run-mysql db-schema trade ## Start DB and apply schema changes, run API
 
-test: ## Run tests
+test-api: ## Run tests
 	go test ./cmd/... -timeout=1m -cover -v
 	go test ./src/... -timeout=1m -cover -v 
+
+test-web: 
+	cd web; yarn install
+	cd web; CI=true yarn test
 
 lint: ## Run linters. Use make install-linters first.
 	vendorcheck ./...
@@ -54,7 +58,7 @@ lint: ## Run linters. Use make install-linters first.
 		-E vet \
 		./...
 
-check: lint test ## Run tests and linters
+check: lint test-api test-web ## Run tests and linters
 
 install-linters: ## Install linters
 	go get -u github.com/FiloSottile/vendorcheck
