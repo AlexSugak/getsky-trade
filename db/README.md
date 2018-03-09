@@ -33,3 +33,11 @@ $ go build -tags 'mysql' -o /usr/local/bin/migrate github.com/mattes/migrate/cli
 ```sh
 $ migrate -database "mysql://root:root@(localhost:3306)/getskytrade" -source file://db/schema up
 ```
+## Importing data
+
+Example:
+
+```sh 
+# importing data into docker hosted mysql using query stored in file
+& docker exec -i mysql mysql -uroot -p<password here> < db/data/fake_data.sql
+```
