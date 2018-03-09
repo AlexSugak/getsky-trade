@@ -176,8 +176,8 @@ func (u Users) Register(user models.User, password string) error {
 	return err
 }
 
-// Update updates user details
-func (u Users) Update(userDetails models.UserDetails) error {
+// UpdateSettings updates user details
+func (u Users) UpdateSettings(userSettings models.UserSettings) error {
 	cmd := `UPDATE Users SET` +
 		`  Timezone = :Timezone,` +
 		`  CountryCode = :CountryCode,` +
@@ -188,6 +188,6 @@ func (u Users) Update(userDetails models.UserDetails) error {
 		`  Currency = :Currency` +
 		`  WHERE UserName = :UserName`
 
-	_, err := u.DB.NamedExec(cmd, &userDetails)
+	_, err := u.DB.NamedExec(cmd, &userSettings)
 	return err
 }

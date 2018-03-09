@@ -51,6 +51,14 @@ func NewHTTPServer(binding string, board board.Board, users user.Users, auth aut
 	}
 }
 
+// Secure is a type that corresponds to SecureDecorator function
+type Secure func(h http.Handler) http.Handler
+
+// SecureDecorator authenticates every request
+func SecureDecorator(h http.Handler) http.Handler {
+	return auth.Middleware(h)
+}
+
 // Run starts http listener and returns error if any
 func (s *HTTPServer) Run() error {
 	log := s.log
@@ -58,7 +66,7 @@ func (s *HTTPServer) Run() error {
 	defer log.Info("HTTP service stop")
 	signal.Notify(s.quit, os.Interrupt)
 
-	r := s.setupRouter()
+	r := s.setupRouter(SecureDecorator)
 
 	s.httpListener = &http.Server{
 		Addr:         s.binding,
@@ -98,15 +106,11 @@ func (s *HTTPServer) Shutdown() error {
 	return s.httpListener.Shutdown(ctx)
 }
 
-func (s *HTTPServer) setupRouter() http.Handler {
+func (s *HTTPServer) setupRouter(Secure Secure) http.Handler {
 	r := mux.NewRouter()
 
 	API := func(h func(*HTTPServer) httputil.APIHandler) http.Handler {
 		return httputil.AcceptJSONHandler(httputil.JSONHandler(httputil.ErrorHandler(s.log, h(s))))
-	}
-
-	Secure := func(h http.Handler) http.Handler {
-		return auth.Middleware(h)
 	}
 
 	r.Handle("/api", httputil.ErrorHandler(s.log, APIInfoHandler(s))).Methods("GET")
@@ -114,7 +118,7 @@ func (s *HTTPServer) setupRouter() http.Handler {
 	r.Handle("/api/users", API(RegisterHandler)).Methods("POST")
 	r.Handle("/api/users/authenticate", API(AuthenticateHandler)).Methods("POST")
 	r.Handle("/api/me", Secure(API(MeHandler))).Methods("GET")
-	r.Handle("/api/me/settings", Secure(API(UpdateUserSettingsHandler))).Methods("POST")
+	r.Handle("/api/me/settings", API(UpdateUserSettingsHandler)).Methods("POST")
 
 	// NOTE: we should not use "adverts" word as part of api path since it can be blocked by AdBlock or similar browser extension
 	r.Handle("/api/postings/{id}", API(AdvertDetailsHandler)).Methods("GET")
@@ -273,7 +277,6 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 
 // UpdateSettingsRequest holds userDetails properties that should be updated
 type UpdateSettingsRequest struct {
-	ID            int64                 `json:"Id" validate:"required"`
 	UserName      string                `json:"username" validate:"required"`
 	Timezone      string                `json:"timezone" validate:"required"`
 	CountryCode   string                `json:"countryCode" validate:"required"`
@@ -315,8 +318,7 @@ func UpdateUserSettingsHandler(s *HTTPServer) httputil.APIHandler {
 			return nil
 		}
 
-		userDetails := models.UserDetails{
-			ID:            req.ID,
+		userSettings := models.UserSettings{
 			UserName:      req.UserName,
 			Timezone:      req.Timezone,
 			CountryCode:   req.CountryCode,
@@ -327,7 +329,7 @@ func UpdateUserSettingsHandler(s *HTTPServer) httputil.APIHandler {
 			Currency:      req.Currency,
 		}
 
-		err = s.users.Update(userDetails)
+		err = s.users.UpdateSettings(userSettings)
 		return err
 	}
 }

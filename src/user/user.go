@@ -6,5 +6,5 @@ import "github.com/AlexSugak/getsky-trade/db/models"
 type Users interface {
 	Get(string) (*models.UserDetails, error)
 	Register(models.User, string) error
-	Update(models.UserDetails) error
+	UpdateSettings(models.UserSettings) error
 }

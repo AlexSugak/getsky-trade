@@ -63,3 +63,15 @@ type UserDetails struct {
 	Status        int            `db:"Status" json:"status"`
 	RegisteredAt  time.Time      `db:"RegisteredAt" json:"registeredAt"`
 }
+
+// UserSettings represents a user's settings that can be updated
+type UserSettings struct {
+	UserName      string         `db:"UserName" json:"username"`
+	Timezone      string         `db:"Timezone" json:"timezone"`
+	CountryCode   string         `db:"CountryCode" json:"countryCode"`
+	StateCode     JSONNullString `db:"StateCode" json:"stateCode"`
+	City          string         `db:"City" json:"city"`
+	PostalCode    string         `db:"PostalCode" json:"postalCode"`
+	DistanceUnits string         `db:"DistanceUnits" json:"distanceUnits"`
+	Currency      string         `db:"Currency" json:"currency"`
+}
