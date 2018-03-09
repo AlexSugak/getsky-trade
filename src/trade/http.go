@@ -118,7 +118,7 @@ func (s *HTTPServer) setupRouter(Secure Secure) http.Handler {
 	r.Handle("/api/users", API(RegisterHandler)).Methods("POST")
 	r.Handle("/api/users/authenticate", API(AuthenticateHandler)).Methods("POST")
 	r.Handle("/api/me", Secure(API(MeHandler))).Methods("GET")
-	r.Handle("/api/me/settings", API(UpdateUserSettingsHandler)).Methods("POST")
+	r.Handle("/api/me/settings", Secure(API(UpdateUserSettingsHandler))).Methods("POST")
 
 	// NOTE: we should not use "adverts" word as part of api path since it can be blocked by AdBlock or similar browser extension
 	r.Handle("/api/postings/{id}", API(AdvertDetailsHandler)).Methods("GET")
