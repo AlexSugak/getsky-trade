@@ -6,6 +6,7 @@ const navItems = [
     { url: '/', name: 'Home' },
     { url: '/search', name: 'Search' },
     { url: '/register', name: 'Register' },
+    { url: '/login', name: 'Login' },
 ];
 
 const Nav = styled.ul`
