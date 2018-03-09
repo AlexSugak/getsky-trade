@@ -216,12 +216,6 @@ type RegisterRequest struct {
 	Password      string                `json:"password" validate:"required"`
 	Email         string                `json:"email" validate:"required,email"`
 	Timezone      string                `json:"timezone" validate:"required"`
-	CountryCode   string                `json:"countryCode" validate:"required"`
-	StateCode     models.JSONNullString `json:"stateCode"`
-	City          string                `json:"city" validate:"required"`
-	PostalCode    string                `json:"postalCode" validate:"required"`
-	DistanceUnits string                `json:"distanceUnits" validate:"required"`
-	Currency      string                `json:"currency" validate:"required"`
 }
 
 // RegisterHandler handles user authentication
@@ -255,12 +249,6 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 			UserName:      req.UserName,
 			Email:         req.Email,
 			Timezone:      req.Timezone,
-			CountryCode:   req.CountryCode,
-			StateCode:     req.StateCode,
-			City:          req.City,
-			PostalCode:    req.PostalCode,
-			DistanceUnits: req.DistanceUnits,
-			Currency:      req.Currency,
 		}
 
 		err = s.users.Register(user, req.Password)

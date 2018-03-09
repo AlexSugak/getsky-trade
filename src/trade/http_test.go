@@ -252,7 +252,7 @@ func TestRegisterHandler(t *testing.T) {
 			method:         "POST",
 			contentType:    "application/json",
 			url:            "/api/users",
-			body:           `{"email":"foo","username":"foo","password":"1","timezone":"1","countryCode":"US","city":"1","postalCode":"1","distanceUnits":"1","currency":"USD"}`,
+			body:           `{"email":"foo","username":"foo","password":"1","timezone":"1"}`,
 			expectedStatus: http.StatusBadRequest,
 		},
 		{
@@ -260,7 +260,7 @@ func TestRegisterHandler(t *testing.T) {
 			method:         "POST",
 			contentType:    "application/json",
 			url:            "/api/users",
-			body:           `{"email":"foo1@bar.baz","username":"foo1","password":"1","timezone":"1","countryCode":"US","city":"1","postalCode":"1","distanceUnits":"1","currency":"USD"}`,
+			body:           `{"email":"foo1@bar.baz","username":"foo1","password":"1","timezone":"1"}`,
 			expectedStatus: http.StatusOK,
 			username:       "foo1",
 		},

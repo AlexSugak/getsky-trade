@@ -5,6 +5,7 @@ import styled from 'styled-components';
 const navItems = [
     { url: '/', name: 'Home' },
     { url: '/search', name: 'Search' },
+    { url: '/register', name: 'Register' },
 ];
 
 const Nav = styled.ul`
