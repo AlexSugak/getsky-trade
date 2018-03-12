@@ -267,7 +267,7 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 type UpdateSettingsRequest struct {
 	UserName      string                `json:"username" validate:"required"`
 	Timezone      string                `json:"timezone" validate:"required"`
-	CountryCode   string                `json:"countryCode" validate:"required"`
+	CountryCode   models.JSONNullString `json:"countryCode" validate:"required"`
 	StateCode     models.JSONNullString `json:"stateCode"`
 	City          string                `json:"city" validate:"required"`
 	PostalCode    string                `json:"postalCode" validate:"required"`

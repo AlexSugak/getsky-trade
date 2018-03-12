@@ -38,7 +38,7 @@ type User struct {
 	Email         string         `db:"Email"`
 	PasswordHash  string         `db:"PasswordHash"`
 	Timezone      string         `db:"Timezone"`
-	CountryCode   string         `db:"CountryCode"`
+	CountryCode   JSONNullString `db:"CountryCode"`
 	StateCode     JSONNullString `db:"StateCode"`
 	City          string         `db:"City"`
 	PostalCode    string         `db:"PostalCode"`
@@ -54,7 +54,7 @@ type UserDetails struct {
 	UserName      string         `db:"UserName" json:"username"`
 	Email         string         `db:"Email" json:"email"`
 	Timezone      string         `db:"Timezone" json:"timezone"`
-	CountryCode   string         `db:"CountryCode" json:"countryCode"`
+	CountryCode   JSONNullString `db:"CountryCode" json:"countryCode"`
 	StateCode     JSONNullString `db:"StateCode" json:"stateCode"`
 	City          string         `db:"City" json:"city"`
 	PostalCode    string         `db:"PostalCode" json:"postalCode"`
@@ -68,7 +68,7 @@ type UserDetails struct {
 type UserSettings struct {
 	UserName      string         `db:"UserName" json:"username"`
 	Timezone      string         `db:"Timezone" json:"timezone"`
-	CountryCode   string         `db:"CountryCode" json:"countryCode"`
+	CountryCode   JSONNullString `db:"CountryCode" json:"countryCode"`
 	StateCode     JSONNullString `db:"StateCode" json:"stateCode"`
 	City          string         `db:"City" json:"city"`
 	PostalCode    string         `db:"PostalCode" json:"postalCode"`
