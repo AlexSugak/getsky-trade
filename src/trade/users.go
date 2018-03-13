@@ -8,7 +8,9 @@ import (
 
 	"github.com/AlexSugak/getsky-trade/db/models"
 	"github.com/AlexSugak/getsky-trade/src/auth"
+	ce "github.com/AlexSugak/getsky-trade/src/errors"
 	"github.com/AlexSugak/getsky-trade/src/util/httputil"
+	validator "gopkg.in/go-playground/validator.v9"
 )
 
 // AuthenticateRequest holds auth data
@@ -93,10 +95,7 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 
 		err := s.validate.Struct(req)
 		if err != nil {
-			return httputil.StatusError{
-				Err:  fmt.Errorf("User info not valid: %s", err),
-				Code: http.StatusBadRequest,
-			}
+			return ce.ValidatorErrorsResponse(err.(validator.ValidationErrors))
 		}
 
 		user := models.User{

@@ -171,8 +171,7 @@ func (u Users) Register(user models.User, password string) error {
 		`   :Currency,` +
 		`   1)`
 
-	_, err = u.DB.NamedExec(
-		cmd, &user)
+	_, err = u.DB.NamedExec(cmd, &user)
 	return err
 }
 

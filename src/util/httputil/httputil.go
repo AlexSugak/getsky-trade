@@ -1,9 +1,11 @@
 package httputil
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
+	"github.com/AlexSugak/getsky-trade/src/errors"
 	"github.com/sirupsen/logrus"
 )
 
@@ -41,10 +43,12 @@ func ErrorHandler(log logrus.FieldLogger, h APIHandler) http.HandlerFunc {
 			case StatusError:
 				log.Errorf("%s: HTTP %d - %s", r.URL, e.Code, e)
 				http.Error(w, e.Error(), e.Code)
+			case errors.ValidationError:
+				w.WriteHeader(http.StatusBadRequest)
+				json.NewEncoder(w).Encode(e.Errors)
 			default:
 				log.Errorf("Error in handler %s - %s", r.URL, err)
-				http.Error(w, http.StatusText(http.StatusInternalServerError),
-					http.StatusInternalServerError)
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			}
 		}
 	}
