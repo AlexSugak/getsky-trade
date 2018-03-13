@@ -6,8 +6,8 @@ import (
 
 // ValidationErrorResponse is entity that contains property name and its error message
 type ValidationErrorResponse struct {
-	Key     string
-	Message string
+	Key     string `json:"key"`
+	Message string `json:"message"`
 }
 
 // ValidationError represents validation error

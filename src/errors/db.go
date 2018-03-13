@@ -2,29 +2,31 @@ package errors
 
 import (
 	"strings"
-
-	"github.com/go-sql-driver/mysql"
 )
 
 // DbDuplicateEntry corresponds to an db error that specifies duplicating of data
-const DbDuplicateEntry = 1062
+const DbDuplicateEntry = "Error 1062: "
 const duplicateEntryPropertyKey = "for key "
+
+// IsDbValidationError checks if the error is db validation error
+func IsDbValidationError(err error) bool {
+	return strings.HasPrefix(err.Error(), DbDuplicateEntry)
+}
 
 // DatabaseErrorResponse parses database error string to user friendly error
 func DatabaseErrorResponse(err error) ValidationError {
 	errorResponse := make([]ValidationErrorResponse, 0)
 
-	me, ok := err.(*mysql.MySQLError)
-	if !ok {
+	if !IsDbValidationError(err) {
 		return ValidationError{Errors: errorResponse}
 	}
 
-	if me.Number == DbDuplicateEntry {
-		key := strings.Replace(strings.Split(me.Message, duplicateEntryPropertyKey)[1], "'", "", -1)
-
+	if strings.HasPrefix(err.Error(), DbDuplicateEntry) {
+		message := strings.TrimSuffix(err.Error(), DbDuplicateEntry)
+		key := strings.Replace(strings.Split(message, duplicateEntryPropertyKey)[1], "'", "", -1)
 		errorResponse = append(errorResponse, ValidationErrorResponse{
 			Key:     key,
-			Message: me.Message,
+			Message: message,
 		})
 	}
 

@@ -46,7 +46,11 @@ func ErrorHandler(log logrus.FieldLogger, h APIHandler) http.HandlerFunc {
 			case errors.ValidationError:
 				log.Errorf("%s: HTTP 400 - %s", r.URL, e.Error())
 				w.WriteHeader(http.StatusBadRequest)
-				json.NewEncoder(w).Encode(e.Errors)
+				err := json.NewEncoder(w).Encode(e.Errors)
+
+				if err != nil {
+					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+				}
 			default:
 				log.Errorf("Error in handler %s - %s", r.URL, err)
 				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)

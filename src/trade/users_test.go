@@ -200,7 +200,7 @@ func TestUpdateUserSettings(t *testing.T) {
 			url:            "/api/me/settings",
 			body:           `{"timezone":"CET","countryCode":"GR","city":"Athens","postalCode":"0000","distanceUnits":"Athens","currency":"EUR"}`,
 			expectedStatus: http.StatusBadRequest,
-			expectedBody:   `User info not valid: Key: 'UpdateSettingsRequest.UserName' Error:Field validation for 'UserName' failed on the 'required' tag`,
+			expectedBody:   `[{"key":"UserName","message":"is required"}]`,
 		},
 		{
 			name:           "should return 404 when the user doesn't exist",

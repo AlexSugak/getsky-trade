@@ -10,7 +10,7 @@ import (
 	"github.com/AlexSugak/getsky-trade/src/auth"
 	ce "github.com/AlexSugak/getsky-trade/src/errors"
 	"github.com/AlexSugak/getsky-trade/src/util/httputil"
-	"github.com/go-sql-driver/mysql"
+
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
@@ -107,8 +107,7 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 
 		err = s.users.Register(user, req.Password)
 		if err != nil {
-			me, _ := err.(*mysql.MySQLError)
-			if me.Number == ce.DbDuplicateEntry {
+			if ce.IsDbValidationError(err) {
 				return ce.DatabaseErrorResponse(err)
 			}
 
