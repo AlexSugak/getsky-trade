@@ -172,6 +172,7 @@ func (u Users) Register(user models.User, password string) error {
 		`   1)`
 
 	_, err = u.DB.NamedExec(cmd, &user)
+
 	return err
 }
 

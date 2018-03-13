@@ -6,8 +6,8 @@ import (
 
 // ValidationErrorResponse is entity that contains property name and its error message
 type ValidationErrorResponse struct {
-	Property string
-	Message  string
+	Key     string
+	Message string
 }
 
 // ValidationError represents validation error

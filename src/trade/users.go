@@ -10,6 +10,7 @@ import (
 	"github.com/AlexSugak/getsky-trade/src/auth"
 	ce "github.com/AlexSugak/getsky-trade/src/errors"
 	"github.com/AlexSugak/getsky-trade/src/util/httputil"
+	"github.com/go-sql-driver/mysql"
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
@@ -106,10 +107,16 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 
 		err = s.users.Register(user, req.Password)
 		if err != nil {
-			return httputil.StatusError{
-				Err:  fmt.Errorf("Failed to register user: %s", err.Error()),
-				Code: http.StatusBadRequest,
+			me, _ := err.(*mysql.MySQLError)
+			if me.Number == ce.DbDuplicateEntry {
+				return ce.DatabaseErrorResponse(err)
 			}
+
+			return httputil.StatusError{
+				Err:  err,
+				Code: http.StatusInternalServerError,
+			}
+
 		}
 
 		return nil
@@ -120,7 +127,7 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 type UpdateSettingsRequest struct {
 	UserName      string                `json:"username" validate:"required"`
 	Timezone      string                `json:"timezone" validate:"required"`
-	CountryCode   models.JSONNullString `json:"countryCode" validate:"required"`
+	CountryCode   models.JSONNullString `json:"countryCode"`
 	StateCode     models.JSONNullString `json:"stateCode"`
 	City          string                `json:"city" validate:"required"`
 	PostalCode    string                `json:"postalCode" validate:"required"`
@@ -147,10 +154,7 @@ func UpdateUserSettingsHandler(s *HTTPServer) httputil.APIHandler {
 
 		err := s.validate.Struct(req)
 		if err != nil {
-			return httputil.StatusError{
-				Err:  fmt.Errorf("User info not valid: %s", err),
-				Code: http.StatusBadRequest,
-			}
+			return ce.ValidatorErrorsResponse(err.(validator.ValidationErrors))
 		}
 
 		_, err = s.users.Get(req.UserName)

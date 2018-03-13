@@ -12,8 +12,8 @@ func ValidatorErrorsResponse(errors validator.ValidationErrors) ValidationError 
 
 	for i := 0; i < len(errors); i++ {
 		ve := ValidationErrorResponse{
-			Property: errors[i].Field(),
-			Message:  mapFieldErrorToErrorMessage(errors[i]),
+			Key:     errors[i].Field(),
+			Message: mapFieldErrorToErrorMessage(errors[i]),
 		}
 		errorResponse = append(errorResponse, ve)
 	}
