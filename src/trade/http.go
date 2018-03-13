@@ -19,25 +19,27 @@ import (
 
 // HTTPServer holds http server info
 type HTTPServer struct {
-	binding       string
-	board         board.Board
-	users         user.Users
-	authenticator auth.Authenticator
-	validate      *validator.Validate
-	log           logrus.FieldLogger
-	httpListener  *http.Server
-	quit          chan os.Signal
-	done          chan struct{}
+	checkRecaptcha auth.RecaptchaChecker
+	binding        string
+	board          board.Board
+	users          user.Users
+	authenticator  auth.Authenticator
+	validate       *validator.Validate
+	log            logrus.FieldLogger
+	httpListener   *http.Server
+	quit           chan os.Signal
+	done           chan struct{}
 }
 
 // NewHTTPServer creates new http server
-func NewHTTPServer(binding string, board board.Board, users user.Users, auth auth.Authenticator, log logrus.FieldLogger) *HTTPServer {
+func NewHTTPServer(recaptchaSecret string, binding string, board board.Board, users user.Users, a auth.Authenticator, log logrus.FieldLogger) *HTTPServer {
 	return &HTTPServer{
-		binding:       binding,
-		board:         board,
-		users:         users,
-		authenticator: auth,
-		validate:      validator.New(),
+		checkRecaptcha: auth.InitRecaptchaChecker(recaptchaSecret),
+		binding:        binding,
+		board:          board,
+		users:          users,
+		authenticator:  a,
+		validate:       validator.New(),
 		log: log.WithFields(logrus.Fields{
 			"prefix": "trade.http",
 		}),

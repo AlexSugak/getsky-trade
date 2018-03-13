@@ -1,6 +1,7 @@
 package trade
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -12,9 +13,30 @@ import (
 	"github.com/AlexSugak/getsky-trade/src/util/logger"
 	"github.com/AlexSugak/getsky-trade/src/util/test"
 	"github.com/jmoiron/sqlx"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	validator "gopkg.in/go-playground/validator.v9"
 )
+
+type FakeAuthenticator struct {
+	mock.Mock
+}
+
+func (fa *FakeAuthenticator) VerifyPassword(username string, password string) error {
+	if username == "testuser" {
+		return nil
+	}
+
+	return errors.New("wrong user or password")
+}
+
+func FakeRecaptchaChecker(response string) (bool, error) {
+	if response == "pass" {
+		return true, nil
+	}
+
+	return false, nil
+}
 
 func TestAuthenticateHandler(t *testing.T) {
 	tests := []struct {
@@ -117,11 +139,19 @@ func TestRegisterHandler(t *testing.T) {
 			expectedStatus: http.StatusBadRequest,
 		},
 		{
+			name:           "should return StatusBadRequest if captcha is not valid",
+			method:         "POST",
+			contentType:    "application/json",
+			url:            "/api/users",
+			body:           `{"email":"foo1@bar.baz","username":"foo1","password":"1","timezone":"1","recaptchaResponse":"not_pass"}`,
+			expectedStatus: http.StatusBadRequest,
+		},
+		{
 			name:           "should return OK and insert user",
 			method:         "POST",
 			contentType:    "application/json",
 			url:            "/api/users",
-			body:           `{"email":"foo1@bar.baz","username":"foo1","password":"1","timezone":"1"}`,
+			body:           `{"email":"foo1@bar.baz","username":"foo1","password":"1","timezone":"1","recaptchaResponse":"pass"}`,
 			expectedStatus: http.StatusOK,
 			username:       "foo1",
 		},
@@ -138,7 +168,7 @@ func TestRegisterHandler(t *testing.T) {
 		u := tradedb.NewUsers(sql)
 
 		w := httptest.NewRecorder()
-		server := &HTTPServer{authenticator: a, users: u, log: logger.InitLogger()}
+		server := &HTTPServer{authenticator: a, users: u, checkRecaptcha: FakeRecaptchaChecker, log: logger.InitLogger()}
 		server.validate = validator.New()
 		handler := server.setupRouter(test.StubSecure)
 

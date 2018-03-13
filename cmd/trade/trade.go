@@ -14,6 +14,8 @@ import (
 func main() {
 	bindingFlag := flag.String("binding", "0.0.0.0:8081", "HTTP server binding")
 	mysqlFlag := flag.String("mysql", "0.0.0.0:3306", "HTTP server binding")
+	recaptchaSecret := flag.String("recaptchaSecret", "6LdTKksUAAAAAAMgKNhOcxgWYYCDRrgx8YoEH5qX", "HTTP server binding")
+
 	flag.Parse()
 
 	log := logger.InitLogger()
@@ -26,7 +28,7 @@ func main() {
 	auth := db.NewAuthenticator(sqlDb)
 	storage := db.NewStorage(sqlDb)
 	users := db.NewUsers(sqlDb)
-	server := trade.NewHTTPServer(*bindingFlag, storage, users, auth, log)
+	server := trade.NewHTTPServer(*recaptchaSecret, *bindingFlag, storage, users, auth, log)
 
 	if err := server.Run(); err != nil {
 		panic(err.Error())

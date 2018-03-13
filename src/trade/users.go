@@ -69,10 +69,11 @@ func AuthenticateHandler(s *HTTPServer) httputil.APIHandler {
 
 // RegisterRequest holds auth data
 type RegisterRequest struct {
-	UserName string `json:"username" validate:"required"`
-	Password string `json:"password" validate:"required"`
-	Email    string `json:"email" validate:"required,email"`
-	Timezone string `json:"timezone" validate:"required"`
+	UserName          string `json:"username" validate:"required"`
+	Password          string `json:"password" validate:"required"`
+	Email             string `json:"email" validate:"required,email"`
+	Timezone          string `json:"timezone" validate:"required"`
+	RecaptchaResponse string `json:"recaptchaResponse" validate:"required"`
 }
 
 // RegisterHandler handles user authentication
@@ -97,6 +98,13 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 		err := s.validate.Struct(req)
 		if err != nil {
 			return ce.ValidatorErrorsResponse(err.(validator.ValidationErrors))
+		}
+
+		res, err := s.checkRecaptcha(req.RecaptchaResponse)
+		if err != nil {
+			return err
+		} else if !res {
+			return ce.CreateSingleValidationError("recaptchaResponse", "not valid")
 		}
 
 		user := models.User{

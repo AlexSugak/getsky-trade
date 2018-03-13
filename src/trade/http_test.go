@@ -2,7 +2,6 @@ package trade
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"os"
 	"testing"
@@ -10,20 +9,7 @@ import (
 	"github.com/mattes/migrate"
 	"github.com/mattes/migrate/database/mysql"
 	_ "github.com/mattes/migrate/source/file"
-	"github.com/stretchr/testify/mock"
 )
-
-type FakeAuthenticator struct {
-	mock.Mock
-}
-
-func (fa *FakeAuthenticator) VerifyPassword(username string, password string) error {
-	if username == "testuser" {
-		return nil
-	}
-
-	return errors.New("wrong user or password")
-}
 
 const dbName = "getskytrade"
 
