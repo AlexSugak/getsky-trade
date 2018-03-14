@@ -69,11 +69,11 @@ func AuthenticateHandler(s *HTTPServer) httputil.APIHandler {
 
 // RegisterRequest holds auth data
 type RegisterRequest struct {
-	UserName          string `json:"username" validate:"required"`
-	Password          string `json:"password" validate:"required"`
-	Email             string `json:"email" validate:"required,email"`
-	Timezone          string `json:"timezone" validate:"required"`
-	RecaptchaResponse string `json:"recaptchaResponse" validate:"required"`
+	UserName   string `json:"username" validate:"required"`
+	Password   string `json:"password" validate:"required"`
+	Email      string `json:"email" validate:"required,email"`
+	TimeOffset int    `json:"timeOffset" validate:"required,min=-11,max=14"`
+	Recaptcha  string `json:"recaptcha" validate:"required"`
 }
 
 // RegisterHandler handles user authentication
@@ -100,17 +100,17 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 			return ce.ValidatorErrorsResponse(err.(validator.ValidationErrors))
 		}
 
-		res, err := s.checkRecaptcha(req.RecaptchaResponse)
+		res, err := s.checkRecaptcha(req.Recaptcha)
 		if err != nil {
 			return err
 		} else if !res {
-			return ce.CreateSingleValidationError("recaptchaResponse", "not valid")
+			return ce.CreateSingleValidationError("recaptcha", "is not valid")
 		}
 
 		user := models.User{
-			UserName: req.UserName,
-			Email:    req.Email,
-			Timezone: req.Timezone,
+			UserName:   req.UserName,
+			Email:      req.Email,
+			TimeOffset: req.TimeOffset,
 		}
 
 		err = s.users.Register(user, req.Password)
@@ -133,7 +133,7 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 // UpdateSettingsRequest holds userDetails properties that should be updated
 type UpdateSettingsRequest struct {
 	UserName      string                `json:"username" validate:"required"`
-	Timezone      string                `json:"timezone" validate:"required"`
+	TimeOffset    int                   `json:"timeOffset" validate:"required,min=-11,max=14"`
 	CountryCode   models.JSONNullString `json:"countryCode"`
 	StateCode     models.JSONNullString `json:"stateCode"`
 	City          string                `json:"city" validate:"required"`
@@ -172,7 +172,7 @@ func UpdateUserSettingsHandler(s *HTTPServer) httputil.APIHandler {
 
 		userSettings := models.UserSettings{
 			UserName:      req.UserName,
-			Timezone:      req.Timezone,
+			TimeOffset:    req.TimeOffset,
 			CountryCode:   req.CountryCode,
 			StateCode:     req.StateCode,
 			City:          req.City,

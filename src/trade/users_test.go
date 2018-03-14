@@ -135,7 +135,7 @@ func TestRegisterHandler(t *testing.T) {
 			method:         "POST",
 			contentType:    "application/json",
 			url:            "/api/users",
-			body:           `{"email":"foo","username":"foo","password":"1","timezone":"1"}`,
+			body:           `{"email":"foo","username":"foo","password":"1","timeOffset":1}`,
 			expectedStatus: http.StatusBadRequest,
 		},
 		{
@@ -143,7 +143,7 @@ func TestRegisterHandler(t *testing.T) {
 			method:         "POST",
 			contentType:    "application/json",
 			url:            "/api/users",
-			body:           `{"email":"foo1@bar.baz","username":"foo1","password":"1","timezone":"1","recaptchaResponse":"not_pass"}`,
+			body:           `{"email":"foo1@bar.baz","username":"foo1","password":"1","timeOffset":1,"recaptcha":"not_pass"}`,
 			expectedStatus: http.StatusBadRequest,
 		},
 		{
@@ -151,7 +151,7 @@ func TestRegisterHandler(t *testing.T) {
 			method:         "POST",
 			contentType:    "application/json",
 			url:            "/api/users",
-			body:           `{"email":"foo1@bar.baz","username":"foo1","password":"1","timezone":"1","recaptchaResponse":"pass"}`,
+			body:           `{"email":"foo1@bar.baz","username":"foo1","password":"1","timeOffset":1,"recaptcha":"pass"}`,
 			expectedStatus: http.StatusOK,
 			username:       "foo1",
 		},
@@ -188,7 +188,7 @@ func TestRegisterHandler(t *testing.T) {
 }
 
 func setupUpdateUserTests() func() {
-	execSQL("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, Timezone, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('bob', 'bob@bob.com', 'foo', 'WST', 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName)
+	execSQL("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('bob', 'bob@bob.com', 'foo', 0, 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName)
 
 	return func() {
 		clearTables()
@@ -228,16 +228,16 @@ func TestUpdateUserSettings(t *testing.T) {
 			method:         "POST",
 			contentType:    "application/json",
 			url:            "/api/me/settings",
-			body:           `{"timezone":"CET","countryCode":"GR","city":"Athens","postalCode":"0000","distanceUnits":"Athens","currency":"EUR"}`,
+			body:           `{"timeOffset":0,"countryCode":"GR","city":"Athens","postalCode":"0000","distanceUnits":"Athens","currency":"EUR"}`,
 			expectedStatus: http.StatusBadRequest,
-			expectedBody:   `[{"key":"UserName","message":"is required"}]`,
+			expectedBody:   `[{"key":"UserName","message":"is required"},{"key":"TimeOffset","message":"is required"}]`,
 		},
 		{
 			name:           "should return 404 when the user doesn't exist",
 			method:         "POST",
 			contentType:    "application/json",
 			url:            "/api/me/settings",
-			body:           `{"Id":2,"username":"foo","email":"foo@foo.com","timezone":"CET","countryCode":"GR","city": "Athens","postalCode": "0000","distanceUnits":"Athens","currency": "USD"}`,
+			body:           `{"Id":2,"username":"foo","email":"foo@foo.com","timeOffset":1,"countryCode":"GR","city": "Athens","postalCode": "0000","distanceUnits":"Athens","currency": "USD"}`,
 			expectedStatus: http.StatusNotFound,
 			expectedBody:   "the user with the userName: 'foo' doesn't exist",
 		},
@@ -246,12 +246,12 @@ func TestUpdateUserSettings(t *testing.T) {
 			method:         "POST",
 			contentType:    "application/json",
 			url:            "/api/me/settings",
-			body:           `{"username":"bob","timezone":"WST","countryCode":null,"city":"New York","postalCode":"9999","distanceUnits":"Athens","currency":"USD","stateCode":null}`,
+			body:           `{"username":"bob","timeOffset":1,"countryCode":null,"city":"New York","postalCode":"9999","distanceUnits":"Athens","currency":"USD","stateCode":null}`,
 			expectedStatus: http.StatusOK,
 			expectedBody:   "",
 			expectedUserSettings: models.UserSettings{
 				UserName:      "bob",
-				Timezone:      "WST",
+				TimeOffset:    1,
 				CountryCode:   models.JSONNullString{},
 				City:          "New York",
 				PostalCode:    "9999",
@@ -288,7 +288,7 @@ func TestUpdateUserSettings(t *testing.T) {
 		if tc.expectedUserSettings != (models.UserSettings{}) {
 			userSettingds := &models.UserSettings{}
 
-			cmd := fmt.Sprintf("SELECT u.UserName, u.Timezone, u.CountryCode, u.StateCode, u.City, u.PostalCode, u.DistanceUnits, u.Currency FROM %s.Users u WHERE u.UserName = ?", dbName)
+			cmd := fmt.Sprintf("SELECT u.UserName, u.TimeOffset, u.CountryCode, u.StateCode, u.City, u.PostalCode, u.DistanceUnits, u.Currency FROM %s.Users u WHERE u.UserName = ?", dbName)
 			err := sql.Get(userSettingds, cmd, "bob")
 			require.NoError(t, err)
 			require.Equal(t, tc.expectedUserSettings, *userSettingds)

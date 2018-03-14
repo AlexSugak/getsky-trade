@@ -37,7 +37,7 @@ type User struct {
 	UserName      string         `db:"UserName"`
 	Email         string         `db:"Email"`
 	PasswordHash  string         `db:"PasswordHash"`
-	Timezone      string         `db:"Timezone"`
+	TimeOffset    int            `db:"TimeOffset"`
 	CountryCode   JSONNullString `db:"CountryCode"`
 	StateCode     JSONNullString `db:"StateCode"`
 	City          string         `db:"City"`
@@ -53,7 +53,7 @@ type UserDetails struct {
 	ID            int64          `db:"Id" json:"id"`
 	UserName      string         `db:"UserName" json:"username"`
 	Email         string         `db:"Email" json:"email"`
-	Timezone      string         `db:"Timezone" json:"timezone"`
+	TimeOffset    int            `db:"TimeOffset" json:"timeOffset"`
 	CountryCode   JSONNullString `db:"CountryCode" json:"countryCode"`
 	StateCode     JSONNullString `db:"StateCode" json:"stateCode"`
 	City          string         `db:"City" json:"city"`
@@ -67,7 +67,7 @@ type UserDetails struct {
 // UserSettings represents a user's settings that can be updated
 type UserSettings struct {
 	UserName      string         `db:"UserName" json:"username"`
-	Timezone      string         `db:"Timezone" json:"timezone"`
+	TimeOffset    int            `db:"TimeOffset" json:"timeOffset"`
 	CountryCode   JSONNullString `db:"CountryCode" json:"countryCode"`
 	StateCode     JSONNullString `db:"StateCode" json:"stateCode"`
 	City          string         `db:"City" json:"city"`

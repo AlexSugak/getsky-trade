@@ -134,7 +134,7 @@ func NewUsers(db *sqlx.DB) Users {
 // Get tries to find a user record in DB by userName and returns error if not found
 func (u Users) Get(userName string) (*models.UserDetails, error) {
 	user := models.UserDetails{}
-	err := u.DB.Get(&user, "SELECT Id, UserName, Email, Timezone, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt FROM Users u WHERE u.UserName = ?", userName)
+	err := u.DB.Get(&user, "SELECT Id, UserName, Email, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt FROM Users u WHERE u.UserName = ?", userName)
 
 	return &user, err
 }
@@ -150,7 +150,7 @@ func (u Users) Register(user models.User, password string) error {
 		` (UserName,` +
 		`  Email,` +
 		`  PasswordHash,` +
-		`  Timezone,` +
+		`  TimeOffset,` +
 		`  CountryCode,` +
 		`  StateCode,` +
 		`  City,` +
@@ -162,7 +162,7 @@ func (u Users) Register(user models.User, password string) error {
 		`  (:UserName,` +
 		`   :Email,` +
 		`   "` + string(hashedPwd) + `",` +
-		`   :Timezone,` +
+		`   :TimeOffset,` +
 		`   :CountryCode,` +
 		`   :StateCode,` +
 		`   :City,` +
@@ -179,7 +179,7 @@ func (u Users) Register(user models.User, password string) error {
 // UpdateSettings updates user details
 func (u Users) UpdateSettings(userSettings models.UserSettings) error {
 	cmd := `UPDATE Users SET` +
-		`  Timezone = :Timezone,` +
+		`  TimeOffset = :TimeOffset,` +
 		`  CountryCode = :CountryCode,` +
 		`  StateCode = :StateCode,` +
 		`  City = :City,` +

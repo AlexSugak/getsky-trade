@@ -42,9 +42,10 @@ const Select = styled.select`
     }
 `;
 
-export default class FormInput extends React.Component {
+export default class FormDropDown extends React.Component {
     render() {
         const { label, isRequired, options, input, meta: { error, warning, touched }, ...props } = this.props;
+
         const showError = touched && (error || warning);
 
         return(
