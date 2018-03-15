@@ -8,20 +8,20 @@ import Registration from './Registration';
 import Login from './Login';
 
 const Routes = ({ match }) => {
-  return (
-    <Switch>
-      <Route path={`/search`} component={SearchAdverts} />
-      <Route path={`/register`} component={Registration} />
-      <Route path={`/login`} component={Login} />
-      <Route path={`/`} component={LatestAdverts} />
-    </Switch>
-  );
+    return (
+        <Switch>
+            <Route path={`/search`} component={SearchAdverts} />
+            <Route path={`/register`} component={Registration} />
+            <Route path={`/login`} component={Login} />
+            <Route path={`/`} component={LatestAdverts} />
+        </Switch>
+    );
 };
 
 Routes.propTypes = {
-  match: PropTypes.shape({
-    url: PropTypes.string.isRequired,
-  }).isRequired,
+    match: PropTypes.shape({
+        url: PropTypes.string.isRequired,
+    }).isRequired,
 };
 
 export default Routes;

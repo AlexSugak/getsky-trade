@@ -47,14 +47,14 @@ injectGlobal`
   }
 `;
 
-const Wrapper = styled(Flex)`
+const Wrapper = styled(Flex) `
     min-height: 100vh;
 `;
 
-const Root = ({locale, ...props}) => (
+const Root = ({ locale, ...props }) => (
     <ThemeProvider theme={theme}>
         <Wrapper className="app" flexDirection="column">
-            <Header/>
+            <Header />
             <Routes {...props} />
             <Footer />
         </Wrapper>
@@ -62,13 +62,13 @@ const Root = ({locale, ...props}) => (
 );
 
 export default () => (
-  <Provider store={store}>
-      <ConnectedRouter history={history}>
-          <Router>
-              <Switch>
-                  <Route path="/" render={props => <Root {...props} locale="en"/>}/>
-              </Switch>
-          </Router>
-      </ConnectedRouter>
-  </Provider>
+    <Provider store={store}>
+        <ConnectedRouter history={history}>
+            <Router>
+                <Switch>
+                    <Route path="/" render={props => <Root {...props} locale="en" />} />
+                </Switch>
+            </Router>
+        </ConnectedRouter>
+    </Provider>
 );
