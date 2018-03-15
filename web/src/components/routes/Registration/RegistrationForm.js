@@ -21,9 +21,12 @@ const passwordsMatch = (value, allValues) => allValues.password && value !== all
 
 class RegistrationForm extends React.Component {
     timeOffsets = [];
+    defaultOffset = 0;
 
     componentWillMount() {
         const date = moment();
+        this.defaultOffset = date.utcOffset() / 60
+
         for (let i = UTC_OFFSET_FROM; i <= UTC_OFFSET_TO; i++) {
             const timeOffset = date.utcOffset(i).format('LLL');
             const offset = i >= 0 ? `+${i}` : i;
@@ -39,7 +42,6 @@ class RegistrationForm extends React.Component {
         }
     }
 
-
     render() {
         const { handleSubmit, pristine, submitting, registerUser } = this.props;
 
@@ -54,6 +56,7 @@ class RegistrationForm extends React.Component {
                         placeholder="Username"
                         description="3 to 16 characters, only letters and numbers"
                         validate={[required, minLength3, maxLength16, alphaNumeric]}
+                        isRequired
                     />
                     <Field
                         name="email"
@@ -63,6 +66,7 @@ class RegistrationForm extends React.Component {
                         placeholder="Email"
                         description=""
                         validate={[required, email]}
+                        isRequired
                     />
                     <Field
                         name="password"
@@ -72,6 +76,7 @@ class RegistrationForm extends React.Component {
                         placeholder="Password"
                         description="8 characters or more"
                         validate={[required, minLength8]}
+                        isRequired
                     />
                     <Field
                         name="confirmPassword"
@@ -80,11 +85,10 @@ class RegistrationForm extends React.Component {
                         label="Confirm password"
                         placeholder="Confirm password"
                         validate={[required, passwordsMatch]}
+                        isRequired
                     />
-                    <Field name="timeOffset" component={FormDropdown} options={this.timeOffsets} label="Your local time" validate={[required]} parse={parseInt} />
-
-                    <Field name="recaptcha" component={ReCaptcha} validate={[required]} withRef ref={r => { this.recaptchaField = r }} />
-
+                    <Field name="timeOffset" component={FormDropdown} options={this.timeOffsets} label="Your local time" validate={[required]} parse={parseInt} defaultValue={this.defaultOffset} isRequired />
+                    <Field name="recaptcha" component={ReCaptcha} validate={[required]} withRef ref={r => { this.recaptchaField = r }} isRequired />
                     <Button type="submit" disabled={pristine || submitting} text="Register" />
                 </Box>
             </Form>

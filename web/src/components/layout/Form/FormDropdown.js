@@ -1,6 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { rgba } from 'polished';
+
 import Wrapper from './ControlWrapper';
 import FormLabel from './FormLabel';
 import ErrorMessage from './ErrorMessage';
@@ -43,26 +45,48 @@ const Select = styled.select`
 `;
 
 export default class FormDropdown extends React.Component {
+    componentDidMount() {
+        // ReduxForm doesn't have a prop for 'defaultValue'. You need to set it manually.
+        const { defaultValue, input: { onChange } } = this.props;
+        onChange(defaultValue);
+    }
+
     render() {
-        const { label, isRequired, options, input, meta: { error, warning, touched }, ...props } = this.props;
+        const { label, isRequired, options, input: { name, onChange }, meta: { error, warning, touched }, defaultValue } = this.props;
 
         const showError = touched && (error || warning);
 
-        return(
+        return (
             <Wrapper>
                 {label &&
-                <FormLabel for={input.name}>
-                    {label}
-                    {isRequired && '*'}
-                </FormLabel>
+                    <FormLabel for={name}>
+                        {label}
+                        {isRequired && '*'}
+                    </FormLabel>
                 }
                 <SelectWrapper>
-                    <Select name={input.name} error={showError} { ...input } { ...props }>
+                    <Select name={name} error={showError} onChange={onChange} defaultValue={defaultValue} >
                         {options.map((item, i) => <option value={item.value} key={i}>{item.text}</option>)}
                     </Select>
                 </SelectWrapper>
-                {showError && <ErrorMessage>{ error || warning }</ErrorMessage>}
+                {showError && <ErrorMessage>{error || warning}</ErrorMessage>}
             </Wrapper>
         );
     }
+}
+
+FormDropdown.propTypes = {
+    label: PropTypes.string,
+    isRequired: PropTypes.bool,
+    options: PropTypes.array,
+    input: PropTypes.shape({
+        onChange: PropTypes.func.isRequired,
+        name: PropTypes.string.isRequired,
+    }).isRequired,
+    meta: PropTypes.shape({
+        touched: PropTypes.bool,
+        error: PropTypes.string,
+        warning: PropTypes.string,
+    }).isRequired,
+    defaultValue : PropTypes.any,
 }
