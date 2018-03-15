@@ -9,7 +9,7 @@ export const register = (user) =>
         dispatch({ type: REGISTER_USER_REQUEST });
 
         try {
-            const response = await registerUser(user);
+            await registerUser(user);
             dispatch({ type: REGISTER_USER_RESPONSE_OK });
         }
         catch (e) {

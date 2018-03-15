@@ -11,15 +11,21 @@ class ReCaptcha extends React.Component {
 	}
 
 	render() {
-		const { meta: { touched, error, warning }, input } = this.props;
+		const { meta: { touched, error, warning }, input: { onChange } } = this.props;
 		const showError = touched && (error || warning);
+
 		return (
 			<ControlWrapper>
-				<ReCAPTCHA ref={cpt => { this.reCaptcha = cpt; }} sitekey={RE_CAPTCHA_KEY} {...input} />
+				<ReCAPTCHA ref={cpt => { this.reCaptcha = cpt; }} sitekey={RE_CAPTCHA_KEY} onChange={onChange} />
 				{showError && <ErrorMessage>{error || warning}</ErrorMessage>}
 			</ControlWrapper>
 		);
 	}
+};
+
+ReCaptcha.propTypes = {
+	meta: PropTypes.object.isRequired,
+	input: PropTypes.object.isRequired,
 };
 
 export default ReCaptcha;

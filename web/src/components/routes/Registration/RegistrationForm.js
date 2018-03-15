@@ -6,7 +6,7 @@ import moment from 'moment';
 import { Box } from 'grid-styled';
 
 import ReCaptcha from './ReCaptcha';
-import { FormInput, FormDropdown, Button, ControlWrapper, ErrorMessage } from '../../layout/Form';
+import { FormInput, FormDropdown, Button } from '../../layout/Form';
 import { required, email, minLength, maxLength, alphaNumeric } from '../../../validation/rules';
 import { register } from './actions';
 
@@ -33,7 +33,7 @@ class RegistrationForm extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         // Reset captcha after receiving response
-        if (prevProps.requesting && prevProps.requesting != this.props.requesting && this.props.errors.length > 0) {
+        if (prevProps.requesting && prevProps.requesting !== this.props.requesting && this.props.errors.length > 0) {
             const cptCmp = this.recaptchaField.getRenderedComponent();
             cptCmp.resetRecaptcha();
         }
@@ -93,8 +93,9 @@ class RegistrationForm extends React.Component {
 }
 
 RegistrationForm.propTypes = {
-    requesting: PropTypes.bool,
-    errors: PropTypes.array,
+    requesting: PropTypes.bool.isRequired,
+    errors: PropTypes.array.isRequired,
+    registerUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ registration }) => {
@@ -102,7 +103,7 @@ const mapStateToProps = ({ registration }) => {
         requesting: registration.requesting,
         errors: registration.errors,
     }
-}
+};
 
 const FormReg = reduxForm({
     form: 'registrationForm'
