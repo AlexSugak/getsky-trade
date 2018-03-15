@@ -10,8 +10,8 @@ import Footer from './layout/Footer';
 import theme from './theme';
 import store, { history } from '../store';
 
-import skycoinLight from './Skycoin-Light.woff';
-import skycoinBold from './Skycoin-Bold.woff';
+import skycoinLight from '../fonts/Skycoin-Light.woff';
+import skycoinBold from '../fonts/Skycoin-Bold.woff';
 
 injectGlobal`
   @font-face {
