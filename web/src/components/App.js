@@ -1,9 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import styled, { injectGlobal, ThemeProvider } from 'styled-components';
 import { Flex } from 'grid-styled';
+
 import Routes from './routes/Routes';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
@@ -53,7 +54,7 @@ const Wrapper = styled(Flex) `
 
 const Root = ({ locale, ...props }) => (
     <ThemeProvider theme={theme}>
-        <Wrapper className="app" flexDirection="column">
+        <Wrapper flexDirection="column">
             <Header />
             <Routes {...props} />
             <Footer />
@@ -64,11 +65,9 @@ const Root = ({ locale, ...props }) => (
 export default () => (
     <Provider store={store}>
         <ConnectedRouter history={history}>
-            <Router>
-                <Switch>
-                    <Route path="/" render={props => <Root {...props} locale="en" />} />
-                </Switch>
-            </Router>
+            <Switch>
+                <Route path="/" render={props => <Root {...props} locale="en" />} />
+            </Switch>
         </ConnectedRouter>
     </Provider>
 );
