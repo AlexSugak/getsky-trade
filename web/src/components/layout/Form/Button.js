@@ -12,6 +12,9 @@ const Button = styled.button`
     &:hover {
         cursor:pointer;
     }
+    &:disabled {
+        background: ${props => props.theme.colors.gray};
+    }
 `;
 
 export default ({ text, type, disabled }) => (
