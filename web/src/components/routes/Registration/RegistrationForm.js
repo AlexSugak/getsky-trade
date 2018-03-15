@@ -1,14 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, reduxForm, Form } from 'redux-form';
-import ReCAPTCHA from 'react-google-recaptcha';
 import moment from 'moment';
 import { Box } from 'grid-styled';
 
-import { register } from './actions';
+import ReCaptcha from './ReCaptcha';
 import { FormInput, FormDropdown, Button, ControlWrapper, ErrorMessage } from '../../layout/Form';
 import { required, email, minLength, maxLength, alphaNumeric } from '../../../validation/rules';
-import { RE_CAPTCHA_KEY } from '../../../constants';
+import { register } from './actions';
 
 const UTC_OFFSET_FROM = -11;
 const UTC_OFFSET_TO = 14;
@@ -19,34 +19,33 @@ const maxLength16 = maxLength(16);
 
 const passwordsMatch = (value, allValues) => allValues.password && value !== allValues.password ? 'Passwords does not match' : undefined;
 
-const ReCaptcha = ({ input, meta: { touched, error, warning }, ...props }) => {
-    const showError = touched && (error || warning);
-    return (
-        <ControlWrapper>
-            <ReCAPTCHA {...input} {...props}  />
-            {showError && <ErrorMessage>{ error || warning }</ErrorMessage>}
-        </ControlWrapper>
-    );
-};
-
 class RegistrationForm extends React.Component {
     timeOffsets = [];
 
-    componentWillMount () {
+    componentWillMount() {
         const date = moment();
-        for(let i = UTC_OFFSET_FROM; i <= UTC_OFFSET_TO; i++) {
+        for (let i = UTC_OFFSET_FROM; i <= UTC_OFFSET_TO; i++) {
             const timeOffset = date.utcOffset(i).format('LLL');
             const offset = i >= 0 ? `+${i}` : i;
-            this.timeOffsets.push({ text: `GMT ${offset} - ${timeOffset}`,  value: i })
+            this.timeOffsets.push({ text: `GMT ${offset} - ${timeOffset}`, value: i })
         }
     }
+
+    componentDidUpdate(prevProps, prevState) {
+        // Reset captcha after receiving response
+        if (prevProps.requesting && prevProps.requesting != this.props.requesting && this.props.errors.length > 0) {
+            const cptCmp = this.recaptchaField.getRenderedComponent();
+            cptCmp.resetRecaptcha();
+        }
+    }
+
 
     render() {
         const { handleSubmit, pristine, submitting, registerUser } = this.props;
 
         return (
             <Form onSubmit={handleSubmit(registerUser)}>
-                <Box width={1/2}>
+                <Box width={1 / 2}>
                     <Field
                         name="username"
                         component={FormInput}
@@ -84,7 +83,7 @@ class RegistrationForm extends React.Component {
                     />
                     <Field name="timeOffset" component={FormDropdown} options={this.timeOffsets} label="Your local time" validate={[required]} parse={parseInt} />
 
-                    <Field name="recaptcha" component={ReCaptcha} sitekey={RE_CAPTCHA_KEY} validate={[required]} />
+                    <Field name="recaptcha" component={ReCaptcha} validate={[required]} withRef ref={field => { this.recaptchaField = field }} />
 
                     <Button type="submit" disabled={pristine || submitting} text="Register" />
                 </Box>
@@ -93,8 +92,20 @@ class RegistrationForm extends React.Component {
     }
 }
 
+RegistrationForm.propTypes = {
+    requesting: PropTypes.bool,
+    errors: PropTypes.array,
+};
+
+const mapStateToProps = ({ registration }) => {
+    return {
+        requesting: registration.requesting,
+        errors: registration.errors,
+    }
+}
+
 const FormReg = reduxForm({
     form: 'registrationForm'
 })(RegistrationForm);
 
-export default connect(null, { registerUser: register })(FormReg);
+export default connect(mapStateToProps, { registerUser: register })(FormReg);
