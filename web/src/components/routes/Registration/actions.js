@@ -1,3 +1,5 @@
+import { push } from 'react-router-redux'
+
 import { registerUser } from '../../../api';
 
 export const REGISTER_USER_REQUEST = 'REGISTER_USER_REQUEST';
@@ -11,6 +13,7 @@ export const register = (user) =>
         try {
             await registerUser(user);
             dispatch({ type: REGISTER_USER_RESPONSE_OK });
+            dispatch(push('/'));
         }
         catch (e) {
             if (e.response.status === 400) {

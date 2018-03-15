@@ -83,7 +83,7 @@ class RegistrationForm extends React.Component {
                     />
                     <Field name="timeOffset" component={FormDropdown} options={this.timeOffsets} label="Your local time" validate={[required]} parse={parseInt} />
 
-                    <Field name="recaptcha" component={ReCaptcha} validate={[required]} withRef ref={field => { this.recaptchaField = field }} />
+                    <Field name="recaptcha" component={ReCaptcha} validate={[required]} withRef ref={r => { this.recaptchaField = r }} />
 
                     <Button type="submit" disabled={pristine || submitting} text="Register" />
                 </Box>
@@ -96,7 +96,7 @@ RegistrationForm.propTypes = {
     requesting: PropTypes.bool.isRequired,
     errors: PropTypes.array.isRequired,
     registerUser: PropTypes.func.isRequired,
-    handleSubmit: PropTypes.func.isRequired, 
+    handleSubmit: PropTypes.func.isRequired,
     pristine: PropTypes.bool.isRequired,
     submitting: PropTypes.bool.isRequired,
 };
