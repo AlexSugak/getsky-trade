@@ -96,6 +96,9 @@ RegistrationForm.propTypes = {
     requesting: PropTypes.bool.isRequired,
     errors: PropTypes.array.isRequired,
     registerUser: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired, 
+    pristine: PropTypes.bool.isRequired,
+    submitting: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = ({ registration }) => {

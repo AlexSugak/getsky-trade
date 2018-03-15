@@ -12,11 +12,11 @@ export const initialState = {
 export default (state = initialState, action) => {
     switch (action.type) {
         case REGISTER_USER_REQUEST:
-            return { requesting: true };
+            return { ...state, requesting: true };
         case REGISTER_USER_RESPONSE_OK:
-            return { requesting: false };
+            return { ...state, requesting: false };
         case REGISTER_USER_RESPONSE_ERROR:
-            return { requesting: false, errors: action.errors };
+            return { ...state, requesting: false, errors: action.errors };
         default:
             return state;
     }
