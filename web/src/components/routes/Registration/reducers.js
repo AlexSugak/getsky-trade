@@ -14,7 +14,7 @@ export default (state = initialState, action) => {
         case REGISTER_USER_REQUEST:
             return { ...state, requesting: true };
         case REGISTER_USER_RESPONSE_OK:
-            return { ...state, requesting: false };
+            return { ...state, requesting: false, errors: [] };
         case REGISTER_USER_RESPONSE_ERROR:
             return { ...state, requesting: false, errors: action.errors };
         default:

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Field, reduxForm, Form } from 'redux-form';
+import { Field, reduxForm, Form, SubmissionError } from 'redux-form';
 import moment from 'moment';
 import { Box } from 'grid-styled';
 
@@ -42,11 +42,20 @@ class RegistrationForm extends React.Component {
         }
     }
 
+    registerUser = user => {
+        const { registerUser } = this.props;
+
+        return registerUser(user)
+            .catch(err => {
+                throw new SubmissionError(err)
+            });
+    }
+
     render() {
-        const { handleSubmit, pristine, submitting, registerUser } = this.props;
+        const { handleSubmit, pristine, submitting } = this.props;
 
         return (
-            <Form onSubmit={handleSubmit(registerUser)}>
+            <Form onSubmit={handleSubmit(this.registerUser)}>
                 <Box width={1 / 2}>
                     <Field
                         name="username"

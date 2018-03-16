@@ -17,7 +17,14 @@ export const register = (user) =>
         }
         catch (e) {
             if (e.response.status === 400) {
+                const errors = e.response.data;
                 dispatch({ type: REGISTER_USER_RESPONSE_ERROR, errors: e.response.data });
+
+                const formErrors = {};
+                Object
+                    .keys(errors)
+                    .every(k => formErrors[errors[k].key.toLowerCase()] = errors[k].message);
+                throw formErrors;
             }
         }
     };
