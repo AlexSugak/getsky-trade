@@ -10,6 +10,7 @@ import Header from './layout/Header';
 import Footer from './layout/Footer';
 import theme from './theme';
 import store, { history } from '../store';
+import { registerApiInterceptor } from '../api/requestInterceptor';
 
 import skycoinLight from '../fonts/Skycoin-Light.woff';
 import skycoinBold from '../fonts/Skycoin-Bold.woff';
@@ -51,6 +52,8 @@ injectGlobal`
 const Wrapper = styled(Flex) `
     min-height: 100vh;
 `;
+
+registerApiInterceptor(store);
 
 const Root = ({ locale, ...props }) => (
     <ThemeProvider theme={theme}>

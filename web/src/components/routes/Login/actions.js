@@ -1,6 +1,7 @@
 import { push } from 'react-router-redux'
 
 import { login as loginRequest } from '../../../api';
+import { putAuthTokens } from '../../../storage'
 
 export const LOGIN_USER_REQUEST = 'LOGIN_USER_REQUEST';
 export const LOGIN_USER_RESPONSE_OK = 'LOGIN_USER_RESPONSE_OK';
@@ -13,6 +14,7 @@ export const login = (user) =>
         try {
             const response = await loginRequest(user);
             dispatch({ type: LOGIN_USER_RESPONSE_OK, data: response.data });
+            putAuthTokens(response.data);
             dispatch(push('/'));
         }
         catch (e) {
