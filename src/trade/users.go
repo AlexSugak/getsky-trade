@@ -102,7 +102,7 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 
 		res, err := s.checkRecaptcha(req.Recaptcha)
 		if err != nil {
-			return ce.CreateSingleValidationError("recaptchaKey", err.Error())
+			return err
 		} else if !res {
 			return ce.CreateSingleValidationError("recaptcha", "is not valid")
 		}
