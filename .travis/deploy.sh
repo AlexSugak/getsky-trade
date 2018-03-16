@@ -24,7 +24,8 @@ git push deploy master
 ssh $RUN_USER@$IP -p $PORT <<EOF
   cd $DEPLOY_DIR
   sudo service docker restart # restart docker service to prevent "timeout" errors (https://github.com/docker/compose/issues/3633#issuecomment-254194717)
-  make run-docker
+  echo key ${RECAPTCHA_SECRET}
+  sudo -E make run-docker
   # run migrations
   docker exec backend sh -c "cd /usr/local/go/src/github.com/AlexSugak/getsky-trade/db/ && bash ./migrate.sh"
 EOF
