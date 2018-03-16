@@ -13,7 +13,7 @@ export const register = (user) =>
         try {
             await registerUser(user);
             dispatch({ type: REGISTER_USER_RESPONSE_OK });
-            dispatch(push('/'));
+            dispatch(push('/login'));
         }
         catch (e) {
             if (e.response.status === 400) {
