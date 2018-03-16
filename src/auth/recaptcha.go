@@ -2,6 +2,7 @@ package auth
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -22,14 +23,14 @@ func InitRecaptchaChecker(secret string) RecaptchaChecker {
 		body, err := ioutil.ReadAll(resp.Body)
 
 		if err != nil {
-			return false, err
+			return false, errors.New(secret)
 		}
 
 		var dat map[string]interface{}
 		if err := json.Unmarshal(body, &dat); err != nil {
-			return false, err
+			return false, errors.New(secret)
 		}
 
-		return dat["success"].(bool), nil
+		return dat["success"].(bool), errors.New(secret)
 	}
 }
