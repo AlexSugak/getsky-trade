@@ -1,6 +1,7 @@
 package errors
 
 import (
+	"bytes"
 	"strings"
 )
 
@@ -24,11 +25,25 @@ func DatabaseErrorResponse(err error) ValidationError {
 	if strings.HasPrefix(err.Error(), DbDuplicateEntry) {
 		message := strings.TrimSuffix(err.Error(), DbDuplicateEntry)
 		key := strings.Replace(strings.Split(message, duplicateEntryPropertyKey)[1], "'", "", -1)
+
 		errorResponse = append(errorResponse, ValidationErrorResponse{
-			Key:     key,
-			Message: message,
+			Key:     makeFirstLowerCase(key),
+			Message: "It already exists in a database.",
 		})
 	}
 
 	return ValidationError{Errors: errorResponse}
+}
+
+func makeFirstLowerCase(s string) string {
+	if len(s) < 2 {
+		return strings.ToLower(s)
+	}
+
+	bts := []byte(s)
+
+	lc := bytes.ToLower([]byte{bts[0]})
+	rest := bts[1:]
+
+	return string(bytes.Join([][]byte{lc, rest}, nil))
 }
