@@ -21,9 +21,7 @@ export const register = (user) =>
                 dispatch({ type: REGISTER_USER_RESPONSE_ERROR, errors: e.response.data });
 
                 const formErrors = {};
-                Object
-                    .keys(errors)
-                    .every(k => formErrors[errors[k].key] = errors[k].message);
+                Object.values(errors).map(k => formErrors[k.key] = k.message)
                 throw formErrors;
             }
         }

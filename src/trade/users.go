@@ -69,7 +69,7 @@ func AuthenticateHandler(s *HTTPServer) httputil.APIHandler {
 
 // RegisterRequest holds auth data
 type RegisterRequest struct {
-	UserName   string `json:"username" validate:"required"`
+	UserName   string `json:"userName" validate:"required"`
 	Password   string `json:"password" validate:"required"`
 	Email      string `json:"email" validate:"required,email"`
 	TimeOffset int    `json:"timeOffset" validate:"required,min=-11,max=14"`

@@ -58,7 +58,7 @@ class RegistrationForm extends React.Component {
             <Form onSubmit={handleSubmit(this.registerUser)}>
                 <Box width={1 / 2}>
                     <Field
-                        name="username"
+                        name="userName"
                         component={FormInput}
                         type="text"
                         label="Username"
