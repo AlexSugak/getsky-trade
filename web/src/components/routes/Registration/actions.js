@@ -23,7 +23,7 @@ export const register = (user) =>
                 const formErrors = {};
                 Object
                     .keys(errors)
-                    .every(k => formErrors[errors[k].key.toLowerCase()] = errors[k].message);
+                    .every(k => formErrors[errors[k].key] = errors[k].message);
                 throw formErrors;
             }
         }
