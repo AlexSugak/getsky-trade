@@ -1,13 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-
-const navItems = [
-    { url: '/', name: 'Home' },
-    { url: '/search', name: 'Search' },
-    { url: '/register', name: 'Register' },
-    { url: '/login', name: 'Login' },
-];
 
 const Nav = styled.ul`
      display: flex;
@@ -21,7 +15,7 @@ const NavItem = styled.li`
     margin: 0 15px;
 `;
 
-const NavLink = styled(Link)`
+const NavLink = styled(Link) `
     color: ${props => props.theme.colors.white};
     text-decoration: none;
     
@@ -30,8 +24,8 @@ const NavLink = styled(Link)`
     }
 `;
 
-export default () => (
-    <Nav className="nav">
+const NavItems = ({ navItems }) => (
+    <Nav>
         {navItems.map((item, i) => (
             <NavItem key={i}>
                 <NavLink to={item.url}>{item.name}</NavLink>
@@ -39,3 +33,9 @@ export default () => (
         ))}
     </Nav>
 );
+
+NavItems.PropTypes = {
+    navItems: PropTypes.array.isRequired,
+}
+
+export default NavItems;

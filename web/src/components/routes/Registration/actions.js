@@ -22,7 +22,7 @@ export const register = (user) =>
 
                 const formErrors = {};
                 Object.values(errors).map(k => formErrors[k.key] = k.message)
-                throw formErrors;
+                return Promise.reject(formErrors);
             }
         }
     };
