@@ -1,6 +1,8 @@
 import React from 'react';
 import { Field, reduxForm, Form } from 'redux-form';
 import { Box } from 'grid-styled';
+import PropTypes from 'prop-types';
+
 import { FormInput, Button } from '../../layout/Form';
 
 const LoginForm = props => {
@@ -16,6 +18,12 @@ const LoginForm = props => {
             <Button type="submit" disabled={pristine || submitting} text="Login" />
         </Form>
     )
+};
+
+LoginForm.propTypes = {
+    handleSubmit: PropTypes.func.isRequired,
+    pristine: PropTypes.bool.isRequired,
+    submitting: PropTypes.bool.isRequired,
 };
 
 export default reduxForm({

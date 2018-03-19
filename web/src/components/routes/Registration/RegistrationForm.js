@@ -36,26 +36,16 @@ class RegistrationForm extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         // Reset captcha after receiving response
-        if (prevProps.requesting && prevProps.requesting !== this.props.requesting && this.props.errors.length > 0) {
+        if (prevProps.submitting && prevProps.submitting !== this.props.submitting) {
             const cptCmp = this.recaptchaField.getRenderedComponent();
             cptCmp.resetRecaptcha();
         }
     }
 
-    registerUser = user => {
-        const { registerUser } = this.props;
-
-        return registerUser(user)
-            .catch(err => {
-                throw new SubmissionError(err)
-            });
-    }
-
     render() {
         const { handleSubmit, pristine, submitting } = this.props;
-
         return (
-            <Form onSubmit={handleSubmit(this.registerUser)}>
+            <Form onSubmit={handleSubmit}>
                 <Box width={1 / 2}>
                     <Field
                         name="userName"
@@ -106,23 +96,11 @@ class RegistrationForm extends React.Component {
 }
 
 RegistrationForm.propTypes = {
-    requesting: PropTypes.bool.isRequired,
-    errors: PropTypes.array.isRequired,
-    registerUser: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     pristine: PropTypes.bool.isRequired,
     submitting: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = ({ registration }) => {
-    return {
-        requesting: registration.requesting,
-        errors: registration.errors,
-    }
-};
-
-const FormReg = reduxForm({
+export default reduxForm({
     form: 'registrationForm'
 })(RegistrationForm);
-
-export default connect(mapStateToProps, { registerUser: register })(FormReg);
