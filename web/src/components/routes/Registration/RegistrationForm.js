@@ -1,14 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Field, reduxForm, Form, SubmissionError } from 'redux-form';
+import { Field, reduxForm, Form } from 'redux-form';
 import moment from 'moment';
 import { Box } from 'grid-styled';
 
 import ReCaptcha from './ReCaptcha';
 import { FormInput, FormDropdown, Button } from '../../layout/Form';
 import { required, email, minLength, maxLength, alphaNumeric } from '../../../validation/rules';
-import { register } from './actions';
 
 const UTC_OFFSET_FROM = -11;
 const UTC_OFFSET_TO = 14;

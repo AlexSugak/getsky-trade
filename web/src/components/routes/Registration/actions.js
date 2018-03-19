@@ -18,7 +18,7 @@ export const register = (user) =>
         catch (e) {
             if (e.response.status === 400) {
                 const errors = e.response.data;
-                dispatch({ type: REGISTER_USER_RESPONSE_ERROR, errors: e.response.data });
+                dispatch({ type: REGISTER_USER_RESPONSE_ERROR });
 
                 const formErrors = {};
                 Object.values(errors).map(k => formErrors[k.key] = k.message)

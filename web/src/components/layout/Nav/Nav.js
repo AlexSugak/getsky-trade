@@ -34,7 +34,7 @@ const NavItems = ({ navItems }) => (
     </Nav>
 );
 
-NavItems.PropTypes = {
+NavItems.propTypes = {
     navItems: PropTypes.array.isRequired,
 }
 

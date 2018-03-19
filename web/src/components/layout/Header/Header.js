@@ -7,7 +7,6 @@ import Container from '../Container';
 import Brand from '../Brand';
 import Nav from '../Nav';
 import SocialMenu from '../SocialLinks';
-import { logout } from '../../routes/Login/actions'
 
 const SubHeaderWrapper = styled.div`
     background: ${props => props.theme.colors.white};

@@ -1,7 +1,7 @@
 import { push } from 'react-router-redux'
 
 import { login as loginRequest } from '../../../api';
-import { getAuthTokens, putAuthTokens } from '../../../storage'
+import { putAuthTokens } from '../../../storage'
 
 export const LOGIN_USER_REQUEST = 'LOGIN_USER_REQUEST';
 export const LOGIN_USER_RESPONSE_OK = 'LOGIN_USER_RESPONSE_OK';
@@ -16,7 +16,6 @@ export const loginUserResponseOk = () => ({
 export const login = (user) =>
     async dispatch => {
         dispatch({ type: LOGIN_USER_REQUEST });
-
         try {
             const response = await loginRequest(user);
             dispatch(loginUserResponseOk());
@@ -30,12 +29,3 @@ export const login = (user) =>
             }
         }
     };
-
-export const authRedirect = (nextState, replace, callback) => {
-    let authTokens = getAuthTokens();
-    if (authTokens !== null) {
-        replace({ pathname: '/' })
-    }
-
-    callback();
-}
