@@ -9,13 +9,17 @@ export const LOGIN_USER_RESPONSE_ERROR = 'LOGIN_USER_RESPONSE_ERROR';
 
 export const LOGOUT_USER = 'LOGOUT_USER';
 
+export const loginUserResponseOk = () => ({
+    type: LOGIN_USER_RESPONSE_OK
+});
+
 export const login = (user) =>
     async dispatch => {
         dispatch({ type: LOGIN_USER_REQUEST });
 
         try {
             const response = await loginRequest(user);
-            dispatch({ type: LOGIN_USER_RESPONSE_OK });
+            dispatch(loginUserResponseOk());
             putAuthTokens(response.data);
             dispatch(push('/'));
         }

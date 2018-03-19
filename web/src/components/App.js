@@ -8,6 +8,8 @@ import { Flex } from 'grid-styled';
 import Routes from './routes/Routes';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
+import AppInitializer from './AppInitializer';
+
 import theme from './theme';
 import store, { history } from '../store';
 import { registerApiInterceptor } from '../api/requestInterceptor';
@@ -57,11 +59,13 @@ registerApiInterceptor(store);
 
 const Root = ({ locale, ...props }) => (
     <ThemeProvider theme={theme}>
-        <Wrapper flexDirection="column">
-            <Header />
-            <Routes {...props} />
-            <Footer />
-        </Wrapper>
+        <AppInitializer>
+            <Wrapper flexDirection="column">
+                <Header />
+                <Routes {...props} />
+                <Footer />
+            </Wrapper>
+        </AppInitializer>
     </ThemeProvider>
 );
 
