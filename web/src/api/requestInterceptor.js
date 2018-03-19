@@ -9,13 +9,12 @@ export const registerApiInterceptor = store => {
         }
 
         return config;
-    }, err => {
-        return Promise.reject(err);
     });
 
     axios.interceptors.response.use(response => {
         return response;
     }, err => {
+        // implement logic to handle bad response
         return Promise.reject(err);
     });
 };

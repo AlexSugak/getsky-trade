@@ -18,12 +18,8 @@ export const login = (user) =>
             dispatch(push('/'));
         }
         catch (e) {
-            if (e.response.status === 400) {
-                const errors = e.response.data;
-                dispatch({ type: LOGIN_USER_RESPONSE_ERROR, errors: e.response.data });
-                const formErrors = {};
-                Object.values(errors).map(k => formErrors[k.key] = k.message)
-                throw formErrors;
+            if (e.response.status === 401) {
+                throw { userName: ' ', password: e.response.data };
             }
         }
     };
