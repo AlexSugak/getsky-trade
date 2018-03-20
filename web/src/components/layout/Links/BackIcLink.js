@@ -7,7 +7,6 @@ const BackIcLink = ({ path, text }) => (
     <Link to={path}><Icon name={IconMap.AngleLeft} /> {text}</Link>
 )
 
-
 BackIcLink.propTypes = {
     text: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired,
