@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Box } from 'grid-styled';
 import Container from '../Container';
-import Promo from '../Promo';
 import Brand from '../Brand';
 import SocialMenu from '../SocialLinks';
 
@@ -53,7 +52,6 @@ const Footer = styled.footer`
 
 export default () => (
     <div>
-        <Promo />
         <Subfooter className="subfooter">
             <Container justifyContent="space-between" py={4}>
                 <Box w={1 / 2}>

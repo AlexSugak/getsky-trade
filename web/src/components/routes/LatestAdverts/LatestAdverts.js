@@ -8,6 +8,7 @@ import pick from 'lodash/pick';
 import pickBy from 'lodash/pickBy';
 import { Tab as UnstyledTab, Tabs, TabList as UnstyledTabList, TabPanel } from 'react-tabs';
 import { getAdverts } from './actions';
+import Promo from '../../layout/Promo';
 import Container from '../../layout/Container';
 import Table, { TableRow, TableCell } from '../../layout/Table';
 import { TRADE_OPTIONS } from '../../../constants';
@@ -33,7 +34,7 @@ const Intro = styled.div`
     }
 `;
 
-const TabList = styled(UnstyledTabList)`
+const TabList = styled(UnstyledTabList) `
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -41,7 +42,7 @@ const TabList = styled(UnstyledTabList)`
     margin-top: -${props => props.theme.introTabsHeight}px;
 `;
 
-const Tab = styled(UnstyledTab)`
+const Tab = styled(UnstyledTab) `
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -80,7 +81,7 @@ const getTradeOptionsText = advert => {
     return values(pick(TRADE_OPTIONS, keys(advertOptions))).join(', ');
 };
 
-const AuthorCell = ({advert}) => (
+const AuthorCell = ({ advert }) => (
     <Author>
         <strong className="name">{advert.author}</strong>
         {advert.countryCode}, <span>{advert.city} {advert.stateCode} {advert.postalCode}</span>
@@ -129,7 +130,7 @@ class LatestAdverts extends React.Component {
             <div>
                 <Intro className="intro">
                     <Container flexDirection="column">
-                        <h1>Buy and sell Skycoin <br/>person-to-person with cash, by mail,<br/> money order & more…</h1>
+                        <h1>Buy and sell Skycoin <br />person-to-person with cash, by mail,<br /> money order & more…</h1>
                         <p>We never store Skycoin on this site so your money can't be hacked or stolen. All transactions are completely peer-to-peer (seller to buyer) and no email is required.</p>
                     </Container>
                 </Intro>
@@ -147,6 +148,7 @@ class LatestAdverts extends React.Component {
                         </TabPanel>
                     </Tabs>
                 </Container>
+                <Promo />
             </div>
         );
     }
