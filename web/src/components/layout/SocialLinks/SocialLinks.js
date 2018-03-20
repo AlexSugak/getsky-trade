@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import Icon from './components/Icon/Icon';
+import Icon, { IconMap } from '../Icon/Icon';
 
 const menuItems = [
-    { icon: 'facebook', url: 'https://facebook.com/getskycoin' },
-    { icon: 'twitter', url: 'https://twitter.com/getskycoin' },
-    { icon: 'instagram', url: 'https://www.instagram.com/getskycoin/' },
+    { icon: IconMap.Facebook, url: 'https://facebook.com/getskycoin' },
+    { icon: IconMap.Twitter, url: 'https://twitter.com/getskycoin' },
+    { icon: IconMap.Instagram, url: 'https://www.instagram.com/getskycoin/' },
 ];
 
 const SocialMenu = styled.ul`
