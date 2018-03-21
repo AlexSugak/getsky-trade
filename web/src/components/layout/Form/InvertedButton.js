@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const InvertedButton = styled.button`
@@ -17,6 +18,15 @@ const InvertedButton = styled.button`
     }
 `;
 
-export default ({ text, type, disabled, onClick }) => (
+const InvertedButtonControl = ({ text, type, disabled, onClick }) => (
     <InvertedButton type={type} disabled={disabled} onClick={onClick}>{text}</InvertedButton>
 );
+
+InvertedButtonControl.propTypes = {
+    text: PropTypes.string.isRequired,
+    type: PropTypes.string,
+    disabled: PropTypes.bool,
+    onClick: PropTypes.func,
+};
+
+export default InvertedButtonControl;
