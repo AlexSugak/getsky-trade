@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Flex, Box } from 'grid-styled';
 
-import Container from '../Container';
 import ControlInput from './ControlInput';
 import Wrapper from './ControlWrapper';
 import FormLabel from './FormLabel';
@@ -12,33 +12,50 @@ import { B } from '../Text';
 const RANGED_MODE = 'RANGED_MODE';
 const SINGLE_MODE = 'SINGLE_MODE';
 
+const fullWidth = { width: '100%' };
+
 class RangedSingleInput extends React.Component {
-    state = {
-        mode: RANGED_MODE,
-        value: {
-            from: 0,
-            to: 0,
+    constructor(props) {
+        super(props);
+
+        this.setMode = this.setMode.bind(this);
+
+        this.state = {
+            mode: RANGED_MODE,
+            value: {
+                from: 0,
+                to: 0,
+            }
         }
     }
 
-    setMode = mode => this.setState({ ...this.state, mode })
+    setMode(mode) {
+        this.setState({ ...this.state, mode })
+    };
 
-    render = () => {
+    render() {
         return (
             <Wrapper>
                 <FormLabel>What is the amount of cash you will pay in USD?</FormLabel>
-                <Button type="button" text='Ranged amount' onClick={() => this.setMode(RANGED_MODE)} />
-                <InvertedButton type="button" text='Single amount' onClick={() => this.setMode(SINGLE_MODE)} />
-                <Container>
+                <Flex mt={2}>
+                    <Button type="button" text='Ranged amount' onClick={() => this.setMode(RANGED_MODE)} style={fullWidth} />
+                    <InvertedButton type="button" text='Single amount' onClick={() => this.setMode(SINGLE_MODE)} style={fullWidth} />
+                </Flex>
+
+                <Flex mt={2} alignItems='center' >
                     <ControlInput placeholder="USD" />
-                    {this.state.mode === RANGED_MODE && <div>
-                        <span>to</span>
+                    {this.state.mode === RANGED_MODE &&
+                        <Box mx={2}>to</Box>
+                    }
+                    {this.state.mode === RANGED_MODE &&
                         <ControlInput placeholder="USD" />
-                    </div>}
-                </Container>
-                <FormLabel>Please choose a <B>ranged</B> or <B>single</B> amount. Valid amounts are 1 to 999999.99</FormLabel>
-                <FormLabel>Example for ranged amounts: <B>60 to 70</B></FormLabel>
-                <FormLabel>Example for single amount: <B>50</B></FormLabel>
+                    }
+                </Flex>
+                <Box mt={2}>
+                    <FormLabel>Please choose a <B>ranged</B> or <B>single</B> amount. Valid amounts are 1 to 999999.99</FormLabel>
+                    <FormLabel>Example for ranged amounts: <B>60 to 70</B></FormLabel>
+                    <FormLabel>Example for single amount: <B>50</B></FormLabel>
+                </Box>
             </Wrapper>
         );
     }

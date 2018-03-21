@@ -1,5 +1,6 @@
 import React from 'react';
 import { reduxForm, Form, Field } from 'redux-form';
+import { Box } from 'grid-styled'
 
 import { FormRangedSingleInput, FormCaptcha, FormCheckboxGroup, FormDropdownInput } from '../Form'
 
@@ -20,7 +21,7 @@ const acceptTradeOptions = [{
 const distanceUnitsOptions = [{
     text: 'Miles',
     value: 'mi',
-},{
+}, {
     text: 'Kilometers',
     value: 'km',
 }];
@@ -29,10 +30,12 @@ class PostingsForm extends React.Component {
     render() {
         return (
             <Form>
-                <FormRangedSingleInput />
-                <FormCheckboxGroup options={acceptTradeOptions} />
-                <Field name="distance" component={FormDropdownInput} options={distanceUnitsOptions} />
-                <Field name="captcha" component={FormCaptcha} />
+                <Box width={1 / 2}>
+                    <FormRangedSingleInput />
+                    <FormCheckboxGroup options={acceptTradeOptions} />
+                    <Field name="distance" component={FormDropdownInput} options={distanceUnitsOptions} />
+                    <Field name="captcha" component={FormCaptcha} />
+                </Box>
             </Form>
         )
     }
