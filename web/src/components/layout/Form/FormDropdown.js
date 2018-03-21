@@ -1,13 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { rgba } from 'polished';
 
 import Wrapper from './ControlWrapper';
 import ControlDropdown from './ControlDropdown';
 import FormLabel from './FormLabel';
 import ErrorMessage from './ErrorMessage';
-import { getBorderColor } from './helper';
 
 export default class FormDropdown extends React.Component {
     componentDidMount() {

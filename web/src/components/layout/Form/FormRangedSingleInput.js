@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 
 import Container from '../Container';
 import ControlInput from './ControlInput';
@@ -8,10 +7,7 @@ import Wrapper from './ControlWrapper';
 import FormLabel from './FormLabel';
 import Button from './Button';
 import InvertedButton from './InvertedButton';
-import FormInput from './FormInput';
-import ErrorMessage from './ErrorMessage';
 import { B } from '../Text';
-import { getBorderColor } from './helper';
 
 const RANGED_MODE = 'RANGED_MODE';
 const SINGLE_MODE = 'SINGLE_MODE';

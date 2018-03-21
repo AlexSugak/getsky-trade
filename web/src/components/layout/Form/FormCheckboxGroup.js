@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { rgba } from 'polished';
 
 import Wrapper from './ControlWrapper';
-import FormLabel from './FormLabel';
 
 const CheckBox = styled.input`
   padding: 10;

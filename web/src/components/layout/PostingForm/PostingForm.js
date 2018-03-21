@@ -1,7 +1,7 @@
 import React from 'react';
 import { reduxForm, Form, Field } from 'redux-form';
 
-import { FormRangedSingleInput, FormCaptcha, FormCheckboxGroup, ControlInput, FormInput, FormDropdownInput } from '../Form'
+import { FormRangedSingleInput, FormCaptcha, FormCheckboxGroup, FormDropdownInput } from '../Form'
 
 const acceptTradeOptions = [{
     title: 'Cache in person',
