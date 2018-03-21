@@ -4,8 +4,7 @@ import { Field, reduxForm, Form } from 'redux-form';
 import moment from 'moment';
 import { Box } from 'grid-styled';
 
-import ReCaptcha from './ReCaptcha';
-import { FormInput, FormDropdown, Button } from '../../layout/Form';
+import { FormInput, FormDropdown, Button, FormCaptcha } from '../../layout/Form';
 import { required, email, minLength, maxLength, alphaNumeric } from '../../../validation/rules';
 
 const UTC_OFFSET_FROM = -11;
@@ -85,7 +84,7 @@ class RegistrationForm extends React.Component {
                         isRequired
                     />
                     <Field name="timeOffset" component={FormDropdown} options={this.timeOffsets} label="Your local time" validate={[required]} parse={parseInt} defaultValue={this.defaultOffset} isRequired />
-                    <Field name="recaptcha" component={ReCaptcha} validate={[required]} withRef ref={r => { this.recaptchaField = r }} isRequired />
+                    <Field name="recaptcha" component={FormCaptcha} validate={[required]} withRef ref={r => { this.recaptchaField = r }} isRequired />
                     <Button type="submit" disabled={pristine || submitting} text="Register" />
                 </Box>
             </Form>

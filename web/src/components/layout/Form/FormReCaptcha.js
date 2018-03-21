@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-import { ControlWrapper, ErrorMessage } from '../../layout/Form';
+import ErrorMessage from './ErrorMessage';
+import ControlWrapper from './ControlWrapper';
 import { RE_CAPTCHA_KEY } from '../../../constants';
 
 class ReCaptcha extends React.Component {

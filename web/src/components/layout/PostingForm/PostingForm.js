@@ -1,14 +1,17 @@
 import React from 'react';
-import { reduxForm, Form } from 'redux-form';
+import { reduxForm, Form, Field } from 'redux-form';
 
-import { RangedSingleInput } from '../Form'
+import { FormRangedSingleInput, FormCaptcha } from '../Form'
 
-const PostingsForm = (props) => {
-    return (
-        <Form>
-            <RangedSingleInput />
-        </Form>
-    )
+class PostingsForm extends React.Component {
+    render = () => {
+        return (
+            <Form>
+                <FormRangedSingleInput />
+                <Field name="captcha" component={FormCaptcha} />
+            </Form>
+        )
+    }
 }
 
 export default reduxForm({

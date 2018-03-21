@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Field } from 'redux-form';
 
 import Container from '../Container';
+import ControlInput from './ControlInput';
 import Wrapper from './ControlWrapper';
 import FormLabel from './FormLabel';
 import Button from './Button';
@@ -34,10 +34,10 @@ class RangedSingleInput extends React.Component {
                 <Button type="button" text='Ranged amount' onClick={() => this.setMode(RANGED_MODE)} />
                 <InvertedButton type="button" text='Single amount' onClick={() => this.setMode(SINGLE_MODE)} />
                 <Container>
-                    <Field name="fromRange" component={FormInput} placeholder="USD" />
+                    <ControlInput placeholder="USD" />
                     {this.state.mode === RANGED_MODE && <div>
                         <span>to</span>
-                        <Field name="toRange" component={FormInput} placeholder="USD" />
+                        <ControlInput placeholder="USD" />
                     </div>}
                 </Container>
                 <FormLabel>Please choose a <B>ranged</B> or <B>single</B> amount. Valid amounts are 1 to 999999.99</FormLabel>
