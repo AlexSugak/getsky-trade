@@ -9,24 +9,31 @@ const Button = styled.button`
     font-family: ${props => props.theme.fontLight};
     font-size: ${props => props.theme.fontSizes[1]}px;
     color: ${props => props.theme.colors.white};
-    
+    border-color: ${props => props.theme.colors.black};
+    border-width: 1px;
+
+    &:focus {
+        outline: none;
+    }
     &:hover {
         cursor:pointer;
+        background: ${props => props.theme.colors.gray};
     }
     &:disabled {
         background: ${props => props.theme.colors.gray};
     }
 `;
 
-const ButtonControl = ({ text, type, disabled, onClick }) => (
-    <Button type={type} disabled={disabled} onClick={onClick}>{text}</Button>
+const ButtonControl = ({ text, type, disabled, onClick, style }) => (
+    <Button type={type} disabled={disabled} onClick={onClick} style={style}>{text}</Button >
 );
 
 ButtonControl.propTypes = {
-    text: PropTypes.string.isRequired, 
-    type: PropTypes.string, 
-    disabled: PropTypes.bool, 
+    text: PropTypes.string.isRequired,
+    type: PropTypes.string,
+    disabled: PropTypes.bool,
     onClick: PropTypes.func,
+    style: PropTypes.object,
 };
 
 export default ButtonControl;

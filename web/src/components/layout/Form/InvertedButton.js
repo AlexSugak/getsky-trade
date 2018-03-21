@@ -9,17 +9,23 @@ const InvertedButton = styled.button`
     font-family: ${props => props.theme.fontLight};
     font-size: ${props => props.theme.fontSizes[1]}px;
     color: ${props => props.theme.colors.black};
-    
+    border-color: ${props => props.theme.colors.black};
+    border-width: 1px;
+
+    &:focus {
+        outline: none;
+    }
     &:hover {
-        cursor:pointer;
+        cursor: pointer;
+        background: ${props => props.theme.colors.lightGray};
     }
     &:disabled {
         color: ${props => props.theme.colors.gray};
     }
 `;
 
-const InvertedButtonControl = ({ text, type, disabled, onClick }) => (
-    <InvertedButton type={type} disabled={disabled} onClick={onClick}>{text}</InvertedButton>
+const InvertedButtonControl = ({ text, type, disabled, onClick, style }) => (
+    <InvertedButton type={type} disabled={disabled} onClick={onClick} style={style}>{text}</InvertedButton>
 );
 
 InvertedButtonControl.propTypes = {
@@ -27,6 +33,7 @@ InvertedButtonControl.propTypes = {
     type: PropTypes.string,
     disabled: PropTypes.bool,
     onClick: PropTypes.func,
+    style: PropTypes.object,
 };
 
 export default InvertedButtonControl;
