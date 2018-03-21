@@ -1,11 +1,17 @@
 import React from 'react';
+import { reduxForm, Form } from 'redux-form';
+
+import { RangedSingleInput } from '../Form'
 
 const PostingsForm = (props) => {
-    return(
-        <div>
-            Hello Form
-        </div>
+    return (
+        <Form>
+            <RangedSingleInput />
+        </Form>
     )
 }
 
-export default PostingsForm
+export default reduxForm({
+    form: 'postingsForm'
+})(PostingsForm);;
+
