@@ -21,7 +21,7 @@ export default class FormInput extends React.Component {
                     {isRequired && '*'}
                 </FormLabel>
                 }
-                <ControlInput name={input.name} type={type} placeholder={placeholder} maxLength={maxLength} error={showError} { ...input } { ...props } />
+                <ControlInput name={input.name} type={type} placeholder={placeholder} maxLength={maxLength} error={showError} onChange={input.onChange} />
                 {!showError && description && <ControlMessage>{description}</ControlMessage>}
                 {showError && <ErrorMessage>{ error || warning }</ErrorMessage>}
             </Wrapper>

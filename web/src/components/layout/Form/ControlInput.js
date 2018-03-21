@@ -19,8 +19,8 @@ const Control = styled.input`
     }
 `;
 
-const ControlInput = ({ name, type, placeholder, maxLength, showError }) => (
-    <Control name={name} type={type} placeholder={placeholder} maxLength={maxLength} error={showError} />
+const ControlInput = ({ name, type, placeholder, maxLength, showError, onChange }) => (
+    <Control name={name} type={type} placeholder={placeholder} maxLength={maxLength} error={showError} onChange={onChange} />
 );
 
 export default ControlInput;

@@ -10,5 +10,6 @@ import ControlMessage from './ControlMessage';
 import FormRangedSingleInput from './FormRangedSingleInput';
 import FormCaptcha from './FormReCaptcha';
 import FormCheckboxGroup from './FormCheckboxGroup';
+import FormDropdownInput from './FormDropdownInput';
 
-export { FormInput, FormLabel, FormDropdown, Button, ErrorMessage, ControlMessage, ControlWrapper, FormRangedSingleInput, InvertedButton, FormCaptcha, ControlInput, FormCheckboxGroup };
+export { FormInput, FormLabel, FormDropdown, Button, ErrorMessage, ControlMessage, ControlWrapper, FormRangedSingleInput, InvertedButton, FormCaptcha, ControlInput, FormCheckboxGroup, FormDropdownInput };
