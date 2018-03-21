@@ -109,7 +109,7 @@ class FormCheckboxGroup extends React.Component {
 
 FormCheckboxGroup.propTypes = {
     options: PropTypes.arrayOf(PropTypes.shape({
-        value: PropTypes.string.isRequired,
+        value: PropTypes.any.isRequired,
         title: PropTypes.string.isRequired,
     })),
 };

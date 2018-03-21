@@ -41,20 +41,22 @@ const Select = styled.select`
     }
 `;
 
-export default class ControlDropdown extends React.Component {
-    render() {
-        const { name, onChange, defaultValue, options } = this.props;
-
-        return (
-            <SelectWrapper>
-                <Select name={name} onChange={onChange} defaultValue={defaultValue} >
-                    {options.map((item, i) => <option value={item.value} key={i}>{item.text}</option>)}
-                </Select>
-            </SelectWrapper>
-        );
-    }
-}
+const ControlDropdown = ({ name, options, defaultValue, onChange }) => (
+    <SelectWrapper>
+        <Select name={name} onChange={onChange} defaultValue={defaultValue} >
+            {options.map((item, i) => <option value={item.value} key={i}>{item.text}</option>)}
+        </Select>
+    </SelectWrapper>
+);
 
 ControlDropdown.propTypes = {
+    name: PropTypes.string.isRequired,
+    defaultValue: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
+    options: PropTypes.arrayOf(PropTypes.shape({
+        value: PropTypes.any.isRequired,
+        text: PropTypes.string.isRequired,
+    })),
+};
 
-}
+export default ControlDropdown;
