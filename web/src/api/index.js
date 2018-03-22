@@ -29,3 +29,10 @@ export const login = user =>
 
 export const getUserInfo = () =>
     axios.get(`${apiUrl}/me`, headers);
+
+
+export const getCountries = () =>
+    axios.get(`${apiUrl}/countries`, headers);
+
+export const getStates = () =>
+    axios.get(`${apiUrl}/states`, headers);
