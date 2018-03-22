@@ -6,7 +6,6 @@ import ControlInput from './ControlInput';
 import Wrapper from './ControlWrapper';
 import FormLabel from './FormLabel';
 import Button from './Button';
-import InvertedButton from './InvertedButton';
 import { B } from '../Text';
 
 const RANGED_MODE = 'RANGED_MODE';
@@ -38,8 +37,8 @@ class RangedSingleInput extends React.Component {
             <Wrapper>
                 <FormLabel>What is the amount of cash you will pay in USD?</FormLabel>
                 <Flex mt={2}>
-                    <Button type="button" text='Ranged amount' onClick={() => this.setMode(RANGED_MODE)} style={fullWidth} />
-                    <InvertedButton type="button" text='Single amount' onClick={() => this.setMode(SINGLE_MODE)} style={fullWidth} />
+                    <Button type="button" text='Ranged amount' onClick={() => this.setMode(RANGED_MODE)} style={fullWidth} primary={this.state.mode === RANGED_MODE} />
+                    <Button type="button" text='Single amount' onClick={() => this.setMode(SINGLE_MODE)} style={fullWidth} primary={this.state.mode === SINGLE_MODE} />
                 </Flex>
 
                 <Flex mt={2} alignItems='center' >

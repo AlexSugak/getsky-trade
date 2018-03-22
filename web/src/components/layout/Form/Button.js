@@ -5,10 +5,10 @@ import styled from 'styled-components';
 const Button = styled.button`
     height: ${props => props.theme.controlHeight}px;
     padding: ${props => props.theme.spaces[0]}px ${props => props.theme.spaces[3]}px;
-    background: ${props => props.theme.colors.black};
+    background: ${props => props.primary ? props.theme.colors.black : props.theme.colors.white};
     font-family: ${props => props.theme.fontLight};
     font-size: ${props => props.theme.fontSizes[1]}px;
-    color: ${props => props.theme.colors.white};
+    color: ${props => props.primary ? props.theme.colors.white : props.theme.colors.black};
     border-color: ${props => props.theme.colors.black};
     border-width: 1px;
 
@@ -17,15 +17,16 @@ const Button = styled.button`
     }
     &:hover {
         cursor:pointer;
-        background: ${props => props.theme.colors.gray};
+        background: ${props => props.primary ? props.theme.colors.gray : props.theme.colors.lightGray};
     }
     &:disabled {
-        background: ${props => props.theme.colors.gray};
+        background: ${props => props.primary ? props.theme.colors.gray : props.theme.colors.white};
+        color: ${props => props.primary ? props.theme.colors.gray : props.theme.colors.black};
     }
 `;
 
-const ButtonControl = ({ text, type, disabled, onClick, style }) => (
-    <Button type={type} disabled={disabled} onClick={onClick} style={style}>{text}</Button >
+const ButtonControl = ({ text, type, disabled, onClick, style, primary }) => (
+    <Button type={type} disabled={disabled} onClick={onClick} style={style} primary={primary}>{text}</Button>
 );
 
 ButtonControl.propTypes = {
@@ -34,6 +35,7 @@ ButtonControl.propTypes = {
     disabled: PropTypes.bool,
     onClick: PropTypes.func,
     style: PropTypes.object,
+    primary: PropTypes.bool,
 };
 
 export default ButtonControl;
