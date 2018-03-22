@@ -4,7 +4,7 @@ import { Box } from 'grid-styled'
 
 import Countries from './countriesList';
 
-import { FormRangedSingleInput, FormCaptcha, FormCheckboxGroup, FormDropdownInput, Button, FormTextArea, FormDropdown, FormInput } from '../Form';
+import { FormRangedSingleInput, FormCaptcha, FormCheckboxGroup, FormDropdownInput, Button, FormTextArea, FormDropdown, FormInput, FormGroup } from '../Form';
 
 const placeHolder = `Example: I can meet in the Starbucks on Main St,\nin McDonalds on Broad St, or anywhere in the "X" shopping district.\nI can meet anytime between 1-4pm and my minimum trade is 1 XMR.'`;
 
@@ -37,15 +37,19 @@ class PostingsForm extends React.Component {
         return (
             <Form onSubmit={handleSubmit}>
                 <Box width={1 / 2}>
-                    <FormRangedSingleInput />
-                    <FormCheckboxGroup options={acceptTradeOptions} />
-                    <Field name="distance" component={FormDropdownInput} options={distanceUnitsOptions} label={'How far will you travel to trade?'} />
-                    <Field name="country" component={FormDropdown} options={Countries} label={'Country'} />
-                    <Field name="state" component={FormDropdown} options={Countries} label={'State'} />
-                    <Field name="city" component={FormInput} label={'City'} />
-                    <Field name="postalCode" component={FormInput} label={'Postal code (required for most countries)'} />
-                    <Field name="additionalInfo" component={FormTextArea} label={'Additional information (optional)'} tip={'Up to 3,000 characters'} placeholder={placeHolder} />
-                    <Field name="captcha" component={FormCaptcha} />
+                    <FormGroup>
+                        <FormRangedSingleInput />
+                        <FormCheckboxGroup options={acceptTradeOptions} />
+                        <Field name="distance" component={FormDropdownInput} options={distanceUnitsOptions} label={'How far will you travel to trade?'} />
+                    </FormGroup>
+                    <FormGroup label={'Your location'}>
+                        <Field name="country" component={FormDropdown} options={Countries} label={'Country'} />
+                        <Field name="state" component={FormDropdown} options={Countries} label={'State'} />
+                        <Field name="city" component={FormInput} label={'City'} />
+                        <Field name="postalCode" component={FormInput} label={'Postal code (required for most countries)'} />
+                        <Field name="additionalInfo" component={FormTextArea} label={'Additional information (optional)'} tip={'Up to 3,000 characters'} placeholder={placeHolder} />
+                        <Field name="captcha" component={FormCaptcha} />
+                    </FormGroup>
                     <Button type="submit" disabled={pristine || submitting} text="Next" />
                 </Box>
             </Form>

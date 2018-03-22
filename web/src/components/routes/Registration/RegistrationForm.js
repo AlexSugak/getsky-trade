@@ -85,7 +85,7 @@ class RegistrationForm extends React.Component {
                     />
                     <Field name="timeOffset" component={FormDropdown} options={this.timeOffsets} label="Your local time" validate={[required]} parse={parseInt} defaultValue={this.defaultOffset} isRequired />
                     <Field name="recaptcha" component={FormCaptcha} validate={[required]} withRef ref={r => { this.recaptchaField = r }} isRequired />
-                    <Button type="submit" disabled={pristine || submitting} text="Register" />
+                    <Button type="submit" disabled={pristine || submitting} text="Register" primary />
                 </Box>
             </Form>
         )
