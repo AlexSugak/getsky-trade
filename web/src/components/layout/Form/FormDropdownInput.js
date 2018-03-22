@@ -1,7 +1,6 @@
 import React from 'react';
 import { Flex, Box } from 'grid-styled';
 
-import Container from '../Container';
 import ControlDropdown from './ControlDropdown';
 import ControlInput from './ControlInput';
 import Wrapper from './ControlWrapper';
