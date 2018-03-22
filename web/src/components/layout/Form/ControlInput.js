@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { rgba } from 'polished';
 import { getBorderColor } from './helper';
 
-const Control = styled.input`
+const ControlInput = styled.input`
     width: 100%;
     height: ${props => props.theme.controlHeight}px;
     padding: ${props => props.theme.spaces[0]}px ${props => props.theme.spaces[1]}px;
@@ -18,9 +18,5 @@ const Control = styled.input`
         border: 1px solid ${props => rgba(props.theme.colors.black, 0.5)};
     }
 `;
-
-const ControlInput = ({ name, type, placeholder, maxLength, showError, onChange }) => (
-    <Control name={name} type={type} placeholder={placeholder} maxLength={maxLength} error={showError} onChange={onChange} />
-);
 
 export default ControlInput;

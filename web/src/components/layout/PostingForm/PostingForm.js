@@ -2,7 +2,9 @@ import React from 'react';
 import { reduxForm, Form, Field } from 'redux-form';
 import { Box } from 'grid-styled'
 
-import { FormRangedSingleInput, FormCaptcha, FormCheckboxGroup, FormDropdownInput, Button, FormTextArea } from '../Form';
+import Countries from './countriesList';
+
+import { FormRangedSingleInput, FormCaptcha, FormCheckboxGroup, FormDropdownInput, Button, FormTextArea, FormDropdown, FormInput } from '../Form';
 
 const placeHolder = `Example: I can meet in the Starbucks on Main St,\nin McDonalds on Broad St, or anywhere in the "X" shopping district.\nI can meet anytime between 1-4pm and my minimum trade is 1 XMR.'`;
 
@@ -38,6 +40,10 @@ class PostingsForm extends React.Component {
                     <FormRangedSingleInput />
                     <FormCheckboxGroup options={acceptTradeOptions} />
                     <Field name="distance" component={FormDropdownInput} options={distanceUnitsOptions} label={'How far will you travel to trade?'} />
+                    <Field name="country" component={FormDropdown} options={Countries} label={'Country'} />
+                    <Field name="state" component={FormDropdown} options={Countries} label={'State'} />
+                    <Field name="city" component={FormInput} label={'City'} />
+                    <Field name="postalCode" component={FormInput} label={'Postal code (required for most countries)'} />
                     <Field name="additionalInfo" component={FormTextArea} label={'Additional information (optional)'} tip={'Up to 3,000 characters'} placeholder={placeHolder} />
                     <Field name="captcha" component={FormCaptcha} />
                     <Button type="submit" disabled={pristine || submitting} text="Next" />

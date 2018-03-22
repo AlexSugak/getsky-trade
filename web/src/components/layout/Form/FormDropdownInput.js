@@ -8,6 +8,8 @@ import Wrapper from './ControlWrapper';
 import FormLabel from './FormLabel';
 import ErrorMessage from './ErrorMessage';
 
+const inputStyle = { borderRight: 0 };
+
 export default class FormDropdownInput extends React.Component {
     constructor(props) {
         super(props);
@@ -56,9 +58,9 @@ export default class FormDropdownInput extends React.Component {
                 }
                 <Flex>
                     <Box width={3 / 4}>
-                        <ControlInput placeholder={'Distance'} onChange={this.onChangeText} />
+                        <ControlInput placeholder={'Distance'} onChange={this.onChangeText} style={inputStyle} />
                     </Box>
-                    <Box width={1 / 4} ml={-1}>
+                    <Box width={1 / 4}>
                         <ControlDropdown options={options} onChange={this.onChangeDropdownValue} />
                     </Box>
                 </Flex>
