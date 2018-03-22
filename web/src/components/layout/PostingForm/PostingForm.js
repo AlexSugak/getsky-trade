@@ -31,6 +31,14 @@ const distanceUnitsOptions = [{
 }];
 
 class PostingsForm extends React.Component {
+    componentDidUpdate(prevProps, prevState) {
+        // Reset captcha after receiving response
+        if (prevProps.submitting && prevProps.submitting !== this.props.submitting) {
+            const cptCmp = this.recaptchaField.getRenderedComponent();
+            cptCmp.resetRecaptcha();
+        }
+    }
+
     render() {
         const { handleSubmit, pristine, submitting } = this.props;
 
@@ -48,9 +56,9 @@ class PostingsForm extends React.Component {
                         <Field name="city" component={FormInput} label={'City'} />
                         <Field name="postalCode" component={FormInput} label={'Postal code (required for most countries)'} />
                         <Field name="additionalInfo" component={FormTextArea} label={'Additional information (optional)'} tip={'Up to 3,000 characters'} placeholder={placeHolder} />
-                        <Field name="captcha" component={FormCaptcha} />
+                        <Field name="captcha" component={FormCaptcha} ref={r => { this.recaptchaField = r }} />
                     </FormGroup>
-                    <Button type="submit" disabled={pristine || submitting} text="Next" />
+                    <Button type="submit" disabled={pristine || submitting} text="Next" primary />
                 </Box>
             </Form>
         )
