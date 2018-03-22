@@ -1,1 +1,1 @@
-export { default } from './PostingForm'
+export { default } from './FormPostingToBuy';
