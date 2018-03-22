@@ -75,3 +75,15 @@ type UserSettings struct {
 	DistanceUnits string         `db:"DistanceUnits" json:"distanceUnits"`
 	Currency      string         `db:"Currency" json:"currency"`
 }
+
+// Country represents a country
+type Country struct {
+	Name string `db:"Name" json:"name"`
+	Code string `db:"Code" json:"code"`
+}
+
+// State represents a country
+type State struct {
+	Name string `db:"Name" json:"name"`
+	Code string `db:"Code" json:"code"`
+}

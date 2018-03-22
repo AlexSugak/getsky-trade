@@ -28,7 +28,9 @@ func main() {
 	auth := db.NewAuthenticator(sqlDb)
 	storage := db.NewStorage(sqlDb)
 	users := db.NewUsers(sqlDb)
-	server := trade.NewHTTPServer(*recaptchaSecret, *bindingFlag, storage, users, auth, log)
+	geo := db.NewGeo(sqlDb)
+
+	server := trade.NewHTTPServer(*recaptchaSecret, *bindingFlag, storage, users, auth, log, geo)
 
 	if err := server.Run(); err != nil {
 		panic(err.Error())

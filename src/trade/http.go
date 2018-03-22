@@ -9,6 +9,7 @@ import (
 
 	"github.com/AlexSugak/getsky-trade/src/auth"
 	"github.com/AlexSugak/getsky-trade/src/board"
+	"github.com/AlexSugak/getsky-trade/src/geo"
 	"github.com/AlexSugak/getsky-trade/src/user"
 	"github.com/AlexSugak/getsky-trade/src/util/httputil"
 	"github.com/gorilla/handlers"
@@ -21,6 +22,7 @@ import (
 type HTTPServer struct {
 	checkRecaptcha auth.RecaptchaChecker
 	binding        string
+	geo            geo.Geo
 	board          board.Board
 	users          user.Users
 	authenticator  auth.Authenticator
@@ -32,7 +34,7 @@ type HTTPServer struct {
 }
 
 // NewHTTPServer creates new http server
-func NewHTTPServer(recaptchaSecret string, binding string, board board.Board, users user.Users, a auth.Authenticator, log logrus.FieldLogger) *HTTPServer {
+func NewHTTPServer(recaptchaSecret string, binding string, board board.Board, users user.Users, a auth.Authenticator, log logrus.FieldLogger, g geo.Geo) *HTTPServer {
 	return &HTTPServer{
 		checkRecaptcha: auth.InitRecaptchaChecker(recaptchaSecret),
 		binding:        binding,
@@ -43,6 +45,7 @@ func NewHTTPServer(recaptchaSecret string, binding string, board board.Board, us
 		log: log.WithFields(logrus.Fields{
 			"prefix": "trade.http",
 		}),
+		geo:  g,
 		quit: make(chan os.Signal, 1),
 		done: make(chan struct{}),
 	}
@@ -111,6 +114,9 @@ func (s *HTTPServer) setupRouter(Secure Secure) http.Handler {
 	}
 
 	r.Handle("/api", httputil.ErrorHandler(s.log, APIInfoHandler(s))).Methods("GET")
+
+	r.Handle("/api/countries", httputil.ErrorHandler(s.log, AvailableCountriesHandler(s))).Methods("GET")
+	r.Handle("/api/states", httputil.ErrorHandler(s.log, AvailableStatesHandler(s))).Methods("GET")
 
 	r.Handle("/api/users", API(RegisterHandler)).Methods("POST")
 	r.Handle("/api/users/authenticate", API(AuthenticateHandler)).Methods("POST")
