@@ -31,7 +31,7 @@ const distanceUnitsOptions = [{
 
 const shouldShowStates = currentCountry => currentCountry === 'US' || currentCountry === 'CA';
 
-const FormPostingToBuy = ({ country, handleSubmit, submitting, pristine }) => (
+const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting, pristine }) => (
     <Form onSubmit={handleSubmit}>
         <Box width={1 / 2}>
             <FormGroup>
@@ -39,7 +39,7 @@ const FormPostingToBuy = ({ country, handleSubmit, submitting, pristine }) => (
                 <FormCheckboxGroup options={acceptTradeOptions} />
                 <Field name="distance" component={FormDropdownInput} options={distanceUnitsOptions} label={'How far will you travel to trade?'} />
             </FormGroup>
-            <LocationFormGroup showStates={shouldShowStates(country)} />
+            <LocationFormGroup states={states} countries={countries} showStates={shouldShowStates(country)} />
             <Button type="submit" disabled={pristine || submitting} text="Next" primary />
         </Box>
     </Form>
