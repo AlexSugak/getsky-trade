@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import moment from 'moment';
 import keys from 'lodash/keys';
@@ -95,13 +96,22 @@ const buyAdvertsColumns = [
     { name: 'Created' },
 ];
 
+const LinkedTableRow = styled(withRouter(({ ...props, href, history }) =>
+    (<TableRow {...props} onClick={() => history.push(href)} />))) `
+        &:hover {
+            opacity: 0.5;
+            cursor: pointer;
+            background-color: rgba(0,0,0, 0.1);
+        }
+    `;
+
 const BuyAdvertRow = (advert) => (
-    <TableRow>
+    <LinkedTableRow href={`/post/${advert.id}`}>
         <TableCell><AuthorCell advert={advert} /></TableCell>
         <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} {advert.currency}</TableCell>
         <TableCell>{getTradeOptionsText(advert)}</TableCell>
         <TableCell>{moment(advert.createdAt).format('DD MMMM YY')}</TableCell>
-    </TableRow>
+    </LinkedTableRow>
 );
 
 const sellAdvertsColumns = [

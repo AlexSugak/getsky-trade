@@ -15,7 +15,11 @@ export const registerUserOk = () => new Promise((resolve, reject) => {
 });
 
 export const registerUser400 = () => new Promise((resolve, reject) => {
-    reject({ 
+    reject({
         response: { status: 400, data: { '0': { key: 'stubField', message: 'stubMessage' } } }
     })
+});
+
+export const getAdvertDetailsOk = details => id => new Promise((resolve, reject) => {
+    resolve({ data: details });
 });
