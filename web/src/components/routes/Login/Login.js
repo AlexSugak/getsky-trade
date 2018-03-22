@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { SubmissionError } from 'redux-form';
 
-
 import LoginForm from './LoginForm';
 import { login } from './actions';
 import Container from '../../layout/Container';
+import { U, H2, H3 } from '../../layout/Text';
 
 class Login extends React.Component {
     onSubmit = (user) => {
@@ -21,8 +21,8 @@ class Login extends React.Component {
     render() {
         return (
             <Container flex='1 0 auto' flexDirection="column" py={4}>
-                <h2>Login</h2>
-                <h3>Don't have an account? <Link to="/register">Register</Link></h3>
+                <H2>Login</H2>
+                <H3>Don't have an account? <Link to="/register"><U>Register</U></Link></H3>
                 <LoginForm onSubmit={this.onSubmit} />
             </Container>
         );
