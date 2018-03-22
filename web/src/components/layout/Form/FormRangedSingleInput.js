@@ -6,7 +6,7 @@ import ControlInput from './ControlInput';
 import Wrapper from './ControlWrapper';
 import FormLabel from './FormLabel';
 import Button from './Button';
-import { B } from '../Text';
+import { B, Tip } from '../Text';
 
 const RANGED_MODE = 'RANGED_MODE';
 const SINGLE_MODE = 'SINGLE_MODE';
@@ -51,9 +51,9 @@ class RangedSingleInput extends React.Component {
                     }
                 </Flex>
                 <Box mt={2}>
-                    <FormLabel>Please choose a <B>ranged</B> or <B>single</B> amount. Valid amounts are 1 to 999999.99</FormLabel>
-                    <FormLabel>Example for ranged amounts: <B>60 to 70</B></FormLabel>
-                    <FormLabel>Example for single amount: <B>50</B></FormLabel>
+                    <Tip>Please choose a <B>ranged</B> or <B>single</B> amount. Valid amounts are 1 to 999999.99</Tip>
+                    <Tip>Example for ranged amounts: <B>60 to 70</B></Tip>
+                    <Tip>Example for single amount: <B>50</B></Tip>
                 </Box>
             </Wrapper>
         );
