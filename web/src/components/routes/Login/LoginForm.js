@@ -15,7 +15,7 @@ const LoginForm = props => {
                 <Field name="password" component={FormInput} type="password" label="Password" placeholder="Password" />
             </Box>
 
-            <Button type="submit" disabled={pristine || submitting} text="Login" />
+            <Button type="submit" disabled={pristine || submitting} text="Login" primary />
         </Form>
     )
 };

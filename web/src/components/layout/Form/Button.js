@@ -21,7 +21,7 @@ const Button = styled.button`
     }
     &:disabled {
         background: ${props => props.primary ? props.theme.colors.gray : props.theme.colors.white};
-        color: ${props => props.primary ? props.theme.colors.gray : props.theme.colors.black};
+        color: ${props => props.primary ? props.theme.colors.white : props.theme.colors.black};
     }
 `;
 
