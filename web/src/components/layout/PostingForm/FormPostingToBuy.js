@@ -4,6 +4,7 @@ import { reduxForm, Form, Field, formValueSelector } from 'redux-form';
 import { Box } from 'grid-styled'
 
 import { FormRangedSingleInput, FormCheckboxGroup, FormDropdownInput, Button, FormGroup } from 'components/layout/Form';
+import { required } from 'validation/rules';
 
 import XmrAmountWarning from './XmrAmountWarning';
 import LocationFormGroup from './LocationFormGroup';
@@ -37,10 +38,10 @@ const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting
     <Form onSubmit={handleSubmit}>
         <Box width={1 / 2}>
             <FormGroup>
-                <Field name="cashAmount" component={FormRangedSingleInput} placeholder={'USD'} label={'What is the amount of cash you will pay in USD?'} isRequired />
+                <Field name="cashAmount" component={FormRangedSingleInput} placeholder={'USD'} label={'What is the amount of cash you will pay in USD?'} isRequired validate={[required]} />
                 <XmrAmountWarning />
-                <Field name="acceptOptions" component={FormCheckboxGroup} options={acceptTradeOptions} label={'Choose the trade options you will accept:'} />
-                <Field name="distance" component={FormDropdownInput} options={distanceUnitsOptions} label={'How far will you travel to trade?'} />
+                <Field name="acceptOptions" component={FormCheckboxGroup} options={acceptTradeOptions} label={'Choose the trade options you will accept:'} validate={[required]} />
+                <Field name="distance" component={FormDropdownInput} options={distanceUnitsOptions} label={'How far will you travel to trade?'} validate={[required]} />
             </FormGroup>
             <LocationFormGroup states={states} countries={countries} showStates={shouldShowStates(country)} />
             <AdditionalInformationSample />

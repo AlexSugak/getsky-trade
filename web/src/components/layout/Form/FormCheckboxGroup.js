@@ -4,34 +4,35 @@ import PropTypes from 'prop-types';
 import CheckBox from 'components/layout/Checkbox';
 import FormItem from 'components/layout/Form/FormItem';
 
+const isChecked = (values, item) => values !== '' ? values.findIndex(v => item === v) !== -1 : false;
+
 class FormCheckboxGroup extends React.Component {
     constructor(props) {
         super(props);
-
         this.check = this.check.bind(this);
-        this.state = {
-            options: this.props.options.map(o => ({ ...o, checked: false })),
+    }
+
+    check(item) {
+        const { options, input: { onChange, value } } = this.props;
+
+        if (value === '') {
+            onChange([item])
+        } else {
+            const index = value.findIndex(v => item === v);
+            const updatedValue = index === -1 ? [...value, item] : value.filter(v => v !== item)
+            updatedValue.length === 0 ? onChange('') : onChange(updatedValue);
         }
     }
 
-    check(value) {
-        const { options } = this.props;
-
-        this.setState({
-            ...this.state,
-            options: options.map(o => o.value === value ? { ...o, checked: !o.checked } : o)
-        })
-    }
-
     render() {
-        const { label, isRequired, options, description, input: { name }, meta: { error, warning, touched } } = this.props;
+        const { label, isRequired, options, description, input: { name, value }, meta: { error, warning, touched } } = this.props;
         const showError = touched && (error || warning);
 
         return (
             <FormItem name={name} label={label} isRequired={isRequired} description={description} showError={showError} error={error}>
                 {options.length > 0 &&
                     options.map(o =>
-                        <CheckBox key={`${name}_checkbox_${o.value}`} checked={o.checked} onClick={() => this.check(o.value)} labelText={o.title} />
+                        <CheckBox key={`${name}_checkbox_${o.value}`} checked={isChecked(value, o.value)} onClick={() => this.check(o.value)} labelText={o.title} />
                     )
                 }
             </FormItem>
