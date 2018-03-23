@@ -23,6 +23,19 @@ describe('advert details actions', () => {
             return store.dispatch(actions.requestAdvertDetails(stubDetails.id))
                 .then(() => expect(store.getActions()).toEqual(expectedActions));
         });
+
+        it('should dispatch GET_ADVERT_DETAILS_RESPONSE action with notFound error status', () => {
+            const stubDetails = { id: 1, type: 1, author: "bob", tradeCashInPerson: true, };
+            const expectedActions = [
+                { type: actions.GET_ADVERT_DETAILS_REQUEST },
+                { type: actions.GET_ADVERT_DETAILS_RESPONSE, details: { notFound: true } }
+            ];
+
+            api.getAdvertDetails = apiStubs.getAdvertDetails404;
+            const store = mockStore({});
+            return store.dispatch(actions.requestAdvertDetails(stubDetails.id))
+                .then(() => expect(store.getActions()).toEqual(expectedActions));
+        });
     });
 
     describe('requestSkycoinPrice', () => {

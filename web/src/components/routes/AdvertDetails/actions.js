@@ -5,12 +5,16 @@ export const GET_ADVERT_DETAILS_RESPONSE = 'GET_ADVERT_DETAILS_RESPONSE';
 
 export const requestAdvertDetails = id => async dispatch => {
     dispatch({ type: GET_ADVERT_DETAILS_REQUEST });
-
-    const response = await getAdvertDetails(id);
-
-    dispatch({ type: GET_ADVERT_DETAILS_RESPONSE, details: response.data });
-
-    return response.data;
+    try {
+        const response = await getAdvertDetails(id);
+        dispatch({ type: GET_ADVERT_DETAILS_RESPONSE, details: response.data });
+        return response.data;
+    } catch (e) {
+        if (e.response.status === 404) {
+            dispatch({ type: GET_ADVERT_DETAILS_RESPONSE, details: { notFound: true } });
+            return null;
+        }
+    }
 };
 
 export const SKYCOIN_PRICE_REQUEST = 'SKYCOIN_PRICE_REQUEST';

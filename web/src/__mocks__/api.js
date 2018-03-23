@@ -24,6 +24,10 @@ export const getAdvertDetailsOk = details => id => new Promise((resolve, reject)
     resolve({ data: details });
 });
 
+export const getAdvertDetails404 = id => new Promise((resolve, reject) => {
+    reject({ response: { status: 404 } });
+});
+
 export const getSkycoinPriceOk = price => currency => new Promise((resolve, reject) => {
     const currencyFieldName = `price_${currency.toLowerCase()}`;
     const responseData = {};

@@ -149,6 +149,11 @@ const AdvertSummary = ({ details }) => (
     </Panel>
 );
 
+const NotFound = () =>
+    (<Container>
+        <h2>Advert not found or no longer exists.</h2>
+    </Container>);
+
 export default connect(
     ({
         advertDetails,
@@ -161,10 +166,18 @@ export default connect(
     }
 )(class extends React.Component {
     async componentWillMount() {
-        const { advertDetails, match, requestAdvertDetails, requestSkycoinPrice } = this.props;
+        const {
+            advertDetails,
+            match,
+
+            requestAdvertDetails,
+            requestSkycoinPrice,
+        } = this.props;
+
         if (advertDetails.id !== match.params.id) {
             const details = await requestAdvertDetails(match.params.id);
-
+            if (!details) return;
+            
             if (!details.fixedPrice) {
                 await requestSkycoinPrice(details.currency);
             }
@@ -172,7 +185,11 @@ export default connect(
     }
     render() {
         const { advertDetails } = this.props;
-        console.log(advertDetails);
+
+        if (advertDetails.notFound) {
+            return <NotFound />;
+        }
+
         return (
             <Container>
                 <Box width={[1, 2 / 3]}>
