@@ -24,8 +24,8 @@ func GetSkycoinPrice(s *HTTPServer) httputil.APIHandler {
 		if err != nil {
 			return err
 		}
-		w.Write(body)
 
-		return nil
+		_, err = w.Write(body)
+		return err
 	}
 }
