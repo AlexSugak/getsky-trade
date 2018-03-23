@@ -25,8 +25,6 @@ const Icon = ({ name }) => (
     <FontAwesomeIcon icon={name} />
 )
 
-export default Icon;
-
 Icon.propTypes = {
     name: PropTypes.object.isRequired,
 };
@@ -34,3 +32,5 @@ Icon.propTypes = {
 Icon.defaultProps = {
     name: IconMap.Facebook,
 };
+
+export default Icon;
