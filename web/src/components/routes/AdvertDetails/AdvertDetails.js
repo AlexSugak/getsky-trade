@@ -3,8 +3,11 @@ import { Flex, Box } from 'grid-styled';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import Container from 'components/layout/Container/';
+import theme from 'components/theme';
+import Container from 'components/layout/Container';
+import { B } from 'components/layout/Text';
 import Icon, { IconMap } from 'components/layout/Icon';
+import { TRADE_OPTIONS } from 'constants/index'
 
 import {
     requestAdvertDetails,
@@ -19,16 +22,16 @@ const PanelHeading = styled(Box) `
     width: 100%;
     text-align: center;
     font-size: 18px;
-    background-color: #000;
-    color: #fff;
+    background-color: ${theme.colors.black};
+    color: ${theme.colors.white};
 `;
 const PanelBody = styled(Box) `
-    background-color: gray;
+    background-color: ${theme.colors.lightGray};
     width: 100%;
     padding: 30px 30px;
 
     ${Flex} {
-        border-bottom: 2px solid gray;
+        border-bottom: 2px solid ${theme.colors.lightGray};
     }
 `;
 
@@ -39,17 +42,17 @@ const advertTypes = {
 
 const PositionName = styled(Box) `
     text-align: right;
-    color: #fff;
-    background-color: #000;
-    padding: 15px 5px;
+    color: ${theme.colors.white};
+    background-color: ${theme.colors.black};
+    padding: 15px 15px;
     font-size: 18px;
 `;
 
 const PositionValue = styled(Box) `
     text-align: left;
-    color: #000;
-    background-color: #fff;
-    padding: 15px 5px;
+    color: ${theme.colors.black};
+    background-color: ${theme.colors.white};
+    padding: 15px 15px;
 `;
 
 const SummaryPosition = ({ name, children }) => (
@@ -76,13 +79,28 @@ const advertValueToString = (amountFrom, amountTo, price = 1) => {
     return `${round(amountFrom / price, 3)} to ${round(amountTo / price, 3)}`;
 };
 
+const TradeOptionsList = styled.ul`
+    list-style: none;
+    svg {
+        margin-right: 10px;
+    }
+
+    li {
+        margin-top: 5px;
+    }
+`;
+
 const TradeOptions = ({ details }) => (
-    <ul>
-        {details.tradeCashInPerson && <li><Icon name={IconMap.CheckCircle} /> Cash in person</li>}
-        {details.tradeCashByMail && <li><Icon name={IconMap.CheckCircle} /> Cash by mail</li>}
-        {details.tradeMoneyOrderByMail && <li><Icon name={IconMap.CheckCircle} /> Money order by mail</li>}
-        {details.tradeOther && <li><Icon name={IconMap.CheckCircle} /> Other</li>}
-    </ul>
+    <TradeOptionsList>
+        {details.tradeCashInPerson
+            && <li><Icon name={IconMap.CheckCircle} /> {TRADE_OPTIONS.tradeCashInPerson} </li>}
+        {details.tradeCashByMail
+            && <li><Icon name={IconMap.CheckCircle} /> {TRADE_OPTIONS.tradeCashByMail} </li>}
+        {details.tradeMoneyOrderByMail
+            && <li><Icon name={IconMap.CheckCircle} /> {TRADE_OPTIONS.tradeMoneyOrderByMail}</li>}
+        {details.tradeOther
+            && <li><Icon name={IconMap.CheckCircle} /> {TRADE_OPTIONS.tradeOther}</li>}
+    </TradeOptionsList>
 );
 
 const distanceUnits = {
@@ -91,15 +109,15 @@ const distanceUnits = {
 };
 
 const AdvertSummary = ({ details }) => (
-    <Panel flexDirection="row" wrap>
+    <Panel flexDirection="row" flexWrap="wrap">
         <PanelHeading width={1}>
             <h3>{details.author} wants to {advertTypes[details.type]} Skycoin</h3>
         </PanelHeading>
         <PanelBody>
-            <Flex flexDirection="row" wrap>
+            <Flex flexDirection="row" flexWrap="wrap">
                 <SummaryPosition
                     name="Will sell:">
-                    {advertValueToString(details.amountFrom, details.amountTo)} {details.currency}
+                    <B>{advertValueToString(details.amountFrom, details.amountTo)} {details.currency}</B>
                 </SummaryPosition>
                 <SummaryPosition
                     name="Which is approximately:">
@@ -121,7 +139,9 @@ const AdvertSummary = ({ details }) => (
                     name="Location:">
                     {details.countryCode}: {details.city} {details.stateCode} {details.postalCode}
                     <p>
-                        Can travel {details.travelDistance} {distanceUnits[details.travelDistanceUoM]} from location
+                        <B>
+                            Can travel {details.travelDistance} {distanceUnits[details.travelDistanceUoM]} from location
+                        </B>
                     </p>
                 </SummaryPosition>
             </Flex>
