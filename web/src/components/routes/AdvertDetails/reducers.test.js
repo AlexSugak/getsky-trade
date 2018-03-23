@@ -16,4 +16,13 @@ describe('advertDetails reducer', () => {
                 .toEqual(detailsStub);
         });
     });
+
+    describe('SKYCOIN_PRICE_RESPONSE', () => {
+        it('should save received price to the reducer\'s state', () => {
+            const expectedState = { price: 1 };
+            expect(reduce(initialState,
+                { type: actions.SKYCOIN_PRICE_RESPONSE, price: 1 }))
+                .toEqual(expectedState);
+        });
+    });
 });

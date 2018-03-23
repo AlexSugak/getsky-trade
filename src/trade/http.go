@@ -127,6 +127,7 @@ func (s *HTTPServer) setupRouter(Secure Secure) http.Handler {
 	r.Handle("/api/postings/{id}", API(AdvertDetailsHandler)).Methods("GET")
 	r.Handle("/api/postings/sell/latest", API(LatestSellAdvertsHandler)).Methods("GET")
 	r.Handle("/api/postings/buy/latest", API(LatestBuyAdvertsHandler)).Methods("GET")
+	r.Handle("/api/skycoin-price/{currency}", API(GetSkycoinPrice)).Methods("GET")
 
 	// TODO: enable CORS
 	originsOk := handlers.AllowedOrigins([]string{"*"})

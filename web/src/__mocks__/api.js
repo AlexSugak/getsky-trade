@@ -23,3 +23,10 @@ export const registerUser400 = () => new Promise((resolve, reject) => {
 export const getAdvertDetailsOk = details => id => new Promise((resolve, reject) => {
     resolve({ data: details });
 });
+
+export const getSkycoinPriceOk = price => currency => new Promise((resolve, reject) => {
+    const currencyFieldName = `price_${currency.toLowerCase()}`;
+    const responseData = {};
+    responseData[currencyFieldName] = price;
+    resolve({ data: [responseData] });
+});

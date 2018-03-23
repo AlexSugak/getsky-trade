@@ -122,12 +122,12 @@ const sellAdvertsColumns = [
 ];
 
 const SellAdvertRow = (advert) => (
-    <TableRow>
+    <LinkedTableRow href={`/post/${advert.id}`}>
         <TableCell><AuthorCell advert={advert} /></TableCell>
         <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} {advert.currency}</TableCell>
         <TableCell>{getTradeOptionsText(advert)}</TableCell>
         <TableCell>{moment(advert.createdAt).format('DD MMMM YY')}</TableCell>
-    </TableRow>
+    </LinkedTableRow>
 );
 
 class LatestAdverts extends React.Component {

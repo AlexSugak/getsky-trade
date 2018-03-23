@@ -5,8 +5,11 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faFacebook from '@fortawesome/fontawesome-free-brands/faFacebook';
 import faTwitter from '@fortawesome/fontawesome-free-brands/faTwitter';
 import faInstagram from '@fortawesome/fontawesome-free-brands/faInstagram';
+
 import faAngleLeft from '@fortawesome/fontawesome-free-solid/faAngleLeft'
 import faAngleRight from '@fortawesome/fontawesome-free-solid/faAngleRight';
+
+import faCheckCircle from '@fortawesome/fontawesome-free-solid/faCheckCircle';
 
 export const IconMap = {
     Facebook: faFacebook,
@@ -14,6 +17,8 @@ export const IconMap = {
     Instagram: faInstagram,
     AngleLeft: faAngleLeft,
     AngleRight: faAngleRight,
+
+    CheckCircle: faCheckCircle,
 }
 
 const Icon = ({ name }) => (
