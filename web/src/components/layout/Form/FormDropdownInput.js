@@ -57,10 +57,10 @@ export default class FormDropdownInput extends React.Component {
                 }
                 <Flex>
                     <Box width={3 / 4}>
-                        <ControlInput placeholder={'Distance'} onChange={this.onChangeText} style={inputStyle} />
+                        <ControlInput name={`${name}_input_text`} placeholder={'Distance'} onChange={this.onChangeText} style={inputStyle} />
                     </Box>
                     <Box width={1 / 4}>
-                        <ControlDropdown options={options} onChange={this.onChangeDropdownValue} />
+                        <ControlDropdown name={`${name}_input_options`} options={options} onChange={this.onChangeDropdownValue} />
                     </Box>
                 </Flex>
                 {showError && <ErrorMessage>{error || warning}</ErrorMessage>}

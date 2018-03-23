@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Flex, Box } from 'grid-styled';
 
+import { B, Tip } from 'components/layout/Text';
+
 import ControlInput from './ControlInput';
 import FormItem from './FormItem';
 import Button from './Button';
-import { B, Tip } from '../Text';
 
 const RANGED_MODE = 'RANGED_MODE';
 const SINGLE_MODE = 'SINGLE_MODE';
@@ -27,6 +28,12 @@ class RangedSingleInput extends React.Component {
         }
     }
 
+    componentDidMount() {
+        const { input: { onChange } } = this.props;
+
+        onChange(this.state.value);
+    }
+
     setMode(mode) {
         this.setState({ ...this.state, mode });
     };
@@ -43,12 +50,12 @@ class RangedSingleInput extends React.Component {
                 </Flex>
 
                 <Flex mt={2} alignItems='center' >
-                    <ControlInput placeholder={placeholder} />
+                    <ControlInput type={'number'} min={0} placeholder={placeholder} />
                     {this.state.mode === RANGED_MODE &&
                         <Box mx={2}>to</Box>
                     }
                     {this.state.mode === RANGED_MODE &&
-                        <ControlInput placeholder={placeholder} />
+                        <ControlInput type={'number'} min={0} placeholder={placeholder} />
                     }
                 </Flex>
                 <Box mt={2}>
