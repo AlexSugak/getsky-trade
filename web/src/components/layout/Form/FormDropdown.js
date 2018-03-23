@@ -4,39 +4,41 @@ import PropTypes from 'prop-types';
 import Wrapper from './ControlWrapper';
 import ControlDropdown from './ControlDropdown';
 import FormLabel from './FormLabel';
-import ErrorMessage from './ErrorMessage';
+import FormItem from './FormItem';
 
-export default class FormDropdown extends React.Component {
+class FormDropdown extends React.Component {
     componentDidMount() {
         // ReduxForm doesn't have a prop for 'defaultValue'. You need to set it manually.
-        const { defaultValue, input: { onChange } } = this.props;
+        const { defaultValue, options, input: { onChange } } = this.props;
         onChange(defaultValue);
     }
 
-    render() {
-        const { label, isRequired, options, input: { name, onChange }, meta: { error, warning, touched }, defaultValue } = this.props;
+    componentDidUpdate(prevProps, prevState) {
+        const { defaultValue, options, input: { onChange } } = this.props;
 
+        // ReduxForm doesn't have a prop for 'defaultValue'. You need to set it manually.
+        if (prevProps.options.length === 0 && options.length > 0) {
+            if (defaultValue) {
+                onChange(defaultValue);
+            } else {
+                onChange(options[0].value);
+            }
+        }
+    }
+
+    render() {
+        const { label, defaultValue, isRequired, options, description, input: { name, onChange }, meta: { error, warning, touched } } = this.props;
         const showError = touched && (error || warning);
 
         return (
-            <Wrapper>
-                {label &&
-                    <FormLabel for={name}>
-                        {label}
-                        {isRequired && '*'}
-                    </FormLabel>
-                }
+            <FormItem name={name} label={label} isRequired={isRequired} description={description} showError={showError} error={error}>
                 <ControlDropdown name={name} onChange={onChange} defaultValue={defaultValue} options={options} />
-                {showError && <ErrorMessage>{error || warning}</ErrorMessage>}
-            </Wrapper>
+            </FormItem>
         );
     }
 }
 
 FormDropdown.propTypes = {
-    label: PropTypes.string,
-    isRequired: PropTypes.bool,
-    options: PropTypes.array,
     input: PropTypes.shape({
         onChange: PropTypes.func.isRequired,
         name: PropTypes.string.isRequired,
@@ -46,5 +48,10 @@ FormDropdown.propTypes = {
         error: PropTypes.string,
         warning: PropTypes.string,
     }).isRequired,
-    defaultValue : PropTypes.any,
+    label: PropTypes.string,
+    isRequired: PropTypes.bool,
+    options: PropTypes.array,
+    defaultValue: PropTypes.any,
 }
+
+export default FormDropdown;

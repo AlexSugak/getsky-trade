@@ -10,16 +10,15 @@ import TextArea from '../TextArea';
 
 const textAreaStyles = { height: 100 };
 
-const FormTextArea = ({ label, tip, placeholder }) =>
-    (
-        <Wrapper>
-            <FormLabel>{label}</FormLabel>
-            <Flex my={2} >
-                <TextArea style={textAreaStyles} placeholder={placeholder} />
-            </Flex>
-            <Tip>{tip}</Tip>
-        </Wrapper>
-    );
+const FormTextArea = ({ label, tip, placeholder }) => (
+    <Wrapper>
+        <FormLabel>{label}</FormLabel>
+        <Flex my={2} >
+            <TextArea style={textAreaStyles} placeholder={placeholder} />
+        </Flex>
+        <Tip>{tip}</Tip>
+    </Wrapper>
+);
 
 FormTextArea.propTypes = {
     input: PropTypes.shape({

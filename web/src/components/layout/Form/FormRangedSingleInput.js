@@ -4,7 +4,7 @@ import { Flex, Box } from 'grid-styled';
 
 import ControlInput from './ControlInput';
 import Wrapper from './ControlWrapper';
-import FormLabel from './FormLabel';
+import FormItem from './FormItem';
 import Button from './Button';
 import { B, Tip } from '../Text';
 
@@ -29,25 +29,27 @@ class RangedSingleInput extends React.Component {
     }
 
     setMode(mode) {
-        this.setState({ ...this.state, mode })
+        this.setState({ ...this.state, mode });
     };
 
     render() {
+        const { label, placeholder, isRequired, input, meta: { error, warning, touched } } = this.props;
+        const showError = touched && (error || warning);
+
         return (
-            <Wrapper>
-                <FormLabel>What is the amount of cash you will pay in USD?</FormLabel>
+            <FormItem name={input.name} label={label} isRequired={isRequired} showError={showError} error={error}>
                 <Flex mt={2}>
                     <Button type="button" text='Ranged amount' onClick={() => this.setMode(RANGED_MODE)} style={fullWidth} primary={this.state.mode === RANGED_MODE} />
                     <Button type="button" text='Single amount' onClick={() => this.setMode(SINGLE_MODE)} style={fullWidth} primary={this.state.mode === SINGLE_MODE} />
                 </Flex>
 
                 <Flex mt={2} alignItems='center' >
-                    <ControlInput placeholder="USD" />
+                    <ControlInput placeholder={placeholder} />
                     {this.state.mode === RANGED_MODE &&
                         <Box mx={2}>to</Box>
                     }
                     {this.state.mode === RANGED_MODE &&
-                        <ControlInput placeholder="USD" />
+                        <ControlInput placeholder={placeholder} />
                     }
                 </Flex>
                 <Box mt={2}>
@@ -55,7 +57,7 @@ class RangedSingleInput extends React.Component {
                     <Tip>Example for ranged amounts: <B>60 to 70</B></Tip>
                     <Tip>Example for single amount: <B>50</B></Tip>
                 </Box>
-            </Wrapper>
+            </FormItem>
         );
     }
 }

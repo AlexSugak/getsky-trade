@@ -4,7 +4,7 @@ import { Flex, Box } from 'grid-styled'
 
 import CheckBox from 'components/layout/Checkbox';
 import FormLabel from 'components/layout/Form/FormLabel';
-import Wrapper from 'components/layout/Form/ControlWrapper';
+import FormItem from 'components/layout/Form/FormItem';
 
 class FormCheckboxGroup extends React.Component {
     constructor(props) {
@@ -26,16 +26,17 @@ class FormCheckboxGroup extends React.Component {
     }
 
     render() {
-        const { options, label } = this.props;
+        const { label, defaultValue, isRequired, options, description, input: { name, onChange }, meta: { error, warning, touched } } = this.props;
+        const showError = touched && (error || warning);
+
         return (
-            <Wrapper>
-                <FormLabel>{label}</FormLabel>
+            <FormItem name={name} label={label} isRequired={isRequired} description={description} showError={showError} error={error}>
                 {options.length > 0 &&
                     options.map(o =>
                         <CheckBox checked={o.checked} onClick={() => this.check(o.value)} labelText={o.title} />
                     )
                 }
-            </Wrapper>
+            </FormItem>
         );
     }
 }

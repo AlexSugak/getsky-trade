@@ -1,28 +1,16 @@
 import React from 'react';
-
-import Wrapper from './ControlWrapper';
-import FormLabel from './FormLabel';
-import ErrorMessage from './ErrorMessage';
 import ControlInput from './ControlInput';
-import ControlMessage from './ControlMessage';
+import FormItem from './FormItem';
 
-export default class FormInput extends React.Component {
-    render() {
-        const { label, placeholder, description, isRequired, type, maxLength, input, meta: { error, warning, touched } } = this.props;
-        const showError = touched && (error || warning);
+const FormInput = (props) => {
+    const { label, placeholder, description, isRequired, type, maxLength, input, meta: { error, warning, touched } } = props;
+    const showError = touched && (error || warning);
 
-        return (
-            <Wrapper>
-                {label &&
-                    <FormLabel for={input.name}>
-                        {label}
-                        {isRequired && '*'}
-                    </FormLabel>
-                }
-                <ControlInput name={input.name} type={type} placeholder={placeholder} maxLength={maxLength} error={showError} onChange={input.onChange} />
-                {!showError && description && <ControlMessage>{description}</ControlMessage>}
-                {showError && <ErrorMessage>{error || warning}</ErrorMessage>}
-            </Wrapper>
-        );
-    }
+    return (
+        <FormItem name={input.name} label={label} isRequired={isRequired} description={description} showError={showError} error={error}>
+            <ControlInput name={input.name} type={type} placeholder={placeholder} maxLength={maxLength} error={showError} onChange={input.onChange} />
+        </FormItem>
+    );
 }
+
+export default FormInput;
