@@ -12,16 +12,18 @@ describe('advertDetails reducer', () => {
     describe('GET_ADVERT_DETAILS_RESPONSE', () => {
         it('should store details entity from action to the reducer\'s state', () => {
             const detailsStub = { id: 2 };
+            const expectedState = { ...initialState, ...detailsStub, loading: false };
             expect(reduce(initialState, { type: actions.GET_ADVERT_DETAILS_RESPONSE, details: detailsStub }))
-                .toEqual(detailsStub);
+                .toEqual(expectedState);
         });
     });
 
     describe('SKYCOIN_PRICE_RESPONSE', () => {
         it('should save received price to the reducer\'s state', () => {
-            const expectedState = { price: 1 };
+            const priceStub = 123;
+            const expectedState = { ...initialState, price: priceStub };
             expect(reduce(initialState,
-                { type: actions.SKYCOIN_PRICE_RESPONSE, price: 1 }))
+                { type: actions.SKYCOIN_PRICE_RESPONSE, price: priceStub }))
                 .toEqual(expectedState);
         });
     });

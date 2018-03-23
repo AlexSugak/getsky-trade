@@ -8,12 +8,14 @@ import values from 'lodash/values';
 import pick from 'lodash/pick';
 import pickBy from 'lodash/pickBy';
 import { Tab as UnstyledTab, Tabs, TabList as UnstyledTabList, TabPanel } from 'react-tabs';
-import { getAdverts } from './actions';
-import Promo from '../../layout/Promo';
-import Container from '../../layout/Container';
-import Table, { TableRow, TableCell } from '../../layout/Table';
-import { TRADE_OPTIONS } from '../../../constants';
 
+import Promo from 'components/layout/Promo';
+import Container from 'components/layout/Container';
+import Table, { TableRow, TableCell } from 'components/layout/Table';
+import { TRADE_OPTIONS } from 'constants';
+import Spinner from 'components/layout/Spinner';
+
+import { getAdverts } from './actions';
 import bgImage from './intro-bg.jpg';
 
 const Intro = styled.div`
@@ -151,9 +153,11 @@ class LatestAdverts extends React.Component {
                             <Tab><span>I want to</span><strong>Sell Skycoin</strong></Tab>
                         </TabList>
                         <TabPanel>
+                            {this.props.loading && <Spinner />}
                             <Table columns={buyAdvertsColumns} rowComponent={BuyAdvertRow} rowData={this.props.sellAdverts} />
                         </TabPanel>
                         <TabPanel>
+                            {this.props.loading && <Spinner />}
                             <Table columns={sellAdvertsColumns} rowComponent={SellAdvertRow} rowData={this.props.buyAdverts} />
                         </TabPanel>
                     </Tabs>

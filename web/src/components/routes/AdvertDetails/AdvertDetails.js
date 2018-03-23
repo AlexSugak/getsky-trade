@@ -8,6 +8,7 @@ import Container from 'components/layout/Container';
 import { B } from 'components/layout/Text';
 import Icon, { IconMap } from 'components/layout/Icon';
 import { TRADE_OPTIONS } from 'constants/index'
+import Spinner from 'components/layout/Spinner';
 
 import {
     requestAdvertDetails,
@@ -177,7 +178,7 @@ export default connect(
         if (advertDetails.id !== match.params.id) {
             const details = await requestAdvertDetails(match.params.id);
             if (!details) return;
-            
+
             if (!details.fixedPrice) {
                 await requestSkycoinPrice(details.currency);
             }
@@ -186,9 +187,9 @@ export default connect(
     render() {
         const { advertDetails } = this.props;
 
-        if (advertDetails.notFound) {
-            return <NotFound />;
-        }
+        if (advertDetails.notFound) return <NotFound />;
+
+        if (advertDetails.loading) return <Spinner />;
 
         return (
             <Container>

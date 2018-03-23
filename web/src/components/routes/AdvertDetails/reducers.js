@@ -6,6 +6,7 @@ import {
 } from './actions';
 
 export const initialState = {
+    loading: true,
 };
 
 export default (state = initialState, action) => {
@@ -13,7 +14,7 @@ export default (state = initialState, action) => {
         case GET_ADVERT_DETAILS_REQUEST:
             return initialState;
         case GET_ADVERT_DETAILS_RESPONSE:
-            return { ...state, ...action.details };
+            return { ...state, ...action.details, loading: false, };
         case SKYCOIN_PRICE_RESPONSE:
             return { ...state, price: action.price };
         default:
