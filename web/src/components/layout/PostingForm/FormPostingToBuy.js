@@ -35,8 +35,8 @@ const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting
     <Form onSubmit={handleSubmit}>
         <Box width={1 / 2}>
             <FormGroup>
-                <FormRangedSingleInput />
-                <FormCheckboxGroup options={acceptTradeOptions} />
+                <Field name="cashAmount" component={FormRangedSingleInput} />
+                <Field name="acceptOptions" component={FormCheckboxGroup} options={acceptTradeOptions} label={'Choose the trade options you will accept:'} />
                 <Field name="distance" component={FormDropdownInput} options={distanceUnitsOptions} label={'How far will you travel to trade?'} />
             </FormGroup>
             <LocationFormGroup states={states} countries={countries} showStates={shouldShowStates(country)} />

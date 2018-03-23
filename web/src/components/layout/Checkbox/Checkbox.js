@@ -15,10 +15,15 @@ const CheckBoxInput = styled.input`
     position: relative;
     outline: none;
 
+    &:hover {
+        cursor: pointer;
+    }
+
     &:active, &:focus {
         border: 1px solid ${props => props.theme.colors.gray};
         outline: none;
     }
+
     &:checked:before {
         content: '\f00c';
         font-size: 16px;
@@ -27,6 +32,7 @@ const CheckBoxInput = styled.input`
         left: 2px;
         color: black;
     }
+
     + label {
         color: black;
     }
@@ -46,8 +52,8 @@ const CheckBox = ({ labelText, checked, onClick }) => {
 };
 
 CheckBox.propTypes = {
-    labelText: PropTypes.string, 
-    checked: PropTypes.bool, 
+    labelText: PropTypes.string,
+    checked: PropTypes.bool,
     onClick: PropTypes.func,
 };
 

@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import { Flex, Box } from 'grid-styled'
 
 import CheckBox from 'components/layout/Checkbox';
+import FormLabel from 'components/layout/Form/FormLabel';
 import Wrapper from 'components/layout/Form/ControlWrapper';
 
 class FormCheckboxGroup extends React.Component {
@@ -25,17 +26,16 @@ class FormCheckboxGroup extends React.Component {
     }
 
     render() {
-        const { options } = this.props;
+        const { options, label } = this.props;
         return (
-            <div>
+            <Wrapper>
+                <FormLabel>{label}</FormLabel>
                 {options.length > 0 &&
                     options.map(o =>
-                        <Wrapper>
-                            <CheckBox checked={o.checked} onClick={() => this.check(o.value)} labelText={o.title} />
-                        </Wrapper>
+                        <CheckBox checked={o.checked} onClick={() => this.check(o.value)} labelText={o.title} />
                     )
                 }
-            </div>
+            </Wrapper>
         );
     }
 }
