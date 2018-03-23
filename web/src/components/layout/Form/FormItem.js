@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Wrapper from './ControlWrapper';
 import FormLabel from './FormLabel';
 import ErrorMessage from './ErrorMessage';
-import ControlInput from './ControlInput';
 import ControlMessage from './ControlMessage';
 
 const FormItem = ({ name, label, isRequired, description, showError, error, children }) => (

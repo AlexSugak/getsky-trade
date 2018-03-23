@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Flex, Box } from 'grid-styled';
 
 import ControlInput from './ControlInput';
-import Wrapper from './ControlWrapper';
 import FormItem from './FormItem';
 import Button from './Button';
 import { B, Tip } from '../Text';

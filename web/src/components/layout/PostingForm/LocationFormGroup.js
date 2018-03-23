@@ -1,7 +1,7 @@
 import React from 'react';
 import { Field } from 'redux-form';
 
-import { required, maxLength } from '../../../validation/rules';
+import { required } from '../../../validation/rules';
 
 import { FormTextArea, FormDropdown, FormInput, FormGroup } from '../Form';
 

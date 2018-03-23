@@ -1,15 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Wrapper from './ControlWrapper';
 import ControlDropdown from './ControlDropdown';
-import FormLabel from './FormLabel';
 import FormItem from './FormItem';
 
 class FormDropdown extends React.Component {
     componentDidMount() {
         // ReduxForm doesn't have a prop for 'defaultValue'. You need to set it manually.
-        const { defaultValue, options, input: { onChange } } = this.props;
+        const { defaultValue, input: { onChange } } = this.props;
         onChange(defaultValue);
     }
 

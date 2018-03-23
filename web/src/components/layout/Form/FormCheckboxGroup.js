@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Flex, Box } from 'grid-styled'
 
 import CheckBox from 'components/layout/Checkbox';
-import FormLabel from 'components/layout/Form/FormLabel';
 import FormItem from 'components/layout/Form/FormItem';
 
 class FormCheckboxGroup extends React.Component {
@@ -26,7 +24,7 @@ class FormCheckboxGroup extends React.Component {
     }
 
     render() {
-        const { label, defaultValue, isRequired, options, description, input: { name, onChange }, meta: { error, warning, touched } } = this.props;
+        const { label, isRequired, options, description, input: { name }, meta: { error, warning, touched } } = this.props;
         const showError = touched && (error || warning);
 
         return (
