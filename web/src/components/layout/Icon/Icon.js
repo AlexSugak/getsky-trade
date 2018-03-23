@@ -10,6 +10,7 @@ import faAngleLeft from '@fortawesome/fontawesome-free-solid/faAngleLeft'
 import faAngleRight from '@fortawesome/fontawesome-free-solid/faAngleRight';
 
 import faCheckCircle from '@fortawesome/fontawesome-free-solid/faCheckCircle';
+import faExclamationCircle from '@fortawesome/fontawesome-free-solid/faExclamationCircle';
 
 export const IconMap = {
     Facebook: faFacebook,
@@ -18,6 +19,7 @@ export const IconMap = {
     AngleLeft: faAngleLeft,
     AngleRight: faAngleRight,
 
+    ExclamationCircle: faExclamationCircle,
     CheckCircle: faCheckCircle,
 }
 

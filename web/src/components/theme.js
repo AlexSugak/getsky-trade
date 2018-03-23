@@ -4,6 +4,7 @@ export default {
         white: '#fff',
         red: '#f00',
         gray: '#424242',
+        warning: '#ff6a00',
         lightGray: '#cecece',
     },
     fontSizes: [12, 14, 16, 17, 25, 35],
