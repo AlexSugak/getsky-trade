@@ -20,6 +20,7 @@ import (
 
 // HTTPServer holds http server info
 type HTTPServer struct {
+	serverTime     ServerTime
 	checkRecaptcha auth.RecaptchaChecker
 	binding        string
 	geo            geo.Geo
@@ -40,6 +41,7 @@ func NewHTTPServer(recaptchaSecret string, binding string, board board.Board, us
 		binding:        binding,
 		board:          board,
 		users:          users,
+		serverTime:     ServerTimeImp{},
 		authenticator:  a,
 		validate:       validator.New(),
 		log: log.WithFields(logrus.Fields{
@@ -127,6 +129,7 @@ func (s *HTTPServer) setupRouter(Secure Secure) http.Handler {
 	r.Handle("/api/postings/{id}", API(AdvertDetailsHandler)).Methods("GET")
 	r.Handle("/api/postings/sell/latest", API(LatestSellAdvertsHandler)).Methods("GET")
 	r.Handle("/api/postings/buy/latest", API(LatestBuyAdvertsHandler)).Methods("GET")
+	r.Handle("/api/postings/buy", Secure(API(BuyAdvertHandler))).Methods("POST")
 	r.Handle("/api/skycoin-price/{currency}", API(GetSkycoinPrice)).Methods("GET")
 
 	// TODO: enable CORS
