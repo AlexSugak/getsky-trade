@@ -38,70 +38,106 @@ type PostAdvertRequest struct {
 	Recaptcha string `json:"recaptcha" validate:"required"`
 }
 
+func prepeareAdvertEntity(s *HTTPServer, w http.ResponseWriter, r *http.Request) (*models.AdvertEntity, error) {
+	w.Header().Set("Accept", "application/json")
+
+	body := &PostAdvertRequest{}
+	if err := json.NewDecoder(r.Body).Decode(body); err != nil {
+		return nil, httputil.StatusError{
+			Err:  fmt.Errorf("Invalid json request body: %v", err),
+			Code: http.StatusBadRequest,
+		}
+	}
+
+	err := s.validate.Struct(body)
+	if err != nil {
+		return nil, ce.ValidatorErrorsResponse(err.(validator.ValidationErrors))
+	}
+
+	user, err := s.users.Get(body.Author)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("the user with the userName: '%s' doesn't exist", body.Author), http.StatusNotFound)
+		return nil, nil
+	}
+
+	res, err := s.checkRecaptcha(body.Recaptcha)
+	if err != nil {
+		return nil, err
+	} else if !res {
+		return nil, ce.CreateSingleValidationError("recaptcha", "is not valid")
+	}
+
+	return &models.AdvertEntity{
+		ID:                    0,
+		Type:                  int(board.Buy),
+		Author:                user.ID,
+		TradeCashInPerson:     body.TradeCashInPerson,
+		TradeCashByMail:       body.TradeCashByMail,
+		TradeMoneyOrderByMail: body.TradeMoneyOrderByMail,
+		TradeOther:            body.TradeOther,
+		AmountFrom:            body.AmountFrom,
+		AmountTo:              body.AmountTo,
+		FixedPrice:            models.JSONNullFloat64{},
+		PercentageAdjustment:  models.JSONNullFloat64{},
+		Currency:              body.Currency,
+		AdditionalInfo:        body.AdditionalInfo,
+		TravelDistance:        body.TravelDistance,
+		TravelDistanceUoM:     body.TravelDistanceUoM,
+		CountryCode:           body.CountryCode,
+		StateCode:             body.StateCode,
+		City:                  body.City,
+		PostalCode:            body.PostalCode,
+		Status:                1,
+		CreatedAt:             s.serverTime.Now(),
+	}, nil
+}
+
 // BuyAdvertHandler saves received advert to the DB
 // Method: GET
 // Content-type: application/json
 // URI: /api/postings/buy
 func BuyAdvertHandler(s *HTTPServer) httputil.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
-		w.Header().Set("Accept", "application/json")
+		advert, err := prepeareAdvertEntity(s, w, r)
+		if err != nil {
+			return err
+		}
+		if advert == nil {
+			return nil
+		}
+		advert.Type = int(board.Buy)
 
-		body := &PostAdvertRequest{}
-		if err := json.NewDecoder(r.Body).Decode(body); err != nil {
-			return httputil.StatusError{
-				Err:  fmt.Errorf("Invalid json request body: %v", err),
-				Code: http.StatusBadRequest,
-			}
+		entityID, err := s.board.InserAdvert(advert)
+		if err != nil {
+			return err
 		}
 
-		err := s.validate.Struct(body)
+		insertedEntity, err := s.board.GetAdvertDetails(entityID)
 		if err != nil {
-			return ce.ValidatorErrorsResponse(err.(validator.ValidationErrors))
+			return err
 		}
 
-		user, err := s.users.Get(body.Author)
+		return json.NewEncoder(w).Encode(&insertedEntity)
+	}
+}
+
+// SellAdvertHandler saves received advert to the DB
+// Method: GET
+// Content-type: application/json
+// URI: /api/postings/sell
+func SellAdvertHandler(s *HTTPServer) httputil.APIHandler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		advert, err := prepeareAdvertEntity(s, w, r)
 		if err != nil {
-			http.Error(w, fmt.Sprintf("the user with the userName: '%s' doesn't exist", body.Author), http.StatusNotFound)
+			return err
+		}
+		if advert == nil {
 			return nil
 		}
 
-		res, err := s.checkRecaptcha(body.Recaptcha)
-		if err != nil {
-			return err
-		} else if !res {
-			return ce.CreateSingleValidationError("recaptcha", "is not valid")
-		}
+		advert.Type = int(board.Sell)
 
-		advert := models.AdvertEntity{
-			ID:                    0,
-			Type:                  int(board.Buy),
-			Author:                user.ID,
-			TradeCashInPerson:     body.TradeCashInPerson,
-			TradeCashByMail:       body.TradeCashByMail,
-			TradeMoneyOrderByMail: body.TradeMoneyOrderByMail,
-			TradeOther:            body.TradeOther,
-			AmountFrom:            body.AmountFrom,
-			AmountTo:              body.AmountTo,
-			FixedPrice:            models.JSONNullFloat64{},
-			PercentageAdjustment:  models.JSONNullFloat64{},
-			Currency:              body.Currency,
-			AdditionalInfo:        body.AdditionalInfo,
-			TravelDistance:        body.TravelDistance,
-			TravelDistanceUoM:     body.TravelDistanceUoM,
-			CountryCode:           body.CountryCode,
-			StateCode:             body.StateCode,
-			City:                  body.City,
-			PostalCode:            body.PostalCode,
-			Status:                1,
-			CreatedAt:             s.serverTime.Now(),
-		}
-
-		_, err = w.Write([]byte(``))
-		if err != nil {
-			return err
-		}
-
-		entityID, err := s.board.InserAdvert(&advert)
+		entityID, err := s.board.InserAdvert(advert)
 		if err != nil {
 			return err
 		}
