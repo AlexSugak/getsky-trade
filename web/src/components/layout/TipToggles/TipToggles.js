@@ -27,12 +27,14 @@ class TipToggles extends React.Component {
         const { expanded } = this.state;
 
         return (
-            <Box my={3}>
+            <Box>
                 <Flex style={cursorPointer} onClick={this.toggle}>
                     <Label>{label}</Label>
                     <Icon name={expanded ? IconMap.AngleUp : IconMap.AngleDown} />
                 </Flex>
-                <Box mt={3}>{children}</Box>
+                {expanded &&
+                    <Box mt={1}> {children}</Box>
+                }
             </Box>
         );
     };
