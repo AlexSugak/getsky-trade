@@ -8,6 +8,8 @@ import faInstagram from '@fortawesome/fontawesome-free-brands/faInstagram';
 
 import faAngleLeft from '@fortawesome/fontawesome-free-solid/faAngleLeft'
 import faAngleRight from '@fortawesome/fontawesome-free-solid/faAngleRight';
+import faAngleUp from '@fortawesome/fontawesome-free-solid/faAngleUp';
+import faAngleDown from '@fortawesome/fontawesome-free-solid/faAngleDown';
 
 import faCheckCircle from '@fortawesome/fontawesome-free-solid/faCheckCircle';
 import faExclamationCircle from '@fortawesome/fontawesome-free-solid/faExclamationCircle';
@@ -18,6 +20,8 @@ export const IconMap = {
     Instagram: faInstagram,
     AngleLeft: faAngleLeft,
     AngleRight: faAngleRight,
+    AngleUp: faAngleUp,
+    AngleDown: faAngleDown,
 
     ExclamationCircle: faExclamationCircle,
     CheckCircle: faCheckCircle,
