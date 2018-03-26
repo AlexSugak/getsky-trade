@@ -58,6 +58,7 @@ func (prices *SkycoinPrices) GetSkycoinPrice(currency string) ([]byte, error) {
 }
 
 func updatePrices(prices *SkycoinPrices, currencies []string) {
+rootLoop:
 	for {
 		for _, c := range currencies {
 			resp, err := getNewPrice(c)
@@ -70,8 +71,8 @@ func updatePrices(prices *SkycoinPrices, currencies []string) {
 			prices.prices[c] = &SkycoinPrice{apiResponse: resp}
 		}
 		select {
-		case _ = <-prices.refreshCycleChannel:
-			break
+		case <-prices.refreshCycleChannel:
+			break rootLoop
 		case <-time.After(refreshInterval):
 			continue
 		}
