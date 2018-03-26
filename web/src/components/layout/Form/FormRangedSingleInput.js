@@ -23,9 +23,15 @@ class RangedSingleInput extends React.Component {
 
         this.state = {
             mode: RANGED_MODE,
+            defaultMin: this.props.min,
             storedTo: this.props.min + 1,
         }
     };
+
+    componentDidMount() {
+        const { input: { value, onChange } } = this.props;
+        onChange({ from: this.state.defaultMin, to: this.state.storedTo })
+    }
 
     setMode(mode) {
         const { input: { value, onChange } } = this.props;
@@ -60,12 +66,12 @@ class RangedSingleInput extends React.Component {
                     <Button type="button" text='Single amount' onClick={() => this.setMode(SINGLE_MODE)} style={fullWidth} primary={this.state.mode === SINGLE_MODE} />
                 </Flex>
                 <Flex mt={2} alignItems='center' >
-                    <ControlInput type="number" min={min} max={max} placeholder={placeholder} error={showError} onChange={this.onChangeFrom} />
+                    <ControlInput type="number" min={min} max={max} placeholder={placeholder} error={showError} onChange={this.onChangeFrom} defaultValue={min} />
                     {this.state.mode === RANGED_MODE &&
                         <Box mx={2}>to</Box>
                     }
                     {this.state.mode === RANGED_MODE &&
-                        <ControlInput type="number" min={min} max={max} placeholder={placeholder} error={showError} onChange={this.onChangeTo} />
+                        <ControlInput type="number" min={min} max={max} placeholder={placeholder} error={showError} onChange={this.onChangeTo} defaultValue={this.state.storedTo} />
                     }
                 </Flex>
                 <Box mt={2}>
