@@ -10,6 +10,7 @@ import (
 	"github.com/AlexSugak/getsky-trade/src/auth"
 	"github.com/AlexSugak/getsky-trade/src/board"
 	"github.com/AlexSugak/getsky-trade/src/geo"
+	"github.com/AlexSugak/getsky-trade/src/skycoinPrice"
 	"github.com/AlexSugak/getsky-trade/src/user"
 	"github.com/AlexSugak/getsky-trade/src/util/httputil"
 	"github.com/gorilla/handlers"
@@ -21,6 +22,7 @@ import (
 // HTTPServer holds http server info
 type HTTPServer struct {
 	serverTime     ServerTime
+	skycoinPrices  *skycoinPrice.SkycoinPrices
 	checkRecaptcha auth.RecaptchaChecker
 	binding        string
 	geo            geo.Geo
@@ -38,6 +40,7 @@ type HTTPServer struct {
 func NewHTTPServer(recaptchaSecret string, binding string, board board.Board, users user.Users, a auth.Authenticator, log logrus.FieldLogger, g geo.Geo) *HTTPServer {
 	return &HTTPServer{
 		checkRecaptcha: auth.InitRecaptchaChecker(recaptchaSecret),
+		skycoinPrices:  skycoinPrice.NewSkycoinPrices(),
 		binding:        binding,
 		board:          board,
 		users:          users,
@@ -78,6 +81,8 @@ func (s *HTTPServer) Run() error {
 		Handler:      r,
 	}
 
+	s.skycoinPrices.StartUpdatingCycle()
+
 	errorC := make(chan error)
 	go func() {
 		if err := s.httpListener.ListenAndServe(); err != nil {
@@ -98,6 +103,8 @@ func (s *HTTPServer) Run() error {
 func (s *HTTPServer) Shutdown() error {
 	s.log.Info("HTTP service shutting down")
 	close(s.done)
+
+	s.skycoinPrices.StopUpdatingCycle()
 
 	// Create a deadline to wait for.
 	wait := time.Second * 5
