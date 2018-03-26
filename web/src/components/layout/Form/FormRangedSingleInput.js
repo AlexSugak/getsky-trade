@@ -18,23 +18,40 @@ class RangedSingleInput extends React.Component {
         super(props);
 
         this.setMode = this.setMode.bind(this);
+        this.onChangeFrom = this.onChangeFrom.bind(this);
+        this.onChangeTo = this.onChangeTo.bind(this);
 
         this.state = {
             mode: RANGED_MODE,
-            value: {
-                from: 0,
-                to: 0,
-            }
+            storedTo: this.props.min + 1,
         }
-    }
+    };
 
     setMode(mode) {
-        this.setState({ ...this.state, mode });
+        const { input: { value, onChange } } = this.props;
+
+        if (mode === SINGLE_MODE) {
+            this.setState({ ...this.state, mode, storedTo: value.to });
+            onChange({ to: value.to, from: value.from });
+        } else {
+            this.setState({ ...this.state, mode, storedTo: value.to });
+            onChange({ to: this.state.storedTo, from: value.from });
+        }
+    };
+
+    onChangeFrom(e) {
+        const { input: { onChange, value } } = this.props;
+        onChange({ from: parseFloat(e.target.value), to: value.to });
+    };
+
+    onChangeTo(e) {
+        const { input: { onChange, value } } = this.props;
+        onChange({ from: value.from, to: parseFloat(e.target.value) });
     };
 
     render() {
         const { label, placeholder, isRequired, min, max, input, meta: { error, warning, touched } } = this.props;
-        const showError = touched && (error || warning);
+        const showError = !!(touched && (error || warning));
 
         return (
             <FormItem name={input.name} label={label} isRequired={isRequired} showError={showError} error={error}>
@@ -42,14 +59,13 @@ class RangedSingleInput extends React.Component {
                     <Button type="button" text='Ranged amount' onClick={() => this.setMode(RANGED_MODE)} style={fullWidth} primary={this.state.mode === RANGED_MODE} />
                     <Button type="button" text='Single amount' onClick={() => this.setMode(SINGLE_MODE)} style={fullWidth} primary={this.state.mode === SINGLE_MODE} />
                 </Flex>
-
                 <Flex mt={2} alignItems='center' >
-                    <ControlInput type={'number'} min={min} max={max} placeholder={placeholder} error={showError} />
+                    <ControlInput type="number" min={min} max={max} placeholder={placeholder} error={showError} onChange={this.onChangeFrom} />
                     {this.state.mode === RANGED_MODE &&
                         <Box mx={2}>to</Box>
                     }
                     {this.state.mode === RANGED_MODE &&
-                        <ControlInput type={'number'} min={min} max={max} placeholder={placeholder} error={showError} />
+                        <ControlInput type="number" min={min} max={max} placeholder={placeholder} error={showError} onChange={this.onChangeTo} />
                     }
                 </Flex>
                 <Box mt={2}>
@@ -59,8 +75,8 @@ class RangedSingleInput extends React.Component {
                 </Box>
             </FormItem>
         );
-    }
-}
+    };
+};
 
 RangedSingleInput.propTypes = {
     input: PropTypes.shape({

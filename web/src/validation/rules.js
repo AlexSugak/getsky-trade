@@ -15,3 +15,20 @@ export const email = value =>
     value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
         ? 'Invalid email address'
         : undefined;
+
+export const rangedRequired = value => {
+    if (value === '' || value === undefined) {
+        return 'The field is required';
+    }
+
+    return (value.from && value.to) ? undefined : 'The field is required';
+};
+
+export const ranged = (min, max) => value =>
+    (value.to >= value.from) ? undefined : 'First value has to be bigger or same';
+
+export const rangedMin = min => value =>
+    (value.from < min || value.to < min) ? `The value can't be less than ${min}` : undefined;
+
+export const rangedMax = max => value =>
+    (value.from > max || value.to > max) ? `The value can't be more than ${max}` : undefined;
