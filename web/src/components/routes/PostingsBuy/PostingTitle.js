@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from 'grid-styled';
 import { Link } from 'react-router-dom';
 
-import { H1, P, U } from '../../layout/Text';
+import { H1, P, U } from 'components/layout/Text';
 
 export default () => (
     <Box>

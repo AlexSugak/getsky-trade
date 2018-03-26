@@ -47,7 +47,7 @@ export default () => (
                     <span>I want to advertise to</span>
                     <strong>Buy Skycoin</strong>
                 </PromoButton>
-                <PromoButton to="/">
+                <PromoButton to="/postings/sell">
                     <span>I want to advertise to</span>
                     <strong>Sell Skycoin</strong>
                 </PromoButton>
