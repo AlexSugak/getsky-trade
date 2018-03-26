@@ -38,7 +38,7 @@ type PostAdvertRequest struct {
 	Recaptcha string `json:"recaptcha" validate:"required"`
 }
 
-func prepeareAdvertEntity(s *HTTPServer, w http.ResponseWriter, r *http.Request) (*models.AdvertEntity, error) {
+func prepareAdvert(s *HTTPServer, w http.ResponseWriter, r *http.Request) (*models.Advert, error) {
 	w.Header().Set("Accept", "application/json")
 
 	body := &PostAdvertRequest{}
@@ -67,7 +67,7 @@ func prepeareAdvertEntity(s *HTTPServer, w http.ResponseWriter, r *http.Request)
 		return nil, ce.CreateSingleValidationError("recaptcha", "is not valid")
 	}
 
-	return &models.AdvertEntity{
+	return &models.Advert{
 		ID:                    0,
 		Type:                  int(board.Buy),
 		Author:                user.ID,
@@ -98,7 +98,7 @@ func prepeareAdvertEntity(s *HTTPServer, w http.ResponseWriter, r *http.Request)
 // URI: /api/postings/buy
 func BuyAdvertHandler(s *HTTPServer) httputil.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
-		advert, err := prepeareAdvertEntity(s, w, r)
+		advert, err := prepareAdvert(s, w, r)
 		if err != nil {
 			return err
 		}
@@ -107,7 +107,7 @@ func BuyAdvertHandler(s *HTTPServer) httputil.APIHandler {
 		}
 		advert.Type = int(board.Buy)
 
-		entityID, err := s.board.InserAdvert(advert)
+		entityID, err := s.board.InsertAdvert(advert)
 		if err != nil {
 			return err
 		}
@@ -127,7 +127,7 @@ func BuyAdvertHandler(s *HTTPServer) httputil.APIHandler {
 // URI: /api/postings/sell
 func SellAdvertHandler(s *HTTPServer) httputil.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
-		advert, err := prepeareAdvertEntity(s, w, r)
+		advert, err := prepareAdvert(s, w, r)
 		if err != nil {
 			return err
 		}
@@ -137,7 +137,7 @@ func SellAdvertHandler(s *HTTPServer) httputil.APIHandler {
 
 		advert.Type = int(board.Sell)
 
-		entityID, err := s.board.InserAdvert(advert)
+		entityID, err := s.board.InsertAdvert(advert)
 		if err != nil {
 			return err
 		}

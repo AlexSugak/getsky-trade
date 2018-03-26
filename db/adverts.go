@@ -95,8 +95,8 @@ func (s Storage) GetAdvertDetails(advertID int64) (models.AdvertDetails, error) 
 	return models.AdvertDetails{}, nil
 }
 
-// InserAdvert inserts a new advert record to the DB
-func (s Storage) InserAdvert(advert *models.AdvertEntity) (int64, error) {
+// InsertAdvert inserts a new advert record to the DB
+func (s Storage) InsertAdvert(advert *models.Advert) (int64, error) {
 	cmd := `INSERT INTO Adverts` +
 		` (Type, ` +
 		` Author, ` +

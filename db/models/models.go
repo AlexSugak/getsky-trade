@@ -31,8 +31,8 @@ type AdvertDetails struct {
 	CreatedAt             time.Time       `db:"CreatedAt" json:"createdAt"`
 }
 
-// AdvertEntity represents Advert DB entity
-type AdvertEntity struct {
+// Advert represents Advert DB entity
+type Advert struct {
 	ID                    int64           `db:"Id" json:"id"`
 	Type                  int             `db:"Type" json:"type"`
 	Author                int64           `db:"Author" json:"author"`

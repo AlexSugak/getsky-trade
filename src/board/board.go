@@ -16,5 +16,5 @@ const (
 type Board interface {
 	GetLatestAdverts(AdvertType, int) ([]models.AdvertDetails, error)
 	GetAdvertDetails(int64) (models.AdvertDetails, error)
-	InserAdvert(*models.AdvertEntity) (int64, error)
+	InsertAdvert(*models.Advert) (int64, error)
 }
