@@ -26,7 +26,7 @@ class FormCheckboxGroup extends React.Component {
 
     render() {
         const { label, isRequired, options, description, input: { name, value }, meta: { error, warning, touched } } = this.props;
-        const showError = touched && (error || warning);
+        const showError = !!(touched && (error || warning));
 
         return (
             <FormItem name={name} label={label} isRequired={isRequired} description={description} showError={showError} error={error}>
