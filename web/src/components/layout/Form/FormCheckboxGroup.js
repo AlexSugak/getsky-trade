@@ -13,7 +13,7 @@ class FormCheckboxGroup extends React.Component {
     }
 
     check(item) {
-        const { options, input: { onChange, value } } = this.props;
+        const { input: { onChange, value } } = this.props;
 
         if (value === '') {
             onChange([item])
@@ -41,10 +41,22 @@ class FormCheckboxGroup extends React.Component {
 }
 
 FormCheckboxGroup.propTypes = {
+    input: PropTypes.shape({
+        onChange: PropTypes.func.isRequired,
+        name: PropTypes.string.isRequired,
+    }).isRequired,
+    meta: PropTypes.shape({
+        touched: PropTypes.bool,
+        error: PropTypes.string,
+        warning: PropTypes.string,
+    }).isRequired,
     options: PropTypes.arrayOf(PropTypes.shape({
         value: PropTypes.any.isRequired,
         title: PropTypes.string.isRequired,
     })),
+    label: PropTypes.string,
+    description: PropTypes.string,
+    isRequired: PropTypes.bool,
 };
 
 FormCheckboxGroup.defaultProps = {

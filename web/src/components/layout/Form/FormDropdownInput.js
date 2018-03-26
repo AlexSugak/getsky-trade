@@ -1,15 +1,14 @@
 import React from 'react';
 import { Flex, Box } from 'grid-styled';
+import PropTypes from 'prop-types';
 
 import ControlDropdown from './ControlDropdown';
 import ControlInput from './ControlInput';
-import Wrapper from './ControlWrapper';
-import FormLabel from './FormLabel';
-import ErrorMessage from './ErrorMessage';
+import FormItem from './FormItem';
 
 const inputStyle = { borderRight: 0 };
 
-export default class FormDropdownInput extends React.Component {
+class FormDropdownInput extends React.Component {
     constructor(props) {
         super(props);
 
@@ -44,27 +43,41 @@ export default class FormDropdownInput extends React.Component {
     }
 
     render() {
-        const { label, isRequired, options, input: { name }, meta: { error, warning, touched } } = this.props;
+        const { label, description, isRequired, options, input: { name }, meta: { error, warning, touched } } = this.props;
         const showError = touched && (error || warning);
 
         return (
-            <Wrapper>
-                {label &&
-                    <FormLabel for={name}>
-                        {label}
-                        {isRequired && '*'}
-                    </FormLabel>
-                }
+            <FormItem name={name} label={label} isRequired={isRequired} description={description} showError={showError} error={error}>
                 <Flex>
                     <Box width={3 / 4}>
-                        <ControlInput name={`${name}_input_text`} placeholder={'Distance'} onChange={this.onChangeText} style={inputStyle} />
+                        <ControlInput name={`${name}_input_text`} placeholder={'Distance'} onChange={this.onChangeText} style={inputStyle} error={showError} />
                     </Box>
                     <Box width={1 / 4}>
-                        <ControlDropdown name={`${name}_input_options`} options={options} onChange={this.onChangeDropdownValue} />
+                        <ControlDropdown name={`${name}_input_options`} options={options} onChange={this.onChangeDropdownValue} error={showError} />
                     </Box>
                 </Flex>
-                {showError && <ErrorMessage>{error || warning}</ErrorMessage>}
-            </Wrapper>
+            </FormItem>
         );
     }
 }
+
+FormDropdownInput.propTypes = {
+    input: PropTypes.shape({
+        onChange: PropTypes.func.isRequired,
+        name: PropTypes.string.isRequired,
+    }).isRequired,
+    meta: PropTypes.shape({
+        touched: PropTypes.bool,
+        error: PropTypes.string,
+        warning: PropTypes.string,
+    }).isRequired,
+    label: PropTypes.string,
+    description: PropTypes.string,
+    isRequired: PropTypes.bool,
+    options: PropTypes.arrayOf(PropTypes.shape({
+        value: PropTypes.any.isRequired,
+        text: PropTypes.string.isRequired,
+    })),
+};
+
+export default FormDropdownInput;

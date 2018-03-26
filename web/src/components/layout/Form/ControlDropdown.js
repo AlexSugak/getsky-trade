@@ -41,9 +41,9 @@ const Select = styled.select`
     }
 `;
 
-const ControlDropdown = ({ name, options, defaultValue, onChange }) => (
+const ControlDropdown = ({ name, options, defaultValue, onChange, error }) => (
     <SelectWrapper>
-        <Select name={name} onChange={onChange} defaultValue={defaultValue} >
+        <Select name={name} onChange={onChange} defaultValue={defaultValue} error={error} >
             {options.map((item, i) => <option value={item.value} key={i}>{item.text}</option>)}
         </Select>
     </SelectWrapper>

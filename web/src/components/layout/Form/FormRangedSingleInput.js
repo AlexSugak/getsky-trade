@@ -33,7 +33,7 @@ class RangedSingleInput extends React.Component {
     };
 
     render() {
-        const { label, placeholder, isRequired, input, meta: { error, warning, touched } } = this.props;
+        const { label, placeholder, isRequired, min, max, input, meta: { error, warning, touched } } = this.props;
         const showError = touched && (error || warning);
 
         return (
@@ -44,16 +44,16 @@ class RangedSingleInput extends React.Component {
                 </Flex>
 
                 <Flex mt={2} alignItems='center' >
-                    <ControlInput type={'number'} min={0} placeholder={placeholder} />
+                    <ControlInput type={'number'} min={min} max={max} placeholder={placeholder} error={showError} />
                     {this.state.mode === RANGED_MODE &&
                         <Box mx={2}>to</Box>
                     }
                     {this.state.mode === RANGED_MODE &&
-                        <ControlInput type={'number'} min={0} placeholder={placeholder} />
+                        <ControlInput type={'number'} min={min} max={max} placeholder={placeholder} error={showError} />
                     }
                 </Flex>
                 <Box mt={2}>
-                    <Tip>Please choose a <B>ranged</B> or <B>single</B> amount. Valid amounts are 1 to 999999.99</Tip>
+                    <Tip>Please choose a <B>ranged</B> or <B>single</B> amount. Valid amounts are {min} to {max}</Tip>
                     <Tip>Example for ranged amounts: <B>60 to 70</B></Tip>
                     <Tip>Example for single amount: <B>50</B></Tip>
                 </Box>
@@ -72,6 +72,12 @@ RangedSingleInput.propTypes = {
         error: PropTypes.string,
         warning: PropTypes.string,
     }).isRequired,
-}
+    label: PropTypes.string,
+    isRequired: PropTypes.bool,
+    options: PropTypes.array,
+    defaultValue: PropTypes.any,
+    min: PropTypes.number,
+    max: PropTypes.number,
+};
 
 export default RangedSingleInput;

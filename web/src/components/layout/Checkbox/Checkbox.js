@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Flex, Box } from 'grid-styled'
+
 import 'font-awesome/css/font-awesome.min.css';
 
 const CheckBoxInput = styled.input`
