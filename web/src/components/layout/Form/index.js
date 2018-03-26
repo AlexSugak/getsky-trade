@@ -12,5 +12,22 @@ import FormCheckboxGroup from './FormCheckboxGroup';
 import FormDropdownInput from './FormDropdownInput';
 import FormTextArea from './FormTextArea';
 import FormGroup from './FormGroup';
+import FormItem from './FormItem';
 
-export { FormInput, FormLabel, FormDropdown, Button, ErrorMessage, ControlMessage, ControlWrapper, FormRangedSingleInput, FormCaptcha, ControlInput, FormCheckboxGroup, FormDropdownInput, FormTextArea, FormGroup };
+export {
+    FormInput,
+    FormLabel,
+    FormDropdown,
+    Button,
+    ErrorMessage,
+    ControlMessage,
+    ControlWrapper,
+    FormRangedSingleInput,
+    FormCaptcha,
+    ControlInput,
+    FormCheckboxGroup,
+    FormDropdownInput,
+    FormTextArea,
+    FormGroup,
+    FormItem,
+};

@@ -6,6 +6,7 @@ import { Box } from 'grid-styled'
 import { FormRangedSingleInput, FormCheckboxGroup, FormDropdownInput, Button, FormGroup } from 'components/layout/Form';
 import { required, minLength, maxLength, ranged, rangedRequired, rangedMin, rangedMax } from 'validation/rules';
 import { XmrAmountWarning, LocationFormGroup, AdditionalInformationSample, ACCEPT_TRADE_OPTIONS, DISTANCE_UNITS_OPTIONS } from 'components/layout/PostingForm';
+import FormCoinPriceInput from './FormCoinPriceInput';
 
 const shouldShowStates = currentCountry => currentCountry === 'US' || currentCountry === 'CA';
 
@@ -32,6 +33,16 @@ const FormPostingToSell = ({ states, countries, country, handleSubmit, submittin
                     max={RANGED_MAX}
                 />
                 <XmrAmountWarning />
+                <Field
+                    name="pricePerCoin"
+                    component={FormCoinPriceInput}
+                    placeholder={'USD'}
+                    label={'Price per coin'}
+                    isRequired
+                    validate={[rangedRequired, ranged1To999999, rMin, rMax]}
+                    min={RANGED_MIN}
+                    max={RANGED_MAX}
+                />
                 <Field
                     name="acceptOptions"
                     component={FormCheckboxGroup}
