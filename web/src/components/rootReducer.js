@@ -4,15 +4,15 @@ import { reducer as formReducer } from 'redux-form'
 
 import latestAdverts from './routes/LatestAdverts/reducers';
 import login from './routes/Login/reducers';
-import postingsBuy from './routes/PostingsBuy/reducers';
 import advertDetails from './routes/AdvertDetails/reducers';
+import app from './AppInitializer/reducers';
 
 const rootReducer = combineReducers({
     routing: routerReducer,
     form: formReducer,
+    app,
     latestAdverts,
     login,
-    postingsBuy,
     advertDetails,
 });
 

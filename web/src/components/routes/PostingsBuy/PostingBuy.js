@@ -1,25 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Container from '../../layout/Container';
-import PostingForm from '../../layout/PostingForm';
-import { BackIcLink } from '../../layout/Links';
+import Container from 'components/layout/Container';
+import PostingForm from 'components/layout/PostingForm';
+import { BackIcLink } from 'components/layout/Links';
 
 import PostingTitle from './PostingTitle';
-import { getCountries, getStates } from './actions';
 
 class PostingsBuy extends React.Component {
     constructor(props) {
         super(props);
-
         this.onSubmit = this.onSubmit.bind(this);
-    }
-
-    componentDidMount() {
-        const { getCountriesReq, getStatesReq } = this.props;
-
-        getStatesReq();
-        getCountriesReq();
     }
 
     onSubmit(form) {
@@ -38,14 +29,9 @@ class PostingsBuy extends React.Component {
     }
 }
 
-const mapStateToProps = ({ postingsBuy }) => ({
-    countries: postingsBuy.countries,
-    states: postingsBuy.states,
+const mapStateToProps = ({ app }) => ({
+    countries: app.countries,
+    states: app.states,
 })
 
-const mapDispatchToProps = {
-    getCountriesReq: getCountries,
-    getStatesReq: getStates,
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(PostingsBuy);
+export default connect(mapStateToProps)(PostingsBuy);
