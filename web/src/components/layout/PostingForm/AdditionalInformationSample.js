@@ -18,6 +18,6 @@ const AdditionalInformationSample = () => (
             </Box>
         </Warning>
     </Box>
-)
+);
 
 export default AdditionalInformationSample;

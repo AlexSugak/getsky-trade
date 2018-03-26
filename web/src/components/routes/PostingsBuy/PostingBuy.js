@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Container from 'components/layout/Container';
-import PostingForm from 'components/layout/PostingForm';
 import { BackIcLink } from 'components/layout/Links';
 
+import PostingForm from './PostingForm';
 import PostingTitle from './PostingTitle';
 
 class PostingsBuy extends React.Component {

@@ -29,7 +29,7 @@ class RangedSingleInput extends React.Component {
     };
 
     componentDidMount() {
-        const { input: { value, onChange } } = this.props;
+        const { input: { onChange } } = this.props;
         onChange({ from: this.state.defaultMin, to: this.state.storedTo })
     }
 

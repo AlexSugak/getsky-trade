@@ -5,32 +5,7 @@ import { Box } from 'grid-styled'
 
 import { FormRangedSingleInput, FormCheckboxGroup, FormDropdownInput, Button, FormGroup } from 'components/layout/Form';
 import { required, minLength, maxLength, ranged, rangedRequired, rangedMin, rangedMax } from 'validation/rules';
-
-import XmrAmountWarning from './XmrAmountWarning';
-import LocationFormGroup from './LocationFormGroup';
-import AdditionalInformationSample from './AdditionalInformationSample';
-
-const acceptTradeOptions = [{
-    title: 'Cache in person',
-    value: 'personCache',
-}, {
-    title: 'Cache by mail',
-    value: 'mailCache',
-}, {
-    title: 'Money Order by mail',
-    value: 'mailMoneyOrder',
-}, {
-    title: 'Other',
-    value: 'other',
-}];
-
-const distanceUnitsOptions = [{
-    text: 'Miles',
-    value: 'mi',
-}, {
-    text: 'Kilometers',
-    value: 'km',
-}];
+import { XmrAmountWarning, LocationFormGroup, AdditionalInformationSample, ACCEPT_TRADE_OPTIONS, DISTANCE_UNITS_OPTIONS } from 'components/layout/PostingForm';
 
 const shouldShowStates = currentCountry => currentCountry === 'US' || currentCountry === 'CA';
 
@@ -42,7 +17,7 @@ const rMax = rangedMax(RANGED_MAX);
 const min0 = minLength(0);
 const max999999 = maxLength(999999);
 
-const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting, pristine }) => (
+const FormPostingToSell = ({ states, countries, country, handleSubmit, submitting, pristine }) => (
     <Form onSubmit={handleSubmit}>
         <Box width={1 / 2}>
             <FormGroup>
@@ -60,7 +35,7 @@ const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting
                 <Field
                     name="acceptOptions"
                     component={FormCheckboxGroup}
-                    options={acceptTradeOptions}
+                    options={ACCEPT_TRADE_OPTIONS}
                     label={'Choose the trade options you will accept:'}
                     isRequired
                     validate={[required]}
@@ -69,7 +44,7 @@ const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting
                     type={'number'}
                     name={'distance'}
                     component={FormDropdownInput}
-                    options={distanceUnitsOptions}
+                    options={DISTANCE_UNITS_OPTIONS}
                     label={'How far will you travel to trade?'}
                     isRequired
                     min={0}
@@ -85,9 +60,9 @@ const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting
 );
 
 const ReduxForm = reduxForm({
-    form: 'formPostingToBuy'
-})(FormPostingToBuy);
+    form: 'formPostingToSell'
+})(FormPostingToSell);
 
-const selector = formValueSelector('formPostingToBuy');
+const selector = formValueSelector('formPostingToSell');
 
 export default connect(state => ({ country: selector(state, 'country') }))(ReduxForm);
