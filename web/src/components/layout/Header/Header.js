@@ -7,6 +7,7 @@ import Container from '../Container';
 import Brand from '../Brand';
 import Nav from '../Nav';
 import SocialMenu from '../SocialLinks';
+import UserSubmenu from '../UserSubmenu';
 
 const SubHeaderWrapper = styled.div`
     background: ${props => props.theme.colors.white};
@@ -28,11 +29,11 @@ const authNavItems = [
     { url: '/search', name: 'Search' },
 ];
 
-const Header = ({ authorized }) => (
+const Header = ({ authorized, userInfo }) => (
     <header>
         <SubHeaderWrapper className="subheader">
             <Container alignItems="center" justifyContent="space-between">
-                <SocialMenu />
+                <UserSubmenu userInfo={userInfo} />
                 <SocialMenu />
             </Container>
         </SubHeaderWrapper>
@@ -49,9 +50,10 @@ Header.propTypes = {
     authorized: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = ({ login }) => {
+const mapStateToProps = ({ login, app, }) => {
     return {
         authorized: login.authorized,
+        userInfo: app.userInfo,
     }
 };
 
