@@ -2,7 +2,8 @@ import { getAuthTokens } from '../../storage'
 import { loginUserResponseOk } from '../routes/Login/actions';
 import {
     getCountries as getCountriesRequest,
-    getStates as getStatesRequest
+    getStates as getStatesRequest,
+    getUserInfo as getUserInfoApi,
 } from '../../api';
 
 export const initApp = () =>
@@ -37,3 +38,9 @@ export const getStates = () =>
             states: states.data,
         });
     };
+
+export const GET_USER_INFO_RESPONSE = 'GET_USER_INFO_RESPONSE';
+export const getUserInfo = () => async dispatch => {
+    const response = await getUserInfoApi();
+    dispatch({ type: GET_USER_INFO_RESPONSE, userInfo: response.data });
+}

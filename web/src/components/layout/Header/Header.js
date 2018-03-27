@@ -31,7 +31,8 @@ const authNavItems = [
 const Header = ({ authorized }) => (
     <header>
         <SubHeaderWrapper className="subheader">
-            <Container alignItems="center" justifyContent="flex-end">
+            <Container alignItems="center" justifyContent="space-between">
+                <SocialMenu />
                 <SocialMenu />
             </Container>
         </SubHeaderWrapper>

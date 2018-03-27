@@ -1,12 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { initApp, getCountries, getStates } from './actions'
+import { initApp, getCountries, getStates, getUserInfo } from './actions'
 
 class AppInitializer extends React.Component {
     componentDidMount() {
         this.props.initApp();
         this.props.getCountries();
         this.props.getStates();
+        this.props.getUserInfo();
     }
 
     render() {
@@ -15,4 +16,4 @@ class AppInitializer extends React.Component {
 }
 
 
-export default connect(null, { initApp, getCountries, getStates })(AppInitializer)
+export default connect(null, { initApp, getCountries, getStates, getUserInfo })(AppInitializer)

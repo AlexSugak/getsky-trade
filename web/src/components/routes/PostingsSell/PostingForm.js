@@ -5,7 +5,7 @@ import { Box } from 'grid-styled'
 
 import { FormRangedSingleInput, FormCheckboxGroup, FormDropdownInput, Button, FormGroup } from 'components/layout/Form';
 import { required, minLength, maxLength, ranged, rangedRequired, rangedMin, rangedMax } from 'validation/rules';
-import { XmrAmountWarning, LocationFormGroup, AdditionalInformationSample, ACCEPT_TRADE_OPTIONS, DISTANCE_UNITS_OPTIONS } from 'components/layout/PostingForm';
+import { SkyAmountWarning, LocationFormGroup, AdditionalInformationSample, ACCEPT_TRADE_OPTIONS, DISTANCE_UNITS_OPTIONS } from 'components/layout/PostingForm';
 import FormCoinPriceInput from './FormCoinPriceInput';
 
 const shouldShowStates = currentCountry => currentCountry === 'US' || currentCountry === 'CA';
@@ -32,7 +32,7 @@ const FormPostingToSell = ({ states, countries, country, handleSubmit, submittin
                     min={RANGED_MIN}
                     max={RANGED_MAX}
                 />
-                <XmrAmountWarning />
+                <SkyAmountWarning />
                 <Field
                     name="pricePerCoin"
                     component={FormCoinPriceInput}

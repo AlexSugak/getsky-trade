@@ -197,10 +197,13 @@ type MeResponse struct {
 // URI: /api/me
 func MeHandler(s *HTTPServer) httputil.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
-		info := MeResponse{
-			UserName: "todo",
+		userName := r.Header.Get("name")
+
+		userDetails, err := s.users.Get(userName)
+		if err != nil {
+			return err
 		}
 
-		return json.NewEncoder(w).Encode(info)
+		return json.NewEncoder(w).Encode(userDetails)
 	}
 }

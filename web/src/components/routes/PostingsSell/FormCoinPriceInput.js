@@ -13,9 +13,9 @@ const fullWidth = { width: '100%' };
 
 const PercentageAdjustmentTip = () => (
     <Box>
-        <Tip><B>A percentage (up to two decimal places) you want applied to the XMR exchange rate price.</B></Tip>
+        <Tip><B>A percentage (up to two decimal places) you want applied to the SKY exchange rate price.</B></Tip>
         <Tip>Example: 10</Tip>
-        <Tip>At the time of the trade, if the XMR exchange rate price is <B>100 USD</B> and you choose <B>10</B> to indicate 10%, you will be selling your XMR for <B>110 USD</B> each.</Tip>
+        <Tip>At the time of the trade, if the SKY exchange rate price is <B>100 USD</B> and you choose <B>10</B> to indicate 10%, you will be selling your SKY for <B>110 USD</B> each.</Tip>
         <Box mt={2}>
             <TipToggles label={'Exchange rate examples'}>
                 <Flex>
@@ -39,7 +39,7 @@ const FixedPriceTip = () => (
     <Box>
         <Tip>Up to two decimal places. The exchange rate <B>will not</B> alter this price.</Tip>
         <Tip>Example: 200</Tip>
-        <Tip>This means you will sell your XMR at 200 USD each.</Tip>
+        <Tip>This means you will sell your SKY at 200 USD each.</Tip>
     </Box>
 );
 

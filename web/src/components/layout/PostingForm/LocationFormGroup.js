@@ -5,7 +5,7 @@ import { Field } from 'redux-form';
 import { required } from 'validation/rules';
 import { FormTextArea, FormDropdown, FormInput, FormGroup } from 'components/layout/Form';
 
-const placeHolder = `Example: I can meet in the Starbucks on Main St,\nin McDonalds on Broad St, or anywhere in the "X" shopping district.\nI can meet anytime between 1-4pm and my minimum trade is 1 XMR.'`;
+const placeHolder = `Example: I can meet in the Starbucks on Main St,\nin McDonalds on Broad St, or anywhere in the "X" shopping district.\nI can meet anytime between 1-4pm and my minimum trade is 1 SKY.'`;
 
 const LocationFormGroup = ({ states, countries, showStates }) => (
     <FormGroup label={'Your location'}>
