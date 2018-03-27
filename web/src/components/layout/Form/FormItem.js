@@ -23,7 +23,7 @@ const FormItem = ({ name, label, isRequired, description, showError, error, chil
 
 FormItem.propTypes = {
     name: PropTypes.string.isRequired,
-    label: PropTypes.string,
+    label: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     isRequired: PropTypes.bool,
     description: PropTypes.string,
     showError: PropTypes.bool,

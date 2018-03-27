@@ -39,7 +39,7 @@ const FormPostingToSell = ({ states, countries, country, handleSubmit, submittin
                     placeholder={'USD'}
                     label={'Price per coin'}
                     isRequired
-                    validate={[rangedRequired, ranged1To999999, rMin, rMax]}
+                    validate={[required]}
                     min={RANGED_MIN}
                     max={RANGED_MAX}
                 />

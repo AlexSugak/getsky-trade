@@ -6,8 +6,8 @@ import { B, Tip, Span } from 'components/layout/Text';
 import { ControlInput, FormItem, Button } from 'components/layout/Form';
 import TipToggles from 'components/layout/TipToggles';
 
-const LEFT_ACTIVE = 'LEFT_ACTIVE';
-const RIGHT_ACTIVE = 'RIGHT_ACTIVE';
+const PERCENTAGE_ADJUSTMENT = 'PERCENTAGE_ADJUSTMENT';
+const FIXED_PRICE = 'FIXED_PRICE';
 
 const fullWidth = { width: '100%' };
 
@@ -53,36 +53,64 @@ class FormCoinPriceInput extends React.Component {
     constructor(props) {
         super(props);
         this.setMode = this.setMode.bind(this);
-        this.state = { mode: LEFT_ACTIVE }
+        this.onChange = this.onChange.bind(this);
+
+        this.state = {
+            mode: PERCENTAGE_ADJUSTMENT,
+            fixedPrice: 0,
+            percentageAdjustment: 0,
+        };
     };
 
     setMode(mode) {
-        this.setState({ ...this.state, mode });
+        const { input: { value, onChange } } = this.props;
+        onChange(this.state.cashedValue);
+        this.setState({ ...this.state, mode, cashedValue: { value, type: this.state.mode, } });
     };
+
+    onChange(e) {
+        const { input: { onChange } } = this.props;
+        const val = e.target.value;
+        const value = isNaN(parseInt(val)) ? '' : parseInt(val);
+
+        if (val === '') {
+            onChange(null);
+        }
+        else {
+            onChange({ value, type: this.state.mode });
+        }
+
+        if (this.state.mode === PERCENTAGE_ADJUSTMENT) {
+            this.setState({ ...this.state, percentageAdjustment: value });
+        } else if (this.state.mode === FIXED_PRICE) {
+            this.setState({ ...this.state, fixedPrice: value });
+        }
+    }
 
     render() {
         const { isRequired, input, meta: { error, warning, touched } } = this.props;
+        const { fixedPrice, percentageAdjustment } = this.state;
         const showError = !!(touched && (error || warning));
 
         return (
             <FormItem name={input.name} label={<Label />} isRequired={isRequired} showError={showError} error={error}>
                 <Flex mt={2}>
-                    <Button type="button" text='PERCENTAGE ADJUSTMENT' onClick={() => this.setMode(LEFT_ACTIVE)} style={fullWidth} primary={this.state.mode === LEFT_ACTIVE} />
-                    <Button type="button" text='FIXED PRICE' onClick={() => this.setMode(RIGHT_ACTIVE)} style={fullWidth} primary={this.state.mode === RIGHT_ACTIVE} />
+                    <Button type="button" text='PERCENTAGE ADJUSTMENT' onClick={() => this.setMode(PERCENTAGE_ADJUSTMENT)} style={fullWidth} primary={this.state.mode === PERCENTAGE_ADJUSTMENT} />
+                    <Button type="button" text='FIXED PRICE' onClick={() => this.setMode(FIXED_PRICE)} style={fullWidth} primary={this.state.mode === FIXED_PRICE} />
                 </Flex>
                 <Flex mt={2} alignItems='center' >
-                    {this.state.mode === LEFT_ACTIVE &&
-                        <ControlInput type="number" placeholder={'percentage adjustment, e.g. 5'} error={showError} />
+                    {this.state.mode === PERCENTAGE_ADJUSTMENT &&
+                        <ControlInput type="number" placeholder={'percentage adjustment, e.g. 5'} error={showError} value={percentageAdjustment} onChange={this.onChange} />
                     }
-                    {this.state.mode === RIGHT_ACTIVE &&
-                        <ControlInput type="number" placeholder={'USD'} error={showError} />
+                    {this.state.mode === FIXED_PRICE &&
+                        <ControlInput type="number" placeholder={'USD'} error={showError} value={fixedPrice} onChange={this.onChange} />
                     }
                 </Flex>
                 <Box mt={2}>
-                    {this.state.mode === LEFT_ACTIVE &&
+                    {this.state.mode === PERCENTAGE_ADJUSTMENT &&
                         <PercentageAdjustmentTip />
                     }
-                    {this.state.mode === RIGHT_ACTIVE &&
+                    {this.state.mode === FIXED_PRICE &&
                         <FixedPriceTip />
                     }
                 </Box>
