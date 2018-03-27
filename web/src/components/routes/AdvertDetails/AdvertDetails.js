@@ -109,7 +109,13 @@ const distanceUnits = {
     km: 'kilometers',
 };
 
-const AdvertSummary = ({ details }) => (
+const getLocationByCode = (locations, code) => {
+    const l = locations.find(l => l.value === code);
+    if (l) return l.text;
+    return code;
+}
+
+const AdvertSummary = ({ details, countries, states }) => (
     <Panel flexDirection="row" flexWrap="wrap">
         <PanelHeading width={1}>
             <h3>{details.author} wants to {advertTypes[details.type]} Skycoin</h3>
@@ -125,7 +131,7 @@ const AdvertSummary = ({ details }) => (
                     {advertValueToString(details.amountFrom, details.amountTo, details.fixedPrice || details.price)} SKY
                 </SummaryPosition>
                 <SummaryPosition
-                    name="Price per XMR:">
+                    name="Price per SKY:">
                     {details.fixedPrice || round(details.price, 3)} {details.currency}
                 </SummaryPosition>
                 <SummaryPosition
@@ -138,7 +144,7 @@ const AdvertSummary = ({ details }) => (
                 </SummaryPosition>
                 <SummaryPosition
                     name="Location:">
-                    {details.countryCode}: {details.city} {details.stateCode} {details.postalCode}
+                    {getLocationByCode(countries, details.countryCode)}: {details.city} {getLocationByCode(states, details.stateCode)} {details.postalCode}
                     <p>
                         <B>
                             Can travel {details.travelDistance} {distanceUnits[details.travelDistanceUoM]} from location
@@ -158,8 +164,10 @@ const NotFound = () =>
 export default connect(
     ({
         advertDetails,
+        app,
     }) => ({
         advertDetails,
+        app,
     }),
     {
         requestAdvertDetails,
@@ -185,7 +193,7 @@ export default connect(
         }
     }
     render() {
-        const { advertDetails } = this.props;
+        const { advertDetails, app } = this.props;
 
         if (advertDetails.notFound) return <NotFound />;
 
@@ -195,7 +203,10 @@ export default connect(
             <Container>
                 <Box width={[1, 2 / 3]}>
                     <h2>Advert summary</h2>
-                    <AdvertSummary details={advertDetails} />
+                    <AdvertSummary
+                        details={advertDetails}
+                        countries={app.countries}
+                        states={app.states} />
                 </Box>
                 <Box width={[1, 1 / 3]}>
                 </Box>

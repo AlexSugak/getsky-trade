@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import styled, { injectGlobal, ThemeProvider } from 'styled-components';
@@ -69,12 +69,25 @@ const Root = ({ locale, ...props }) => (
     </ThemeProvider>
 );
 
+const ScrollToTop = withRouter(class extends React.Component {
+    componentDidUpdate(prevProps) {
+        if (this.props.location !== prevProps.location) {
+            window.scrollTo(0, 0)
+        }
+    }
+    render() {
+        return this.props.children
+    }
+})
+
 export default () => (
     <Provider store={store}>
         <ConnectedRouter history={history}>
-            <Switch>
-                <Route path="/" render={props => <Root {...props} locale="en" />} />
-            </Switch>
+            <ScrollToTop>
+                <Switch>
+                    <Route path="/" render={props => <Root {...props} locale="en" />} />
+                </Switch>
+            </ScrollToTop>
         </ConnectedRouter>
     </Provider>
 );
