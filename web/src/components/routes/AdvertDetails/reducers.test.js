@@ -21,7 +21,7 @@ describe('advertDetails reducer', () => {
     describe('SKYCOIN_PRICE_RESPONSE', () => {
         it('should save received price to the reducer\'s state', () => {
             const priceStub = 123;
-            const expectedState = { ...initialState, price: priceStub };
+            const expectedState = { ...initialState, price: priceStub, loading: false };
             expect(reduce(initialState,
                 { type: actions.SKYCOIN_PRICE_RESPONSE, price: priceStub }))
                 .toEqual(expectedState);
