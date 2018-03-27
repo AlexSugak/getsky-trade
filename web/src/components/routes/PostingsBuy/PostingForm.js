@@ -4,7 +4,7 @@ import { reduxForm, Form, Field, formValueSelector } from 'redux-form';
 import { Box } from 'grid-styled'
 
 import { FormRangedSingleInput, FormCheckboxGroup, FormDropdownInput, Button, FormGroup } from 'components/layout/Form';
-import { required, minLength, maxLength, ranged, rangedRequired, rangedMin, rangedMax } from 'validation/rules';
+import { required, min, max, ranged, rangedRequired, rangedMin, rangedMax } from 'validation/rules';
 import { SkyAmountWarning, LocationFormGroup, AdditionalInformationSample, ACCEPT_TRADE_OPTIONS, DISTANCE_UNITS_OPTIONS, } from 'components/layout/PostingForm';
 
 const shouldShowStates = currentCountry => currentCountry === 'US' || currentCountry === 'CA';
@@ -14,11 +14,9 @@ const RANGED_MAX = 999999.99;
 const ranged1To999999 = ranged(RANGED_MIN, RANGED_MAX);
 const rMin = rangedMin(RANGED_MIN);
 const rMax = rangedMax(RANGED_MAX);
-const min0 = minLength(0);
-const max999999 = maxLength(999999);
 
 const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting, pristine }) => (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} noValidate>
         <Box width={1 / 2}>
             <FormGroup>
                 <Field
@@ -38,7 +36,7 @@ const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting
                     options={ACCEPT_TRADE_OPTIONS}
                     label={'Choose the trade options you will accept:'}
                     isRequired
-                    validate={[required]}
+                    validate={[required()]}
                 />
                 <Field
                     type={'number'}
@@ -49,7 +47,7 @@ const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting
                     isRequired
                     min={0}
                     max={999999}
-                    validate={[required, min0, max999999]}
+                    validate={[(required(v => v ? v.data : v)), (min(0, v => v.data)), (max(9999, v => v.data))]}
                 />
             </FormGroup>
             <LocationFormGroup states={states} countries={countries} showStates={shouldShowStates(country)} />

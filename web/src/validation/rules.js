@@ -1,10 +1,70 @@
-export const required = value => (value ? undefined : 'This field is required');
+const id = v => v;
 
-export const minLength = min => value =>
-    value && value.length < min ? `This field must be ${min} characters or more` : undefined;
+const validateValueExtractor = valueExtractor => {
+    if (typeof (valueExtractor) !== 'function') {
+        throw Error('valueExtractor is not valid. It must be a function.');
+    }
+}
 
-export const maxLength = max => value =>
-    value && value.length > max ? `This field must be ${max} characters or less` : undefined;
+export const required = (valueExtractor = id) =>
+    value => {
+        validateValueExtractor(valueExtractor);
+
+        if (valueExtractor) {
+            const extractedValue = value ? valueExtractor(value) : undefined;
+            return extractedValue ? undefined : 'This field is required';
+        }
+
+        return value ? undefined : 'This field is required';
+    }
+
+export const min = (min, valueExtractor = id) =>
+    value => {
+        validateValueExtractor(valueExtractor);
+
+        if (valueExtractor) {
+            const extractedValue = valueExtractor(value);
+            return extractedValue && extractedValue < min ? `This field must be ${min} or more` : undefined;
+        }
+
+        return value && value < min ? `This field must be ${min} or more` : undefined;
+    };
+
+export const minLength = (min, valueExtractor = id) =>
+    value => {
+        validateValueExtractor(valueExtractor);
+
+        if (valueExtractor) {
+            const extractedValue = valueExtractor(value);
+            return extractedValue && extractedValue.length < min ? `This field must be ${min} characters or more` : undefined;
+        }
+
+        return value && value.length < min ? `This field must be ${min} characters or more` : undefined;
+    };
+
+export const maxLength = (max, valueExtractor = id) =>
+    value => {
+        validateValueExtractor(valueExtractor);
+
+        if (valueExtractor) {
+            const extractedValue = valueExtractor(value);
+            return extractedValue && extractedValue.length > max ? `This field must be ${max} characters or less` : undefined;
+        }
+
+        return value && value.length > max ? `This field must be ${max} characters or less` : undefined;
+    };
+
+export const max = (max, valueExtractor = id) =>
+    value => {
+        validateValueExtractor(valueExtractor);
+
+        if (valueExtractor) {
+            const extractedValue = valueExtractor(value);
+            return extractedValue && extractedValue > max ? `This field must be ${max} or less` : undefined;
+        }
+
+        return value && value > max ? `This field must be ${max} or less` : undefined;
+    };
 
 export const alphaNumeric = value =>
     value && /[^a-zA-Z0-9 ]/i.test(value)

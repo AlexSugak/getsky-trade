@@ -9,12 +9,12 @@ const placeHolder = `Example: I can meet in the Starbucks on Main St,\nin McDona
 
 const LocationFormGroup = ({ states, countries, showStates }) => (
     <FormGroup label={'Your location'}>
-        <Field name="country" component={FormDropdown} options={countries} label={'Country'} isRequired validate={[required]} />
+        <Field name="country" component={FormDropdown} options={countries} label={'Country'} isRequired validate={[required()]} />
         {showStates &&
-            <Field name="state" component={FormDropdown} options={states} label={'State'} isRequired validate={[required]} />
+            <Field name="state" component={FormDropdown} options={states} label={'State'} isRequired validate={[required()]} />
         }
-        <Field name="city" component={FormInput} label={'City'} isRequired validate={[required]} />
-        <Field name="postalCode" component={FormInput} label={'Postal code (required for most countries)'} isRequired validate={[required]} />
+        <Field name="city" component={FormInput} label={'City'} isRequired validate={[required()]} />
+        <Field name="postalCode" component={FormInput} label={'Postal code (required for most countries)'} isRequired validate={[required()]} />
         <Field name="additionalInfo" component={FormTextArea} label={'Additional information (optional)'} tip={'Up to 3,000 characters'} placeholder={placeHolder} />
     </FormGroup>
 )

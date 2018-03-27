@@ -44,7 +44,7 @@ class FormDropdownInput extends React.Component {
 
     render() {
         const { label, type, min, max, description, isRequired, options, input: { name }, meta: { error, warning, touched } } = this.props;
-        const showError = touched && (error || warning);
+        const showError = !!(touched && (error || warning));
 
         return (
             <FormItem name={name} label={label} isRequired={isRequired} description={description} showError={showError} error={error}>

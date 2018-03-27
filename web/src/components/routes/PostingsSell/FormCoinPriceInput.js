@@ -71,7 +71,7 @@ class FormCoinPriceInput extends React.Component {
     onChange(e) {
         const { input: { onChange } } = this.props;
         const val = e.target.value;
-        const value = isNaN(parseInt(val)) ? '' : parseInt(val);
+        const value = isNaN(parseInt(val, 10)) ? '' : parseInt(val, 10);
 
         if (val === '') {
             onChange(null);
