@@ -38,3 +38,5 @@ export const getSkycoinPriceOk = price => currency => new Promise((resolve, reje
 export const getStatesOk = () => new Promise((resolve, reject) => { resolve({ data: [] }) })
 
 export const getCountriesOk = () => new Promise((resolve, reject) => { resolve({ data: [] }) })
+
+export const getUserInfoApiOk = () => new Promise((resolve, reject) => { resolve({ data: {} }) })
