@@ -72,7 +72,7 @@ class RegistrationForm extends React.Component {
                         label="Password"
                         placeholder="Password"
                         description="8 characters or more"
-                        validate={[required, minLength8]}
+                        validate={[r, minLength8]}
                         isRequired
                     />
                     <Field
