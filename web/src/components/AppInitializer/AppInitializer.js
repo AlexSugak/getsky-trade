@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { initApp, getCountries, getStates, getUserInfo } from './actions'
 
 class AppInitializer extends React.Component {
-    componentDidMount() {
+    componentWillMount() {
         this.props.initApp();
         this.props.getCountries();
         this.props.getStates();

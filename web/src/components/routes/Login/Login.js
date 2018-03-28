@@ -10,9 +10,10 @@ import { U, H2, H3 } from '../../layout/Text';
 
 class Login extends React.Component {
     onSubmit = (user) => {
-        const { loginUser } = this.props;
+        const { loginUser, location } = this.props;
+        const fromLocation = location && location.state && location.state.from;
 
-        return loginUser(user)
+        return loginUser(user, fromLocation)
             .catch(err => {
                 throw new SubmissionError(err)
             });
@@ -28,6 +29,5 @@ class Login extends React.Component {
         );
     }
 }
-
 
 export default connect(null, { loginUser: login })(Login)

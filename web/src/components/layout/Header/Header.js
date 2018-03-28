@@ -9,6 +9,8 @@ import Nav from '../Nav';
 import SocialMenu from '../SocialLinks';
 import UserSubmenu from '../UserSubmenu';
 
+import { logout } from 'components/routes/Login/actions';
+
 const SubHeaderWrapper = styled.div`
     background: ${props => props.theme.colors.white};
 `;
@@ -29,11 +31,11 @@ const authNavItems = [
     { url: '/search', name: 'Search' },
 ];
 
-const Header = ({ authorized, userInfo }) => (
+const Header = ({ authorized, userInfo, logout }) => (
     <header>
         <SubHeaderWrapper className="subheader">
-            <Container alignItems="center" justifyContent="space-between">
-                <UserSubmenu userInfo={userInfo} />
+            <Container alignItems="center" justifyContent={authorized ? 'space-between' : 'flex-end'}>
+                {authorized && <UserSubmenu userInfo={userInfo} logout={logout} />}
                 <SocialMenu />
             </Container>
         </SubHeaderWrapper>
@@ -57,4 +59,4 @@ const mapStateToProps = ({ login, app, }) => {
     }
 };
 
-export default connect(mapStateToProps, null)(Header);
+export default connect(mapStateToProps, { logout })(Header);

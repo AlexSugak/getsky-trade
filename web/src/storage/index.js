@@ -14,3 +14,7 @@ export const putAuthTokens = tokens => {
         localStorage.setItem(AUTH_ACCESS_TOKEN, JSON.stringify(tokens));
     }
 };
+
+export const deleteAuthTokens = () => {
+    localStorage.setItem(AUTH_ACCESS_TOKEN, null);
+};

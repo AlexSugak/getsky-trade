@@ -24,20 +24,16 @@ const UserMenuItem = styled.li`
     padding: 10px 50px;
     border-top: 1px solid ${theme.colors.lightGray};
     border-bottom: 1px solid ${theme.colors.lightGray};
+    color: ${theme.colors.white};
 
-    a {
-        color: ${theme.colors.white};
-    }
 
     &:hover {
         opacity: 0.5;
         cursor: pointer;
         background-color: ${theme.colors.white};
 
-        a {
-            font-weight: bold;
-            color: ${theme.colors.black};
-        }
+        font-weight: bold;
+        color: ${theme.colors.black};
     }
 
     &:last-child {
@@ -46,28 +42,28 @@ const UserMenuItem = styled.li`
     }
 `;
 
-const NavLink = styled(Link)`
+const NavLink = styled(Link) `
     color: ${theme.colors.white};
 
-    &:hover {
+    ${UserMenuItem}:hover & {
         font-weight: bold;
         color: ${theme.colors.black};
     }
 `;
 
-export default ({ userInfo }) => (
+export default ({ userInfo, logout }) => (
     <UserMenuContainer>
-        <Expander heading={
+        <Expander label={
             <UserName>
                 <Icon name={IconMap.User} /> {userInfo && userInfo.username}
             </UserName>
         }>
             <UserMenu>
                 <UserMenuItem>
-                    <NavLink to="/setting">Settings</NavLink>
+                    <NavLink to="/user-settings">Settings</NavLink>
                 </UserMenuItem>
-                <UserMenuItem>
-                    <a href="#">Log out</a>
+                <UserMenuItem onClick={logout}>
+                    Log out
                 </UserMenuItem>
             </UserMenu>
         </Expander>

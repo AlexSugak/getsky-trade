@@ -15,9 +15,13 @@ const ExpanderIcon = styled(Icon) `
     vertical-align: bottom;
 `;
 
+const hiddenStyle = { display: 'none' };
+const visibleStyle = { display: 'block' };
+
 export default class extends React.Component {
     static propTypes = {
         children: PropTypes.any,
+        label: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
     }
     state = {
         visible: false,
@@ -45,11 +49,13 @@ export default class extends React.Component {
         return (
             <div>
                 <ExpanderLabel onClick={() => this.toggleExpander(!visible)}>
-                    {this.props.heading}
+                    {this.props.label}
                     {visible && <ExpanderIcon name={IconMap.AngleUp} />}
                     {!visible && <ExpanderIcon name={IconMap.AngleDown} />}
                 </ExpanderLabel>
-                {visible && this.props.children}
+                <div style={visible ? visibleStyle : hiddenStyle}>
+                    {this.props.children}
+                </div>
             </div >);
     }
 }
