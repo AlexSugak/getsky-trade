@@ -7,14 +7,16 @@ import { FormTextArea, FormDropdown, FormInput, FormGroup } from 'components/lay
 
 const placeHolder = `Example: I can meet in the Starbucks on Main St,\nin McDonalds on Broad St, or anywhere in the "X" shopping district.\nI can meet anytime between 1-4pm and my minimum trade is 1 SKY.'`;
 
+const r = required();
+
 const LocationFormGroup = ({ states, countries, showStates }) => (
     <FormGroup label={'Your location'}>
-        <Field name="country" component={FormDropdown} options={countries} label={'Country'} isRequired validate={[required()]} />
+        <Field name="country" component={FormDropdown} options={countries} label={'Country'} isRequired validate={[r]} />
         {showStates &&
-            <Field name="state" component={FormDropdown} options={states} label={'State'} isRequired validate={[required()]} />
+            <Field name="state" component={FormDropdown} options={states} label={'State'} isRequired validate={[r]} />
         }
-        <Field name="city" component={FormInput} label={'City'} isRequired validate={[required()]} />
-        <Field name="postalCode" component={FormInput} label={'Postal code (required for most countries)'} isRequired validate={[required()]} />
+        <Field name="city" component={FormInput} label={'City'} isRequired validate={[r]} />
+        <Field name="postalCode" component={FormInput} label={'Postal code (required for most countries)'} isRequired validate={[r]} />
         <Field name="additionalInfo" component={FormTextArea} label={'Additional information (optional)'} tip={'Up to 3,000 characters'} placeholder={placeHolder} />
     </FormGroup>
 )

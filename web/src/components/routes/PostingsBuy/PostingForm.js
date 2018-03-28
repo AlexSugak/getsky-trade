@@ -14,6 +14,7 @@ const RANGED_MAX = 999999.99;
 const ranged1To999999 = ranged(RANGED_MIN, RANGED_MAX);
 const rMin = rangedMin(RANGED_MIN);
 const rMax = rangedMax(RANGED_MAX);
+const r = required();
 
 const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting, pristine }) => (
     <Form onSubmit={handleSubmit} noValidate>
@@ -36,7 +37,7 @@ const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting
                     options={ACCEPT_TRADE_OPTIONS}
                     label={'Choose the trade options you will accept:'}
                     isRequired
-                    validate={[required()]}
+                    validate={[r]}
                 />
                 <Field
                     type={'number'}

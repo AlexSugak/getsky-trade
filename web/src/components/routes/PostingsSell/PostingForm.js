@@ -15,6 +15,7 @@ const RANGED_MAX = 999999.99;
 const ranged1To999999 = ranged(RANGED_MIN, RANGED_MAX);
 const rMin = rangedMin(RANGED_MIN);
 const rMax = rangedMax(RANGED_MAX);
+const r = required();
 
 const FormPostingToSell = ({ states, countries, country, handleSubmit, submitting, pristine }) => (
     <Form onSubmit={handleSubmit} noValidate>
@@ -37,7 +38,7 @@ const FormPostingToSell = ({ states, countries, country, handleSubmit, submittin
                     placeholder={'USD'}
                     label={'Price per coin'}
                     isRequired
-                    validate={[required()]}
+                    validate={[r]}
                     min={RANGED_MIN}
                     max={RANGED_MAX}
                 />
@@ -47,7 +48,7 @@ const FormPostingToSell = ({ states, countries, country, handleSubmit, submittin
                     options={ACCEPT_TRADE_OPTIONS}
                     label={'Choose the trade options you will accept:'}
                     isRequired
-                    validate={[required()]}
+                    validate={[r]}
                 />
                 <Field
                     type={'number'}
