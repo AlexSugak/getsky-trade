@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import Container from 'components/layout/Container';
 import { BackIcLink } from 'components/layout/Links';
+import { setAdvertPreview } from 'components/routes/PostingsPreview/actions';
 
 import PostingForm from './PostingForm';
 import PostingTitle from './PostingTitle';
@@ -14,6 +15,8 @@ class PostingsSell extends React.Component {
     }
 
     onSubmit(form) {
+        this.props.setAdvertPreview(form);
+        this.props.history.go('/postings/sell/preview');
     }
 
     render() {
@@ -34,4 +37,4 @@ const mapStateToProps = ({ app }) => ({
     states: app.states,
 })
 
-export default connect(mapStateToProps)(PostingsSell);
+export default connect(mapStateToProps, { setAdvertPreview })(PostingsSell);

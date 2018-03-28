@@ -1,9 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import Container from 'components/layout/Container';
 import { BackIcLink } from 'components/layout/Links';
-import { setBuyAdvertPreview } from 'components/routes/PostingsBuyPreview/actions';
+import { setAdvertPreview, ADVERT_BUY } from 'components/routes/PostingsPreview/actions';
+
 import PostingForm from './PostingForm';
 import PostingTitle from './PostingTitle';
 
@@ -14,7 +16,8 @@ class PostingsBuy extends React.Component {
     }
 
     onSubmit(form) {
-        this.props.setBuyAdvertPreview(form);
+        this.props.setAdvertPreview(form, ADVERT_BUY, this.props.userInfo.userName);
+        this.props.push('/postings/buy/preview');
     }
 
     render() {
@@ -33,6 +36,7 @@ class PostingsBuy extends React.Component {
 const mapStateToProps = ({ app }) => ({
     countries: app.countries,
     states: app.states,
+    userInfo: app.userInfo,
 });
 
-export default connect(mapStateToProps, { setBuyAdvertPreview })(PostingsBuy);
+export default connect(mapStateToProps, { setAdvertPreview, push })(PostingsBuy);

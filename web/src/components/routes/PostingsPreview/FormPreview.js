@@ -1,24 +1,14 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Box } from 'grid-styled';
+import PropTypes from 'prop-types';
 import { reduxForm, Form, Field } from 'redux-form';
 
 import { required } from 'validation/rules';
 import { AdvertSummary } from 'components/routes/AdvertDetails';
-import { BackIcLink } from 'components/layout/Links';
-import { H1, B } from 'components/layout/Text';
 import { Button, FormCaptcha } from 'components/layout/Form';
-
-import { Warning } from 'components/layout/Alerts';
 
 const r = required()
 
 class FormPreview extends React.Component {
-    constructor(props) {
-        super(props);
-        this.onSubmit = this.onSubmit.bind(this);
-    }
-
     componentDidUpdate(prevProps, prevState) {
         // Reset captcha after receiving response
         if (prevProps.submitting && prevProps.submitting !== this.props.submitting) {
@@ -32,7 +22,9 @@ class FormPreview extends React.Component {
 
         return (
             <Form handleSubmit={handleSubmit}>
-                <AdvertSummary countries={countries} states={states} details={details} />
+                {details &&
+                    <AdvertSummary countries={countries} states={states} details={details} />
+                }
                 <Field name="recaptcha" component={FormCaptcha} validate={[r]} withRef ref={r => { this.recaptchaField = r }} isRequired />
                 <Button type="submit" disabled={pristine || submitting} text="Post advert" primary />
             </Form>
@@ -52,7 +44,7 @@ FormPreview.propTypes = {
 };
 
 const ReduxForm = reduxForm({
-    form: 'formPreviewPostingToBuy'
+    form: 'formPreviewPosting'
 })(FormPreview);
 
 export default ReduxForm;

@@ -1,15 +1,15 @@
 export const ACCEPT_TRADE_OPTIONS = [{
     title: 'Cache in person',
-    value: 'personCache',
+    value: 'tradeCashInPerson',
 }, {
     title: 'Cache by mail',
-    value: 'mailCache',
+    value: 'tradeCashByMail',
 }, {
     title: 'Money Order by mail',
-    value: 'mailMoneyOrder',
+    value: 'tradeMoneyOrderByMail',
 }, {
     title: 'Other',
-    value: 'other',
+    value: 'tradeOther',
 }];
 
 export const DISTANCE_UNITS_OPTIONS = [{

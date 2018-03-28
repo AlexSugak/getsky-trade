@@ -36,7 +36,7 @@ const PanelBody = styled(Box) `
     }
 `;
 
-const advertTypes = {
+export const advertTypes = {
     '1': 'sell',
     '2': 'buy',
 };

@@ -11,9 +11,9 @@ const r = required();
 
 const LocationFormGroup = ({ states, countries, showStates }) => (
     <FormGroup label={'Your location'}>
-        <Field name="country" component={FormDropdown} options={countries} label={'Country'} isRequired validate={[r]} />
+        <Field name="countryCode" component={FormDropdown} options={countries} label={'Country'} isRequired validate={[r]} />
         {showStates &&
-            <Field name="state" component={FormDropdown} options={states} label={'State'} isRequired validate={[r]} />
+            <Field name="stateCode" component={FormDropdown} options={states} label={'State'} isRequired validate={[r]} />
         }
         <Field name="city" component={FormInput} label={'City'} isRequired validate={[r]} />
         <Field name="postalCode" component={FormInput} label={'Postal code (required for most countries)'} isRequired validate={[r]} />

@@ -6,9 +6,10 @@ const initialState = {
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case SET_BUY_PREVIEW: 
-            return state;
+        case SET_BUY_PREVIEW:
+            return { ...state, preview: action.preview };
+
         default:
             return state
-    }
+    };
 };

@@ -5,7 +5,7 @@ import { reducer as formReducer } from 'redux-form'
 import latestAdverts from './routes/LatestAdverts/reducers';
 import login from './routes/Login/reducers';
 import advertDetails from './routes/AdvertDetails/reducers';
-import buyPreview from './routes/PostingsBuyPreview/reducers';
+import preview from './routes/PostingsPreview/reducers';
 import app from './AppInitializer/reducers';
 
 const rootReducer = combineReducers({
@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
     latestAdverts,
     login,
     advertDetails,
-    buyPreview,
+    preview,
 });
 
 
