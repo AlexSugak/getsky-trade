@@ -1,1 +1,1 @@
-export { default } from './AdvertDetails';
+export { default, AdvertSummary } from './AdvertDetails';

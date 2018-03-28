@@ -115,7 +115,7 @@ const getLocationByCode = (locations, code) => {
     return code;
 }
 
-const AdvertSummary = ({ details, countries, states }) => (
+export const AdvertSummary = ({ details, countries, states }) => (
     <Panel flexDirection="row" flexWrap="wrap">
         <PanelHeading width={1}>
             <h3>{details.author} wants to {advertTypes[details.type]} Skycoin</h3>

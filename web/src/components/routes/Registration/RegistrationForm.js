@@ -23,7 +23,7 @@ class RegistrationForm extends React.Component {
 
     componentWillMount() {
         const date = moment();
-        this.defaultOffset = date.utcOffset() / 60
+        this.defaultOffset = date.utcOffset() / 60;
 
         for (let i = UTC_OFFSET_FROM; i <= UTC_OFFSET_TO; i++) {
             const timeOffset = date.utcOffset(i).format('LLL');

@@ -8,6 +8,7 @@ import SearchAdverts from './SearchAdverts';
 import Registration from './Registration';
 import Login from './Login';
 import PostingsBuy from './PostingsBuy';
+import PostingsBuyPreview from './PostingsBuyPreview';
 import PostingsSell from './PostingsSell';
 import AdvertDetails from './AdvertDetails';
 import UserSettings from './UserSettings';
@@ -29,8 +30,10 @@ const Routes = ({ match }) => {
             <Route path={`/post/:id`} component={AdvertDetails} />
 
             <PrivateRoute path={`/user-settings`} component={UserSettings} />
+            <PrivateRoute path={`/postings/buy/preview`} component={PostingsBuyPreview} />
             <PrivateRoute path={`/postings/buy`} component={PostingsBuy} />
             <PrivateRoute path={`/postings/sell`} component={PostingsSell} />
+            
             <Route path={`/`} component={LatestAdverts} />
         </Switch>
     );
