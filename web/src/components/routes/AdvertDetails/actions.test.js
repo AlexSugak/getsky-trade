@@ -37,20 +37,4 @@ describe('advert details actions', () => {
                 .then(() => expect(store.getActions()).toEqual(expectedActions));
         });
     });
-
-    describe('requestSkycoinPrice', () => {
-        it('should dispatch SKYCOIN_PRICE_RESPONSE action with received price', () => {
-            const price = 1;
-            const currency = 'EUR';
-            const expectedActions = [
-                { type: actions.SKYCOIN_PRICE_REQUEST },
-                { type: actions.SKYCOIN_PRICE_RESPONSE, price }
-            ];
-
-            api.getSkycoinPrice = apiStubs.getSkycoinPriceOk(price);
-            const store = mockStore({});
-            return store.dispatch(actions.requestSkycoinPrice(currency))
-                .then(() => expect(store.getActions()).toEqual(expectedActions));
-        });
-    });
 });

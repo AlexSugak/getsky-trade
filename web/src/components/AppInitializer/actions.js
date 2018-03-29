@@ -4,6 +4,7 @@ import {
     getCountries as getCountriesRequest,
     getStates as getStatesRequest,
     getUserInfo as getUserInfoApi,
+    getSkycoinPrice as getSkycoinPriceApi,
 } from '../../api';
 
 export const initApp = () =>
@@ -43,4 +44,16 @@ export const GET_USER_INFO_RESPONSE = 'GET_USER_INFO_RESPONSE';
 export const getUserInfo = () => async dispatch => {
     const response = await getUserInfoApi();
     dispatch({ type: GET_USER_INFO_RESPONSE, userInfo: response.data });
-}
+};
+
+export const SKYCOIN_PRICE_REQUEST = 'SKYCOIN_PRICE_REQUEST';
+export const SKYCOIN_PRICE_RESPONSE = 'SKYCOIN_PRICE_RESPONSE';
+
+export const requestSkycoinPrice = currency =>
+    async dispatch => {
+        dispatch({ type: SKYCOIN_PRICE_REQUEST });
+        const currencyFieldName = `price_${currency.toLowerCase()}`;
+
+        const response = await getSkycoinPriceApi(currency);
+        dispatch({ type: SKYCOIN_PRICE_RESPONSE, price: response.data[0][currencyFieldName] });
+    };

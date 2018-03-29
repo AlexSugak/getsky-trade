@@ -1,10 +1,12 @@
 import {
     GET_ADVERT_DETAILS_REQUEST,
     GET_ADVERT_DETAILS_RESPONSE,
+} from './actions';
 
+import {
     SKYCOIN_PRICE_REQUEST,
     SKYCOIN_PRICE_RESPONSE,
-} from './actions';
+} from 'components/AppInitializer/actions'
 
 export const initialState = {
     loading: true,
@@ -19,7 +21,7 @@ export default (state = initialState, action) => {
         case SKYCOIN_PRICE_REQUEST:
             return { ...state, loading: true };
         case SKYCOIN_PRICE_RESPONSE:
-            return { ...state, price: action.price, loading: false,  };
+            return { ...state, loading: false };
         default:
             return state;
     }

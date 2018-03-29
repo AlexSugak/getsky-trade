@@ -20,11 +20,11 @@ export const requestAdvertDetails = id => async dispatch => {
 export const SKYCOIN_PRICE_REQUEST = 'SKYCOIN_PRICE_REQUEST';
 export const SKYCOIN_PRICE_RESPONSE = 'SKYCOIN_PRICE_RESPONSE';
 
-export const requestSkycoinPrice = currency => async dispatch => {
-    dispatch({ type: SKYCOIN_PRICE_REQUEST });
-    const currencyFieldName = `price_${currency.toLowerCase()}`;
+export const requestSkycoinPrice = currency =>
+    async dispatch => {
+        dispatch({ type: SKYCOIN_PRICE_REQUEST });
+        const currencyFieldName = `price_${currency.toLowerCase()}`;
 
-    const response = await getSkycoinPrice(currency);
-
-    dispatch({ type: SKYCOIN_PRICE_RESPONSE, price: response.data[0][currencyFieldName] });
-};
+        const response = await getSkycoinPrice(currency);
+        dispatch({ type: SKYCOIN_PRICE_RESPONSE, price: response.data[0][currencyFieldName] });
+    };

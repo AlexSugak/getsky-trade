@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { initApp, getCountries, getStates, getUserInfo } from './actions'
+import { initApp, getCountries, getStates, getUserInfo, requestSkycoinPrice } from './actions'
 
 class AppInitializer extends React.Component {
     componentWillMount() {
@@ -8,6 +8,8 @@ class AppInitializer extends React.Component {
         this.props.getCountries();
         this.props.getStates();
         this.props.getUserInfo();
+        // TODO: Remove hardcoded value if the app support different currencies
+        this.props.requestSkycoinPrice('USD');
     }
 
     render() {
@@ -16,4 +18,10 @@ class AppInitializer extends React.Component {
 }
 
 
-export default connect(null, { initApp, getCountries, getStates, getUserInfo })(AppInitializer)
+export default connect(null, {
+    initApp,
+    getCountries,
+    getStates,
+    getUserInfo,
+    requestSkycoinPrice,
+})(AppInitializer)

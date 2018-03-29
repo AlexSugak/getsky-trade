@@ -1,3 +1,4 @@
+import { SKYCOIN_PRICE_RESPONSE, } from 'components/AppInitializer/actions';
 import * as actions from './actions';
 import reduce, { initialState } from './reducers';
 
@@ -19,11 +20,10 @@ describe('advertDetails reducer', () => {
     });
 
     describe('SKYCOIN_PRICE_RESPONSE', () => {
-        it('should save received price to the reducer\'s state', () => {
+        it('should set loading false', () => {
             const priceStub = 123;
-            const expectedState = { ...initialState, price: priceStub, loading: false };
-            expect(reduce(initialState,
-                { type: actions.SKYCOIN_PRICE_RESPONSE, price: priceStub }))
+            const expectedState = { ...initialState, loading: false };
+            expect(reduce(initialState, { type: SKYCOIN_PRICE_RESPONSE }))
                 .toEqual(expectedState);
         });
     });
