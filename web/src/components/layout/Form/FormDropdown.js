@@ -13,7 +13,9 @@ class FormDropdown extends React.Component {
                 onChange(defaultValue);
             }
         } else if (options.length > 0) {
-            onChange(options[0].value);
+            if (!value) {
+                onChange(options[0].value);
+            }
         }
     }
 
@@ -25,13 +27,14 @@ class FormDropdown extends React.Component {
             if (defaultValue) {
                 onChange(defaultValue);
             } else {
+                console.log(111);
                 onChange(options[0].value);
             }
         }
     }
 
     render() {
-        const { label, defaultValue, isRequired, options, description, input: { name, onChange }, meta: { error, warning, touched } } = this.props;
+        const { label, defaultValue, isRequired, options, description, input: { value, name, onChange }, meta: { error, warning, touched } } = this.props;
         const showError = !!(touched && (error || warning));
 
         return (
