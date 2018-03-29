@@ -19,7 +19,7 @@ export default (state = initialState, action) => {
         case GET_STATES_RESPONSE:
             return { ...state, states: action.states.map(s => ({ text: s.name, value: s.code })) };
         case GET_USER_INFO_RESPONSE:
-            return { ...state, userInfo: action.userInfo, };
+            return { ...state, userInfo: action.userInfo };
         case SKYCOIN_PRICE_RESPONSE:
             return { ...state, skyPrice: action.price, };
         default:
