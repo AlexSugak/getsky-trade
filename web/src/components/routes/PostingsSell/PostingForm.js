@@ -16,6 +16,10 @@ const rMin = rangedMin(RANGED_MIN);
 const rMax = rangedMax(RANGED_MAX);
 const r = required();
 
+const rData = required(v => v ? v.data : v);
+const minData0 = min(0, v => v.data);
+const maxData9999 = max(9999, v => v.data);
+
 const FormPostingToSell = ({ states, countries, country, handleSubmit, submitting, pristine }) => (
     <Form onSubmit={handleSubmit} noValidate>
         <Box width={1 / 2}>
@@ -59,7 +63,9 @@ const FormPostingToSell = ({ states, countries, country, handleSubmit, submittin
                     defaultValue={{ data: '', prefix: DISTANCE_UNITS_OPTIONS[0].value }}
                     label={'How far will you travel to trade?'}
                     isRequired
-                    validate={[(required(v => v ? v.data : v)), (min(0, v => v.data)), (max(9999, v => v.data))]}
+                    min={0}
+                    max={9999}
+                    validate={[rData, minData0, maxData9999]}
                 />
             </FormGroup>
             <LocationFormGroup states={states} countries={countries} showStates={shouldShowStates(country)} />

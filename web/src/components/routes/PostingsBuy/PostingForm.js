@@ -11,9 +11,13 @@ const shouldShowStates = currentCountry => currentCountry === 'US' || currentCou
 
 const RANGED_MIN = 1;
 const RANGED_MAX = 999999;
+const r = required();
 const rMin = rangedMin(RANGED_MIN);
 const rMax = rangedMax(RANGED_MAX);
-const r = required();
+
+const rData = required(v => v ? v.data : v);
+const minData0 = min(0, v => v.data);
+const maxData9999 = max(9999, v => v.data);
 
 const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting, pristine, defaultCountry }) => (
     <Form onSubmit={handleSubmit} noValidate>
@@ -48,8 +52,8 @@ const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting
                     label={'How far will you travel to trade?'}
                     isRequired
                     min={0}
-                    max={999999}
-                    validate={[(required(v => v ? v.data : v)), (min(0, v => v.data)), (max(9999, v => v.data))]}
+                    max={9999}
+                    validate={[rData, minData0, maxData9999]}
                 />
             </FormGroup>
             <LocationFormGroup states={states} countries={countries} showStates={shouldShowStates(country)} defaultCountry={defaultCountry} />
