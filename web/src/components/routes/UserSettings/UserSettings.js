@@ -43,7 +43,7 @@ export default connect(
                 } = this.props;
 
                 const locationFormRegisteredValues = ['timeOffset', 'countryCode', 'stateCode', 'city', 'postalCode'];
-                const otherSettingsFormRegisteredValues = ['currency', 'distanceUnits'];
+                const otherSettingsFormRegisteredValues = ['email', 'currency', 'distanceUnits'];
 
                 saveUserSettings({
                     ...userInfo,

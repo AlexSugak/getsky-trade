@@ -26,6 +26,15 @@ export default reduxForm({ form: 'userOtherSettingsForm' })(
                 <Form onSubmit={handleSubmit}>
                     <Box width={1 / 2}>
                         <Field
+                            name="email"
+                            component={FormInput}
+                            type="text"
+                            label="Email"
+                            placeholder="Email"
+                            description="Enter your email if you would like to receive notifications when someone responds to your advert. We do not sell, share, or make your email address known to others."
+                        />
+
+                        <Field
                             name="distanceUnits"
                             component={FormDropdown}
                             options={distanceUnits}
