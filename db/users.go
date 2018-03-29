@@ -49,6 +49,14 @@ func (u Users) Get(userName string) (*models.UserDetails, error) {
 	return &user, err
 }
 
+// GetByEmail tries to find a user record in DB by email and returns error if not found
+func (u Users) GetByEmail(email string) (*models.UserDetails, error) {
+	user := models.UserDetails{}
+	err := u.DB.Get(&user, "SELECT Id, UserName, Email, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt FROM Users u WHERE u.Email = ?", email)
+
+	return &user, err
+}
+
 // Register inserts new user record in DB and returns error if failed to do so
 func (u Users) Register(user models.User, password string) error {
 	hashedPwd, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -89,6 +97,7 @@ func (u Users) Register(user models.User, password string) error {
 // UpdateSettings updates user details
 func (u Users) UpdateSettings(userSettings models.UserSettings) error {
 	cmd := `UPDATE Users SET` +
+		`  Email = :Email,` +
 		`  TimeOffset = :TimeOffset,` +
 		`  CountryCode = :CountryCode,` +
 		`  StateCode = :StateCode,` +

@@ -133,6 +133,7 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 // UpdateSettingsRequest holds userDetails properties that should be updated
 type UpdateSettingsRequest struct {
 	UserName      string                `json:"username" validate:"required"`
+	Email         string                `json:"email"`
 	TimeOffset    int                   `json:"timeOffset"`
 	CountryCode   models.JSONNullString `json:"countryCode"`
 	StateCode     models.JSONNullString `json:"stateCode"`
@@ -164,14 +165,21 @@ func UpdateUserSettingsHandler(s *HTTPServer) httputil.APIHandler {
 			return ce.ValidatorErrorsResponse(err.(validator.ValidationErrors))
 		}
 
-		_, err = s.users.Get(req.UserName)
+		targetUser, err := s.users.Get(req.UserName)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("the user with the userName: '%s' doesn't exist", req.UserName), http.StatusNotFound)
 			return nil
 		}
 
+		userWithSameEmail, err := s.users.GetByEmail(req.Email)
+		if err == nil && userWithSameEmail.UserName != targetUser.UserName {
+			http.Error(w, fmt.Sprintf("specified email address '%s' is already used by another user", req.Email), http.StatusBadRequest)
+			return nil
+		}
+
 		userSettings := models.UserSettings{
 			UserName:      req.UserName,
+			Email:         req.Email,
 			TimeOffset:    req.TimeOffset,
 			CountryCode:   req.CountryCode,
 			StateCode:     req.StateCode,

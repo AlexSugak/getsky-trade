@@ -92,6 +92,7 @@ type UserDetails struct {
 // UserSettings represents a user's settings that can be updated
 type UserSettings struct {
 	UserName      string         `db:"UserName" json:"username"`
+	Email         string         `db:"Email" json:"email"`
 	TimeOffset    int            `db:"TimeOffset" json:"timeOffset"`
 	CountryCode   JSONNullString `db:"CountryCode" json:"countryCode"`
 	StateCode     JSONNullString `db:"StateCode" json:"stateCode"`

@@ -189,6 +189,7 @@ func TestRegisterHandler(t *testing.T) {
 
 func setupUpdateUserTests() func() {
 	execSQL("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('bob', 'bob@bob.com', 'foo', 0, 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName)
+	execSQL("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('alice', 'alice@alice.com', 'foo', 0, 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName)
 
 	return func() {
 		clearTables()
@@ -233,6 +234,15 @@ func TestUpdateUserSettings(t *testing.T) {
 			expectedBody:   `[{"key":"UserName","message":"is required"}]`,
 		},
 		{
+			name:           "should return 400 when specified email is used by another user",
+			method:         "POST",
+			contentType:    "application/json",
+			url:            "/api/me/settings",
+			body:           `{"timeOffset":0,"username":"bob", "email":"alice@alice.com","countryCode":"GR","city":"Athens","postalCode":"0000","distanceUnits":"Athens","currency":"EUR"}`,
+			expectedStatus: http.StatusBadRequest,
+			expectedBody:   `specified email address 'alice@alice.com' is already used by another user`,
+		},
+		{
 			name:           "should return 404 when the user doesn't exist",
 			method:         "POST",
 			contentType:    "application/json",
@@ -246,11 +256,12 @@ func TestUpdateUserSettings(t *testing.T) {
 			method:         "POST",
 			contentType:    "application/json",
 			url:            "/api/me/settings",
-			body:           `{"username":"bob","timeOffset":1,"countryCode":null,"city":"New York","postalCode":"9999","distanceUnits":"Athens","currency":"USD","stateCode":null}`,
+			body:           `{"username":"bob","timeOffset":1,"email":"bob2@bob2.com","countryCode":null,"city":"New York","postalCode":"9999","distanceUnits":"Athens","currency":"USD","stateCode":null}`,
 			expectedStatus: http.StatusOK,
 			expectedBody:   "",
 			expectedUserSettings: models.UserSettings{
 				UserName:      "bob",
+				Email:         "bob2@bob2.com",
 				TimeOffset:    1,
 				CountryCode:   models.JSONNullString{},
 				City:          "New York",
@@ -288,7 +299,7 @@ func TestUpdateUserSettings(t *testing.T) {
 		if tc.expectedUserSettings != (models.UserSettings{}) {
 			userSettingds := &models.UserSettings{}
 
-			cmd := fmt.Sprintf("SELECT u.UserName, u.TimeOffset, u.CountryCode, u.StateCode, u.City, u.PostalCode, u.DistanceUnits, u.Currency FROM %s.Users u WHERE u.UserName = ?", dbName)
+			cmd := fmt.Sprintf("SELECT u.UserName, u.Email, u.TimeOffset, u.CountryCode, u.StateCode, u.City, u.PostalCode, u.DistanceUnits, u.Currency FROM %s.Users u WHERE u.UserName = ?", dbName)
 			err := sql.Get(userSettingds, cmd, "bob")
 			require.NoError(t, err)
 			require.Equal(t, tc.expectedUserSettings, *userSettingds)
