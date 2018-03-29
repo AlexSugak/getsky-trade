@@ -21,7 +21,7 @@ export default (state = initialState, action) => {
         case GET_USER_INFO_RESPONSE:
             return { ...state, userInfo: action.userInfo };
         case SKYCOIN_PRICE_RESPONSE:
-            return { ...state, skyPrice: action.price, };
+            return { ...state, skyPrice: action.price };
         default:
             return state;
     }

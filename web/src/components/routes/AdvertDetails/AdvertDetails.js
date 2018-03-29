@@ -3,6 +3,7 @@ import { Flex, Box } from 'grid-styled';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
+import { round } from 'utils/';
 import theme from 'components/theme';
 import Container from 'components/layout/Container';
 import { B } from 'components/layout/Text';
@@ -65,11 +66,6 @@ const SummaryPosition = ({ name, children }) => (
         </PositionValue>
     </Flex>
 );
-
-// Taken from http://www.jacklmoore.com/notes/rounding-in-javascript/
-const round = (value, decimals) => {
-    return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
-}
 
 const advertValueToString = (amountFrom, amountTo, price = 1) => {
     if (!amountTo) {

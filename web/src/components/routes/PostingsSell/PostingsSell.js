@@ -26,13 +26,13 @@ class PostingsSell extends React.Component {
     }
 
     render() {
-        const { countries, states, userInfo } = this.props;
+        const { countries, states, userInfo, skyPrice } = this.props;
 
         return (
             <Container flex='1 0 auto' flexDirection='column' py={4}>
                 <BackIcLink path='/' text='Dashboard' />
                 <PostingTitle />
-                <PostingForm countries={countries} states={states} onSubmit={this.onSubmit} defaultCountry={userInfo ? userInfo.countryCode : undefined} />
+                <PostingForm countries={countries} states={states} onSubmit={this.onSubmit} skyPrice={skyPrice} defaultCountry={userInfo ? userInfo.countryCode : undefined} />
             </Container>
         )
     }
@@ -42,6 +42,7 @@ const mapStateToProps = ({ app }) => ({
     countries: app.countries,
     states: app.states,
     userInfo: app.userInfo,
+    skyPrice: app.skyPrice,
 })
 
 export default connect(mapStateToProps, { setAdvertPreview, push })(PostingsSell);

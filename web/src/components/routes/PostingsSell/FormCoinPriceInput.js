@@ -5,6 +5,7 @@ import { Flex, Box } from 'grid-styled';
 import { B, Tip, Span } from 'components/layout/Text';
 import { ControlInput, FormItem, Button } from 'components/layout/Form';
 import TipToggles from 'components/layout/TipToggles';
+import { round } from 'utils/';
 
 const PERCENTAGE_ADJUSTMENT = 'PERCENTAGE_ADJUSTMENT';
 const FIXED_PRICE = 'FIXED_PRICE';
@@ -43,9 +44,9 @@ const FixedPriceTip = () => (
     </Box>
 );
 
-const Label = () => (
+const Label = ({ skyPrice }) => (
     <Span>
-        Price per coin (last price from <a href={'https://coinmarketcap.com/currencies/skycoin/'}>coinmarketcap.com</a> = 196.41 USD)
+        Price per coin (last price from <a href={'https://coinmarketcap.com/currencies/skycoin/'}>coinmarketcap.com</a> = {round(skyPrice, 3)} USD)
     </Span>
 );
 
@@ -68,7 +69,7 @@ class FormCoinPriceInput extends React.Component {
             const value = this.state.percentageAdjustment;
             onChange(value ? { type: mode, value } : null);
         } else {
-            const value = this.state.percentageAdjustment;
+            const value = this.state.fixedPrice;
             onChange(value ? { type: mode, value } : null);
         }
 
@@ -95,12 +96,12 @@ class FormCoinPriceInput extends React.Component {
     }
 
     render() {
-        const { isRequired, input, meta: { error, warning, touched } } = this.props;
+        const { isRequired, input, meta: { error, warning, touched }, skyPrice } = this.props;
         const { fixedPrice, percentageAdjustment } = this.state;
         const showError = !!(touched && (error || warning));
 
         return (
-            <FormItem name={input.name} label={<Label />} isRequired={isRequired} showError={showError} error={error}>
+            <FormItem name={input.name} label={<Label skyPrice={skyPrice} />} isRequired={isRequired} showError={showError} error={error}>
                 <Flex mt={2}>
                     <Button type="button" text='PERCENTAGE ADJUSTMENT' onClick={() => this.setMode(PERCENTAGE_ADJUSTMENT)} style={fullWidth} primary={this.state.mode === PERCENTAGE_ADJUSTMENT} />
                     <Button type="button" text='FIXED PRICE' onClick={() => this.setMode(FIXED_PRICE)} style={fullWidth} primary={this.state.mode === FIXED_PRICE} />
