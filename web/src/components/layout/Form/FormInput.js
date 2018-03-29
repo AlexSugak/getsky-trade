@@ -8,7 +8,7 @@ const FormInput = (props) => {
 
     return (
         <FormItem name={input.name} label={label} isRequired={isRequired} description={description} showError={showError} error={error}>
-            <ControlInput name={input.name} type={type} placeholder={placeholder} maxLength={maxLength} error={showError} onChange={input.onChange} />
+            <ControlInput value={input.value} name={input.name} type={type} placeholder={placeholder} maxLength={maxLength} error={showError} onChange={input.onChange} />
         </FormItem>
     );
 }

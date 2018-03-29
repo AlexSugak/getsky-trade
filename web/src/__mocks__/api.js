@@ -40,3 +40,5 @@ export const getStatesOk = () => new Promise((resolve, reject) => { resolve({ da
 export const getCountriesOk = () => new Promise((resolve, reject) => { resolve({ data: [] }) })
 
 export const getUserInfoApiOk = () => new Promise((resolve, reject) => { resolve({ data: {} }) })
+
+export const updateUserSettingsOk = settings => new Promise((resolve, reject) => { resolve({ data: {} }) })

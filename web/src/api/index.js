@@ -40,3 +40,6 @@ export const getAdvertDetails = id =>
 
 export const getSkycoinPrice = currency => 
     axios.get(`${apiUrl}/skycoin-price/${currency}`);
+
+export const updateUserSettings = settings => 
+    axios.post(`${apiUrl}/me/settings`, settings, headers)

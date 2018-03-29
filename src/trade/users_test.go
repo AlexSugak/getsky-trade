@@ -230,7 +230,7 @@ func TestUpdateUserSettings(t *testing.T) {
 			url:            "/api/me/settings",
 			body:           `{"timeOffset":0,"countryCode":"GR","city":"Athens","postalCode":"0000","distanceUnits":"Athens","currency":"EUR"}`,
 			expectedStatus: http.StatusBadRequest,
-			expectedBody:   `[{"key":"UserName","message":"is required"},{"key":"TimeOffset","message":"is required"}]`,
+			expectedBody:   `[{"key":"UserName","message":"is required"}]`,
 		},
 		{
 			name:           "should return 404 when the user doesn't exist",

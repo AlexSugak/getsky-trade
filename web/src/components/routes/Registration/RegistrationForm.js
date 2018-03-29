@@ -4,8 +4,8 @@ import { Field, reduxForm, Form } from 'redux-form';
 import moment from 'moment';
 import { Box } from 'grid-styled';
 
-import { FormInput, FormDropdown, Button, FormCaptcha } from '../../layout/Form';
-import { required, email, minLength, maxLength, alphaNumeric } from '../../../validation/rules';
+import { FormInput, FormDropdown, Button, FormCaptcha } from 'components/layout/Form';
+import { required, email, minLength, maxLength, alphaNumeric } from 'validation/rules';
 
 const UTC_OFFSET_FROM = -11;
 const UTC_OFFSET_TO = 14;

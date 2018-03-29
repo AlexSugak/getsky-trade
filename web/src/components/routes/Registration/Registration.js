@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { SubmissionError } from 'redux-form';
 
-import Container from '../../layout/Container';
+import Container from 'components/layout/Container';
 import RegistrationForm from './RegistrationForm';
 import { register } from './actions'
 

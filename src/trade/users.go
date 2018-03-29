@@ -133,13 +133,13 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 // UpdateSettingsRequest holds userDetails properties that should be updated
 type UpdateSettingsRequest struct {
 	UserName      string                `json:"username" validate:"required"`
-	TimeOffset    int                   `json:"timeOffset" validate:"required,min=-11,max=14"`
+	TimeOffset    int                   `json:"timeOffset"`
 	CountryCode   models.JSONNullString `json:"countryCode"`
 	StateCode     models.JSONNullString `json:"stateCode"`
-	City          string                `json:"city" validate:"required"`
-	PostalCode    string                `json:"postalCode" validate:"required"`
-	DistanceUnits string                `json:"distanceUnits" validate:"required"`
-	Currency      string                `json:"currency" validate:"required"`
+	City          string                `json:"city"`
+	PostalCode    string                `json:"postalCode"`
+	DistanceUnits string                `json:"distanceUnits"`
+	Currency      string                `json:"currency"`
 }
 
 // UpdateUserSettingsHandler updates user's settings
@@ -184,11 +184,6 @@ func UpdateUserSettingsHandler(s *HTTPServer) httputil.APIHandler {
 		err = s.users.UpdateSettings(userSettings)
 		return err
 	}
-}
-
-// MeResponse holds basic logged in user intofation
-type MeResponse struct {
-	UserName string `json:"username"`
 }
 
 // MeHandler returns currently logged in user info
