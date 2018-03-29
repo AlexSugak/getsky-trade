@@ -44,11 +44,11 @@ export default connect(
 
                 const locationFormRegisteredValues = ['timeOffset', 'countryCode', 'stateCode', 'city', 'postalCode'];
                 const otherSettingsFormRegisteredValues = ['currency', 'distanceUnits'];
-                
+
                 saveUserSettings({
                     ...userInfo,
                     ...extractFormValues(locationForm.values, locationFormRegisteredValues),
-                    timeOffset: parseInt(locationForm.values, 10),
+                    timeOffset: parseInt(locationForm.values.timeOffset, 10),
                     ...extractFormValues(otherSettings.values, otherSettingsFormRegisteredValues),
                 });
             }

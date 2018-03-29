@@ -21,7 +21,10 @@ const UserMenu = styled.ul`
 
 const UserMenuItem = styled.li`
     margin-bottom: -1px;
-    padding: 10px 50px;
+    & > * {
+        padding: 10px 50px;
+        display: block;
+    }
     border-top: 1px solid ${theme.colors.lightGray};
     border-bottom: 1px solid ${theme.colors.lightGray};
     color: ${theme.colors.white};
@@ -63,7 +66,7 @@ export default ({ userInfo, logout }) => (
                     <NavLink to="/user-settings">Settings</NavLink>
                 </UserMenuItem>
                 <UserMenuItem onClick={logout}>
-                    Log out
+                    <span>Log out</span>
                 </UserMenuItem>
             </UserMenu>
         </Expander>
