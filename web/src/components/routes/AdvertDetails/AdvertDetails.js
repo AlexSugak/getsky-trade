@@ -12,7 +12,6 @@ import Spinner from 'components/layout/Spinner';
 
 import {
     requestAdvertDetails,
-    requestSkycoinPrice,
 } from './actions';
 
 const Panel = styled(Flex) `
@@ -171,7 +170,6 @@ export default connect(
     }),
     {
         requestAdvertDetails,
-        requestSkycoinPrice,
     }
 )(class extends React.Component {
     async componentWillMount() {
@@ -180,7 +178,6 @@ export default connect(
             match,
 
             requestAdvertDetails,
-            requestSkycoinPrice,
         } = this.props;
 
         if (advertDetails.id !== match.params.id) {
