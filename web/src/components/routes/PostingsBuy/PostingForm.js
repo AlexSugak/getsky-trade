@@ -16,7 +16,7 @@ const rMin = rangedMin(RANGED_MIN);
 const rMax = rangedMax(RANGED_MAX);
 const r = required();
 
-const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting, pristine }) => (
+const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting, pristine, defaultCountry }) => (
     <Form onSubmit={handleSubmit} noValidate>
         <Box width={1 / 2}>
             <FormGroup>
@@ -51,7 +51,7 @@ const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting
                     validate={[(required(v => v ? v.data : v)), (min(0, v => v.data)), (max(9999, v => v.data))]}
                 />
             </FormGroup>
-            <LocationFormGroup states={states} countries={countries} showStates={shouldShowStates(country)} />
+            <LocationFormGroup states={states} countries={countries} showStates={shouldShowStates(country)} defaultCountry={defaultCountry} />
             <AdditionalInformationSample />
             <Button type="submit" text="Next" primary />
         </Box>

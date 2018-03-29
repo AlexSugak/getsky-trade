@@ -16,18 +16,18 @@ class PostingsBuy extends React.Component {
     }
 
     onSubmit(form) {
-        this.props.setAdvertPreview(form, ADVERT_BUY, this.props.userInfo.userName);
+        this.props.setAdvertPreview(form, ADVERT_BUY, this.props.userInfo.username);
         this.props.push('/postings/buy/preview');
     }
 
     render() {
-        const { countries, states } = this.props;
+        const { countries, states, userInfo } = this.props;
 
         return (
             <Container flex='1 0 auto' flexDirection='column' py={4}>
                 <BackIcLink path='/' text='Dashboard' />
                 <PostingTitle />
-                <PostingForm countries={countries} states={states} onSubmit={this.onSubmit} />
+                <PostingForm countries={countries} states={states} onSubmit={this.onSubmit} defaultCountry={userInfo.countryCode} />
             </Container>
         )
     }
