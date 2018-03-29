@@ -1,5 +1,3 @@
-import { ACCEPT_TRADE_OPTIONS } from 'components/layout/PostingForm/constants';
-
 export const SET_BUY_PREVIEW = 'SET_BUY_PREVIEW ';
 
 export const ADVERT_SELL = 1;

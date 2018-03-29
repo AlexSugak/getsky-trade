@@ -8,8 +8,7 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case SET_BUY_PREVIEW:
             return { ...state, preview: action.preview };
-
         default:
-            return state
+            return state;
     };
 };
