@@ -42,3 +42,7 @@ export const getCountriesOk = () => new Promise((resolve, reject) => { resolve({
 export const getUserInfoApiOk = () => new Promise((resolve, reject) => { resolve({ data: {} }) })
 
 export const updateUserSettingsOk = settings => new Promise((resolve, reject) => { resolve({ data: {} }) })
+
+export const createBuyAdvertOk = settings => new Promise((resolve, reject) => { resolve({}) });
+
+export const createSellAdvertOk = settings => new Promise((resolve, reject) => { resolve({}) });

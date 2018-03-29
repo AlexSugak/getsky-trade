@@ -1,4 +1,4 @@
-import { SET_BUY_PREVIEW } from './actions';
+import { SET_FORM_PREVIEW } from './actions';
 
 const initialState = {
     preview: undefined,
@@ -6,7 +6,7 @@ const initialState = {
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case SET_BUY_PREVIEW:
+        case SET_FORM_PREVIEW:
             return { ...state, preview: action.preview };
         default:
             return state;
