@@ -27,7 +27,6 @@ class FormDropdown extends React.Component {
             if (defaultValue) {
                 onChange(defaultValue);
             } else {
-                console.log(111);
                 onChange(options[0].value);
             }
         }
