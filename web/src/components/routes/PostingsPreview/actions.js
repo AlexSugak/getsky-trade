@@ -26,6 +26,7 @@ export const setAdvertPreview = (formPreview, type, author) =>
             travel: formPreview.distance.prefix,
             type
         };
+
         dispatch({ type: SET_BUY_PREVIEW, preview });
     };
 

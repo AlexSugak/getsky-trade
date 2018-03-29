@@ -13,7 +13,7 @@ class ReCaptcha extends React.Component {
 
     render() {
         const { meta: { touched, error, warning }, input: { onChange } } = this.props;
-        const showError = touched && (error || warning);
+        const showError = !!(touched && (error || warning));
 
         return (
             <ControlWrapper>
