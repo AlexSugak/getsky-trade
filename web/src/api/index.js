@@ -38,8 +38,14 @@ export const getStates = () =>
 export const getAdvertDetails = id =>
     axios.get(`${apiUrl}/postings/${id}`, headers);
 
-export const getSkycoinPrice = currency => 
+export const getSkycoinPrice = currency =>
     axios.get(`${apiUrl}/skycoin-price/${currency}`);
 
-export const updateUserSettings = settings => 
+export const updateUserSettings = settings =>
     axios.post(`${apiUrl}/me/settings`, settings, headers)
+
+export const postBuyAdvert = advert =>
+    axios.post(`${apiUrl}/postings/buy`, advert, headers);
+
+export const postSellAdvert = advert =>
+    axios.post(`${apiUrl}/postings/sell`, advert, headers)

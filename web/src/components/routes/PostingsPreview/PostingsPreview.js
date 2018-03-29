@@ -8,6 +8,7 @@ import { BackIcLink } from 'components/layout/Links';
 import { H1, B, P } from 'components/layout/Text';
 import { Warning } from 'components/layout/Alerts';
 import FormPreview from './FormPreview';
+import { createBuyAdvert, createSellAdvert } from './actions';
 
 const AdvertTypes = {
     BUY: 'buy',
@@ -55,6 +56,14 @@ class PostingsPreview extends React.Component {
     }
 
     onSubmit(form) {
+        const advertType = getAdvertTypeFromLocation(this.props.location);
+        const preparedPreview = { ...this.props.preview, recaptcha: form.recaptcha };
+
+        if (advertType === AdvertTypes.BUY) {
+            this.props.createBuyAdvert(preparedPreview);
+        } else {
+            this.props.createSellAdvert(preparedPreview);
+        }
     }
 
     render() {
@@ -82,4 +91,4 @@ const mapStateToProps = ({ preview, app }) => ({
     skyPrice: app.skyPrice,
 });
 
-export default connect(mapStateToProps, { push })(PostingsPreview);
+export default connect(mapStateToProps, { push, createBuyAdvert, createSellAdvert })(PostingsPreview);

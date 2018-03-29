@@ -1,3 +1,6 @@
+import { push } from 'react-router-redux';
+import { postBuyAdvert, postSellAdvert } from 'api/';
+
 export const SET_BUY_PREVIEW = 'SET_BUY_PREVIEW ';
 
 export const ADVERT_SELL = 1;
@@ -29,6 +32,14 @@ export const setAdvertPreview = (formPreview, extraData) =>
         dispatch({ type: SET_BUY_PREVIEW, preview });
     };
 
-export const createAdvert = () =>
-    dispatch => {
+export const createBuyAdvert = (advert) =>
+    async dispatch => {
+        await postBuyAdvert(advert);
+        dispatch(push('/'));
+    };
+
+export const createSellAdvert = (advert) =>
+    async dispatch => {
+        await postSellAdvert(advert);
+        dispatch(push('/'));
     };
