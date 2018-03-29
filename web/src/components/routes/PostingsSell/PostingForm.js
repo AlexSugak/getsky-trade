@@ -56,7 +56,6 @@ const FormPostingToSell = ({ states, countries, country, handleSubmit, submittin
                 <Field
                     type={'number'}
                     name={'distance'}
-                    min={0}
                     component={FormDropdownInput}
                     options={DISTANCE_UNITS_OPTIONS}
                     parse={(v) => ({ ...v, data: parseInt(v.data, 10) })}
