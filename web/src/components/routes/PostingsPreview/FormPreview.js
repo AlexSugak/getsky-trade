@@ -6,7 +6,7 @@ import { required } from 'validation/rules';
 import { AdvertSummary } from 'components/routes/AdvertDetails';
 import { Button, FormCaptcha } from 'components/layout/Form';
 
-const r = required()
+const r = required();
 
 class FormPreview extends React.Component {
     componentDidUpdate(prevProps, prevState) {
@@ -21,7 +21,7 @@ class FormPreview extends React.Component {
         const { handleSubmit, pristine, submitting, countries, states, details } = this.props;
 
         return (
-            <Form handleSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit}>
                 {details &&
                     <AdvertSummary countries={countries} states={states} details={details} />
                 }
