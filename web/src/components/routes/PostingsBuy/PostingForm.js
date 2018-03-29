@@ -10,7 +10,7 @@ import { SkyAmountWarning, LocationFormGroup, AdditionalInformationSample, ACCEP
 const shouldShowStates = currentCountry => currentCountry === 'US' || currentCountry === 'CA';
 
 const RANGED_MIN = 1;
-const RANGED_MAX = 999999.99;
+const RANGED_MAX = 999999;
 const rMin = rangedMin(RANGED_MIN);
 const rMax = rangedMax(RANGED_MAX);
 const r = required();

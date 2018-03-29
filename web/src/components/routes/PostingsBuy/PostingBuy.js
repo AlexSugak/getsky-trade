@@ -16,7 +16,8 @@ class PostingsBuy extends React.Component {
     }
 
     onSubmit(form) {
-        this.props.setAdvertPreview(form, ADVERT_BUY, this.props.userInfo.username);
+        const extraData = { type: ADVERT_BUY, author: this.props.userInfo.username };
+        this.props.setAdvertPreview(form, extraData);
         this.props.push('/postings/buy/preview');
     }
 

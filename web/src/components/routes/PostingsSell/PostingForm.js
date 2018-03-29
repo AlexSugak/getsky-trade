@@ -11,7 +11,7 @@ import FormCoinPriceInput from './FormCoinPriceInput';
 const shouldShowStates = currentCountry => currentCountry === 'US' || currentCountry === 'CA';
 
 const RANGED_MIN = 1;
-const RANGED_MAX = 999999.99;
+const RANGED_MAX = 999999;
 const rMin = rangedMin(RANGED_MIN);
 const rMax = rangedMax(RANGED_MAX);
 const r = required();
@@ -52,6 +52,7 @@ const FormPostingToSell = ({ states, countries, country, handleSubmit, submittin
                 <Field
                     type={'number'}
                     name={'distance'}
+                    min={0}
                     component={FormDropdownInput}
                     options={DISTANCE_UNITS_OPTIONS}
                     defaultValue={{ data: '', prefix: DISTANCE_UNITS_OPTIONS[0].value }}
