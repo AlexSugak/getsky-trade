@@ -43,6 +43,7 @@ const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting
                     name={'distance'}
                     component={FormDropdownInput}
                     options={DISTANCE_UNITS_OPTIONS}
+                    defaultValue={{ data: '', prefix: DISTANCE_UNITS_OPTIONS[0].value }}
                     label={'How far will you travel to trade?'}
                     isRequired
                     min={0}

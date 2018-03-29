@@ -54,6 +54,7 @@ const FormPostingToSell = ({ states, countries, country, handleSubmit, submittin
                     name={'distance'}
                     component={FormDropdownInput}
                     options={DISTANCE_UNITS_OPTIONS}
+                    defaultValue={{ data: '', prefix: DISTANCE_UNITS_OPTIONS[0].value }}
                     label={'How far will you travel to trade?'}
                     isRequired
                     validate={[(required(v => v ? v.data : v)), (min(0, v => v.data)), (max(9999, v => v.data))]}

@@ -25,12 +25,12 @@ class FormDropdownInput extends React.Component {
 
     componentDidMount() {
         const { defaultValue, input: { onChange } } = this.props;
+        this.setState({ ...this.state, value: defaultValue });
         onChange(defaultValue);
     }
 
     onChangeText(e) {
         const value = { ...this.state.value, data: e.target.value };
-
         this.setState({ ...this.state, value });
         this.props.input.onChange(value);
     }
