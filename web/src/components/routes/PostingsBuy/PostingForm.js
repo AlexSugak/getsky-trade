@@ -64,4 +64,4 @@ const ReduxForm = reduxForm({
 
 const selector = formValueSelector('formPostingToBuy');
 
-export default connect(state => ({ country: selector(state, 'country') }))(ReduxForm);
+export default connect(state => ({ country: selector(state, 'countryCode') }))(ReduxForm);
