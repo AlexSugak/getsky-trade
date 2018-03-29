@@ -33,7 +33,7 @@ class FormDropdown extends React.Component {
     }
 
     render() {
-        const { label, defaultValue, isRequired, options, description, input: { value, name, onChange }, meta: { error, warning, touched } } = this.props;
+        const { label, defaultValue, isRequired, options, description, input: { name, onChange }, meta: { error, warning, touched } } = this.props;
         const showError = !!(touched && (error || warning));
 
         return (
