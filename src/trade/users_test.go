@@ -240,7 +240,7 @@ func TestUpdateUserSettings(t *testing.T) {
 			url:            "/api/me/settings",
 			body:           `{"timeOffset":0,"username":"bob", "email":"alice@alice.com","countryCode":"GR","city":"Athens","postalCode":"0000","distanceUnits":"Athens","currency":"EUR"}`,
 			expectedStatus: http.StatusBadRequest,
-			expectedBody:   `specified email address 'alice@alice.com' is already used by another user`,
+			expectedBody:   `[{"key":"email","message":"Specified email address is already used by another user"}]`,
 		},
 		{
 			name:           "should return 404 when the user doesn't exist",
