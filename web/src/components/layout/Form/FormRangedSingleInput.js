@@ -47,7 +47,7 @@ class RangedSingleInput extends React.Component {
 
         const from = e.target.value !== '' ? parseFloat(e.target.value) : '';
         this.setState({ ...this.state, from });
-        onChange({ from, to: value.to });
+        onChange({ from, to: value.to || '' });
     };
 
     onChangeTo(e) {
@@ -55,7 +55,7 @@ class RangedSingleInput extends React.Component {
 
         const to = e.target.value !== '' ? parseFloat(e.target.value) : '';
         this.setState({ ...this.state, to });
-        onChange({ from: value.from, to });
+        onChange({ from: value.from || '', to });
     };
 
     onChangeSingle(e) {
@@ -69,6 +69,7 @@ class RangedSingleInput extends React.Component {
     render() {
         const { label, placeholder, isRequired, min, max, input, meta: { error, warning, touched } } = this.props;
         const showError = !!(touched && (error || warning));
+
 
         return (
             <FormItem name={input.name} label={label} isRequired={isRequired} showError={showError} error={error}>
