@@ -81,14 +81,19 @@ export const rangedRequired = value => {
         return 'The field is required';
     }
 
-    return (value.from && value.to) ? undefined : 'The field is required';
+    if (value.to === undefined) {
+        return value.from ? undefined : 'The field is required';
+    } else {
+        return (value.from && value.to) ? undefined : 'The field is required';
+    }
 };
 
-export const ranged = (min, max) => value =>
-    (value.to >= value.from) ? undefined : 'First value has to be bigger or same';
+export const ranged = value =>
+    (value.to === undefined || (value.to >= value.from)) ? undefined : 'First value has to be bigger or same';
+
 
 export const rangedMin = min => value =>
-    (value.from < min || value.to < min) ? `The value can't be less than ${min}` : undefined;
+    (value.to === undefined && (value.from < min || value.to < min)) ? `The value can't be less than ${min}` : undefined;
 
 export const rangedMax = max => value =>
-    (value.from > max || value.to > max) ? `The value can't be more than ${max}` : undefined;
+    (value.to === undefined && (value.from > max || value.to > max)) ? `The value can't be more than ${max}` : undefined;

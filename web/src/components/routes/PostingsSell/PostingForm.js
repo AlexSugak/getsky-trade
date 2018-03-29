@@ -12,7 +12,6 @@ const shouldShowStates = currentCountry => currentCountry === 'US' || currentCou
 
 const RANGED_MIN = 1;
 const RANGED_MAX = 999999.99;
-const ranged1To999999 = ranged(RANGED_MIN, RANGED_MAX);
 const rMin = rangedMin(RANGED_MIN);
 const rMax = rangedMax(RANGED_MAX);
 const r = required();
@@ -27,7 +26,7 @@ const FormPostingToSell = ({ states, countries, country, handleSubmit, submittin
                     placeholder={'USD'}
                     label={'What is the amount of cash you will pay in USD?'}
                     isRequired
-                    validate={[rangedRequired, ranged1To999999, rMin, rMax]}
+                    validate={[rangedRequired, ranged, rMin, rMax]}
                     min={RANGED_MIN}
                     max={RANGED_MAX}
                 />

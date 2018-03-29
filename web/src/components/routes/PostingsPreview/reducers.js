@@ -10,5 +10,5 @@ export default (state = initialState, action) => {
             return { ...state, preview: action.preview };
         default:
             return state;
-    };
+    }
 };

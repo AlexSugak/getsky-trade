@@ -20,39 +20,50 @@ class RangedSingleInput extends React.Component {
         this.setMode = this.setMode.bind(this);
         this.onChangeFrom = this.onChangeFrom.bind(this);
         this.onChangeTo = this.onChangeTo.bind(this);
+        this.onChangeSingle = this.onChangeSingle.bind(this);
 
         this.state = {
             mode: RANGED_MODE,
-            defaultMin: this.props.min,
-            storedTo: this.props.min + 1,
+            from: '',
+            to: '',
+            single: '',
         }
     };
 
-    componentDidMount() {
-        const { input: { onChange } } = this.props;
-        onChange({ from: this.state.defaultMin, to: this.state.storedTo })
-    }
-
     setMode(mode) {
-        const { input: { value, onChange } } = this.props;
+        const { input: { onChange } } = this.props;
 
         if (mode === SINGLE_MODE) {
-            this.setState({ ...this.state, mode, storedTo: value.to });
-            onChange({ to: value.to, from: value.from });
+            onChange({ to: null, from: this.state.single });
         } else {
-            this.setState({ ...this.state, mode, storedTo: value.to });
-            onChange({ to: this.state.storedTo, from: value.from });
+            onChange({ to: this.state.to, from: this.state.from });
         }
+
+        this.setState({ ...this.state, mode });
     };
 
     onChangeFrom(e) {
         const { input: { onChange, value } } = this.props;
-        onChange({ from: parseFloat(e.target.value), to: value.to });
+
+        const from = e.target.value !== '' ? parseFloat(e.target.value) : '';
+        this.setState({ ...this.state, from });
+        onChange({ from, to: value.to });
     };
 
     onChangeTo(e) {
         const { input: { onChange, value } } = this.props;
-        onChange({ from: value.from, to: parseFloat(e.target.value) });
+
+        const to = e.target.value !== '' ? parseFloat(e.target.value) : '';
+        this.setState({ ...this.state, to });
+        onChange({ from: value.from, to });
+    };
+
+    onChangeSingle(e) {
+        const { input: { onChange } } = this.props;
+
+        const single = e.target.value !== '' ? parseFloat(e.target.value) : '';
+        this.setState({ ...this.state, single });
+        onChange({ from: single });
     };
 
     render() {
@@ -65,15 +76,18 @@ class RangedSingleInput extends React.Component {
                     <Button type="button" text='Ranged amount' onClick={() => this.setMode(RANGED_MODE)} style={fullWidth} primary={this.state.mode === RANGED_MODE} />
                     <Button type="button" text='Single amount' onClick={() => this.setMode(SINGLE_MODE)} style={fullWidth} primary={this.state.mode === SINGLE_MODE} />
                 </Flex>
-                <Flex mt={2} alignItems='center' >
-                    <ControlInput type="number" min={min} max={max} placeholder={placeholder} error={showError} onChange={this.onChangeFrom} defaultValue={min} />
-                    {this.state.mode === RANGED_MODE &&
+                {this.state.mode === RANGED_MODE &&
+                    <Flex mt={2} alignItems='center' >
+                        <ControlInput type="number" min={min} max={max} placeholder={placeholder} error={showError} onChange={this.onChangeFrom} value={this.state.from} />
                         <Box mx={2}>to</Box>
-                    }
-                    {this.state.mode === RANGED_MODE &&
-                        <ControlInput type="number" min={min} max={max} placeholder={placeholder} error={showError} onChange={this.onChangeTo} defaultValue={this.state.storedTo} />
-                    }
-                </Flex>
+                        <ControlInput type="number" min={min} max={max} placeholder={placeholder} error={showError} onChange={this.onChangeTo} value={this.state.to} />
+                    </Flex>
+                }
+                {this.state.mode === SINGLE_MODE &&
+                    <Flex mt={2} alignItems='center' >
+                        <ControlInput type="number" min={min} max={max} placeholder={placeholder} error={showError} onChange={this.onChangeSingle} value={this.state.single} />
+                    </Flex>
+                }
                 <Box mt={2}>
                     <Tip>Please choose a <B>ranged</B> or <B>single</B> amount. Valid amounts are {min} to {max}</Tip>
                     <Tip>Example for ranged amounts: <B>60 to 70</B></Tip>
