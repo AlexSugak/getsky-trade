@@ -55,7 +55,7 @@ const FormPostingToSell = ({ states, countries, country, handleSubmit, submittin
                     min={0}
                     component={FormDropdownInput}
                     options={DISTANCE_UNITS_OPTIONS}
-                    parse={(v) => ({ ...v, data: parseInt(v.data) })}
+                    parse={(v) => ({ ...v, data: parseInt(v.data, 10) })}
                     defaultValue={{ data: '', prefix: DISTANCE_UNITS_OPTIONS[0].value }}
                     label={'How far will you travel to trade?'}
                     isRequired
