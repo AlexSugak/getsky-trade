@@ -27,7 +27,7 @@ class PostingsBuy extends React.Component {
             <Container flex='1 0 auto' flexDirection='column' py={4}>
                 <BackIcLink path='/' text='Dashboard' />
                 <PostingTitle />
-                <PostingForm countries={countries} states={states} onSubmit={this.onSubmit} defaultCountry={userInfo.countryCode} />
+                <PostingForm countries={countries} states={states} onSubmit={this.onSubmit} defaultCountry={userInfo ? userInfo.countryCode : undefined} />
             </Container>
         )
     }
