@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { SubmissionError } from 'redux-form';
 
 import Container from 'components/layout/Container';
 
@@ -33,23 +34,39 @@ export default connect(
         loadForm,
     })(
         class extends React.Component {
-            onSubmit = (form) => {
+            saveOtherForm = form => {
+                const {
+                    saveUserSettings,
+                    userInfo,
+
+                    otherSettings,
+                } = this.props;
+
+                const otherSettingsFormRegisteredValues = ['email', 'currency', 'distanceUnits'];
+
+                return saveUserSettings({
+                    ...userInfo,
+                    ...extractFormValues(otherSettings.values, otherSettingsFormRegisteredValues),
+                }).catch(err => {
+                    throw new SubmissionError(err)
+                });
+            }
+            saveLocation = form => {
                 const {
                     saveUserSettings,
                     userInfo,
 
                     locationForm,
-                    otherSettings,
                 } = this.props;
 
                 const locationFormRegisteredValues = ['timeOffset', 'countryCode', 'stateCode', 'city', 'postalCode'];
-                const otherSettingsFormRegisteredValues = ['email', 'currency', 'distanceUnits'];
 
-                saveUserSettings({
+                return saveUserSettings({
                     ...userInfo,
                     ...extractFormValues(locationForm.values, locationFormRegisteredValues),
                     timeOffset: parseInt(locationForm.values.timeOffset, 10),
-                    ...extractFormValues(otherSettings.values, otherSettingsFormRegisteredValues),
+                }).catch(err => {
+                    throw new SubmissionError(err)
                 });
             }
             render() {
@@ -72,12 +89,12 @@ export default connect(
                             countries={countries}
                             states={states}
                             showStates={locationForm && locationForm.values.countryCode === 'US'}
-                            onSubmit={this.onSubmit} />
+                            onSubmit={this.saveLocation} />
                         <h2>Other settings</h2>
                         <OtherSettings
                             enableReinitialize
                             initialValues={userInfo ? { ...userInfo, timeOffset: userInfo.timeOffset.toString() } : {}}
-                            onSubmit={this.onSubmit} />
+                            onSubmit={this.saveOtherForm} />
                     </Container>
                 );
             }

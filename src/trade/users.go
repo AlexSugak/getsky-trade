@@ -173,8 +173,7 @@ func UpdateUserSettingsHandler(s *HTTPServer) httputil.APIHandler {
 
 		userWithSameEmail, err := s.users.GetByEmail(req.Email)
 		if err == nil && userWithSameEmail.UserName != targetUser.UserName {
-			http.Error(w, fmt.Sprintf("specified email address '%s' is already used by another user", req.Email), http.StatusBadRequest)
-			return nil
+			return ce.CreateSingleValidationError("email", "Specified email address is already used by another user")
 		}
 
 		userSettings := models.UserSettings{
