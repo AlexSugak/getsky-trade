@@ -63,6 +63,9 @@ export default ({ userInfo, logout }) => (
         }>
             <UserMenu>
                 <UserMenuItem>
+                    <NavLink to="/dashboard">Dashboard</NavLink>
+                </UserMenuItem>
+                <UserMenuItem>
                     <NavLink to="/user-settings">Settings</NavLink>
                 </UserMenuItem>
                 <UserMenuItem onClick={logout}>

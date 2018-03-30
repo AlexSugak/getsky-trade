@@ -12,6 +12,7 @@ import PostingsPreview from './PostingsPreview';
 import PostingsSell from './PostingsSell';
 import AdvertDetails from './AdvertDetails';
 import UserSettings from './UserSettings';
+import Dashboard from './Dashboard';
 
 const PrivateRoute = connect(({ login }) => ({
     login
@@ -29,6 +30,7 @@ const Routes = ({ match }) => {
             <Route path={`/login`} component={Login} />
             <Route path={`/post/:id`} component={AdvertDetails} />
 
+            <PrivateRoute path={`/dashboard`} component={Dashboard} />
             <PrivateRoute path={`/user-settings`} component={UserSettings} />
             <PrivateRoute path={`/postings/buy/preview`} component={PostingsPreview} />
             <PrivateRoute path={`/postings/buy`} component={PostingsBuy} />
