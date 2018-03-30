@@ -6,8 +6,9 @@ import Container from 'components/layout/Container';
 
 import LocationForm from './LocationForm';
 import OtherSettings from './OtherSettings';
+import ChangePasswordForm from './ChangePasswordForm';
 
-import { saveUserSettings, loadForm } from './actions';
+import { saveUserSettings, changePassword } from './actions';
 
 const extractFormValues = (form, names) =>
     (names.reduce((acc, curr) => {
@@ -31,7 +32,7 @@ export default connect(
     }),
     {
         saveUserSettings,
-        loadForm,
+        changePassword,
     })(
         class extends React.Component {
             saveOtherForm = form => {
@@ -69,6 +70,12 @@ export default connect(
                     throw new SubmissionError(err)
                 });
             }
+            changePassword = form => {
+                return this.props.changePassword(form)
+                    .catch(err => {
+                        throw new SubmissionError(err)
+                    });
+            }
             render() {
                 const {
                     locationForm,
@@ -95,6 +102,9 @@ export default connect(
                             enableReinitialize
                             initialValues={userInfo ? { ...userInfo, timeOffset: userInfo.timeOffset.toString() } : {}}
                             onSubmit={this.saveOtherForm} />
+
+                        <h2>Change your password</h2>
+                        <ChangePasswordForm onSubmit={this.changePassword} />
                     </Container>
                 );
             }

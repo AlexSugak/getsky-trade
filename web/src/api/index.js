@@ -44,6 +44,9 @@ export const getSkycoinPrice = currency =>
 export const updateUserSettings = settings =>
     axios.post(`${apiUrl}/me/settings`, settings, headers)
 
+export const changePassword = passwordForm =>
+    axios.post(`${apiUrl}/me/change-password`, passwordForm, headers)
+
 export const postBuyAdvert = advert =>
     axios.post(`${apiUrl}/postings/buy`, advert, headers);
 

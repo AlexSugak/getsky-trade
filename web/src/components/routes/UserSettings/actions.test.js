@@ -23,4 +23,19 @@ describe('userSettingsActions', () => {
                 .then(() => expect(store.getActions()).toEqual(expectedActions))
         });
     });
+
+    describe('changePassword', () => {
+        it('should dispatch CHANGE_PASSWORD_REQUEST and CHANGE_PASSWORD_RESPONSE actions and call changePasswordApi', () => {
+            const passwordFormStub = {};
+            const expectedActions = [
+                { type: actions.CHANGE_PASSWORD_REQUEST },
+                { type: actions.CHANGE_PASSWORD_RESPONSE },
+            ];
+
+            api.changePassword = apiStubs.changePasswordOk;
+            const store = mockStore({});
+            return store.dispatch(actions.changePassword(passwordFormStub))
+                .then(() => expect(store.getActions()).toEqual(expectedActions))
+        });
+    });
 });

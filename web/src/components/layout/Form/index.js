@@ -5,6 +5,7 @@ import FormLabel from './FormLabel';
 import FormDropdown from './FormDropdown';
 import Button from './Button';
 import ErrorMessage from './ErrorMessage';
+import FormMessage from './FormMessage';
 import ControlMessage from './ControlMessage';
 import FormRangedSingleInput from './FormRangedSingleInput';
 import FormCaptcha from './FormReCaptcha';
@@ -30,4 +31,5 @@ export {
     FormTextArea,
     FormGroup,
     FormItem,
+    FormMessage,
 };

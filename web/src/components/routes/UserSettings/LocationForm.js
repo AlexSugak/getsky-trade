@@ -3,7 +3,7 @@ import { Field, reduxForm, Form } from 'redux-form';
 import moment from 'moment';
 import { Box } from 'grid-styled';
 
-import { FormInput, FormDropdown, Button } from 'components/layout/Form';
+import { FormInput, FormDropdown, Button, FormMessage, } from 'components/layout/Form';
 
 const UTC_OFFSET_FROM = -11;
 const UTC_OFFSET_TO = 14;
@@ -28,16 +28,17 @@ export default reduxForm({ form: 'userLocationSettingsForm' })(
                 handleSubmit,
                 pristine,
                 submitting,
+                submitSucceeded,
 
                 countries,
                 showStates,
                 states,
-
             } = this.props;
 
             return (
                 <Form onSubmit={handleSubmit}>
                     <Box width={1 / 2}>
+                        {submitSucceeded && <FormMessage>Settings updated</FormMessage>}
                         <Field
                             name="timeOffset"
                             component={FormDropdown}

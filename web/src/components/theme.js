@@ -6,6 +6,7 @@ export default {
         gray: '#424242',
         warning: '#ff6a00',
         lightGray: '#cecece',
+        success: '#00ff40',
     },
     fontSizes: [12, 14, 16, 17, 25, 35],
     spaces: [5, 10, 15, 20, 25, 30, 35, 40, 50],

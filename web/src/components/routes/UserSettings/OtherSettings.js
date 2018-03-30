@@ -2,7 +2,7 @@ import React from 'react';
 import { Field, reduxForm, Form } from 'redux-form';
 import { Box } from 'grid-styled';
 
-import { FormInput, FormDropdown, Button } from 'components/layout/Form';
+import { FormInput, FormDropdown, Button, FormMessage, } from 'components/layout/Form';
 
 const distanceUnits = [
     { text: 'Kilometers', value: 'km' },
@@ -20,11 +20,13 @@ export default reduxForm({ form: 'userOtherSettingsForm' })(
                 handleSubmit,
                 pristine,
                 submitting,
+                submitSucceeded,
             } = this.props;
 
             return (
                 <Form onSubmit={handleSubmit}>
                     <Box width={1 / 2}>
+                        {submitSucceeded && <FormMessage>Settings updated</FormMessage>}
                         <Field
                             name="email"
                             component={FormInput}
