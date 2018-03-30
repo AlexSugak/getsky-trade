@@ -47,7 +47,7 @@ export const createBuyAdvert = (advert) =>
     async dispatch => {
         await postBuyAdvert(advert);
         dispatch(push('/'));
-        dispatch(destroyForm('formPostingToBuy'));
+        dispatch(destroyForm(BuyFormName));
     };
 
 export const createSellAdvert = (advert) =>
