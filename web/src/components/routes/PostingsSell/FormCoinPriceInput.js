@@ -11,8 +11,12 @@ const PERCENTAGE_ADJUSTMENT = 'PERCENTAGE_ADJUSTMENT';
 const FIXED_PRICE = 'FIXED_PRICE';
 
 const fullWidth = { width: '100%' };
+const skyPriceWithPercents = (skyPrice, percent) => {
+    const extra = skyPrice * percent;
+    return round((parseFloat(skyPrice, 10) + extra), 2);
+};
 
-const PercentageAdjustmentTip = () => (
+const PercentageAdjustmentTip = ({ skyPrice }) => (
     <Box>
         <Tip><B>A percentage (up to two decimal places) you want applied to the SKY exchange rate price.</B></Tip>
         <Tip>Example: 10</Tip>
@@ -20,16 +24,16 @@ const PercentageAdjustmentTip = () => (
         <Box mt={2}>
             <TipToggles label={'Exchange rate examples'}>
                 <Flex>
-                    <Box width={1 / 4}><Tip>0% = 196.41 USD</Tip></Box>
-                    <Box width={1 / 4}><Tip>2% = 200.34 USD</Tip></Box>
-                    <Box width={1 / 4}><Tip>4% = 204.27 USD</Tip></Box>
-                    <Box width={1 / 4}><Tip>6% = 208.19 USD</Tip></Box>
+                    <Box width={1 / 4}><Tip>0% = {round(skyPrice, 2)} USD</Tip></Box>
+                    <Box width={1 / 4}><Tip>2% = {skyPriceWithPercents(skyPrice, 0.02)} USD</Tip></Box>
+                    <Box width={1 / 4}><Tip>4% = {skyPriceWithPercents(skyPrice, 0.04)} USD</Tip></Box>
+                    <Box width={1 / 4}><Tip>6% = {skyPriceWithPercents(skyPrice, 0.06)} USD</Tip></Box>
                 </Flex>
                 <Flex mt={1}>
-                    <Box width={1 / 4}><Tip>8% = 212.12 USD</Tip></Box>
-                    <Box width={1 / 4}><Tip>10% = 216.05 USD</Tip></Box>
-                    <Box width={1 / 4}><Tip>12% = 219.98 USD</Tip></Box>
-                    <Box width={1 / 4}><Tip>14% = 223.91 USD</Tip></Box>
+                    <Box width={1 / 4}><Tip>8% = {skyPriceWithPercents(skyPrice, 0.08)} USD</Tip></Box>
+                    <Box width={1 / 4}><Tip>10% = {skyPriceWithPercents(skyPrice, 0.1)} USD</Tip></Box>
+                    <Box width={1 / 4}><Tip>12% = {skyPriceWithPercents(skyPrice, 0.12)} USD</Tip></Box>
+                    <Box width={1 / 4}><Tip>14% = {skyPriceWithPercents(skyPrice, 0.14)} USD</Tip></Box>
                 </Flex>
             </TipToggles>
         </Box>
@@ -46,7 +50,7 @@ const FixedPriceTip = () => (
 
 const Label = ({ skyPrice }) => (
     <Span>
-        Price per coin (last price from <a href={'https://coinmarketcap.com/currencies/skycoin/'}>coinmarketcap.com</a> = {round(skyPrice, 3)} USD)
+        Price per coin (last price from <a href={'https://coinmarketcap.com/currencies/skycoin/'}>coinmarketcap.com</a> = {round(skyPrice, 2)} USD)
     </Span>
 );
 
@@ -116,7 +120,7 @@ class FormCoinPriceInput extends React.Component {
                 </Flex>
                 <Box mt={2}>
                     {this.state.mode === PERCENTAGE_ADJUSTMENT &&
-                        <PercentageAdjustmentTip />
+                        <PercentageAdjustmentTip skyPrice={skyPrice} />
                     }
                     {this.state.mode === FIXED_PRICE &&
                         <FixedPriceTip />
