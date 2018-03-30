@@ -1,10 +1,21 @@
 import { push } from 'react-router-redux';
 import { postBuyAdvert, postSellAdvert } from 'api/';
+import { SellFormName } from 'components/routes/PostingsSell';
+import { BuyFormName } from 'components/routes/PostingsBuy';
 
 export const SET_FORM_PREVIEW = 'SET_FORM_PREVIEW ';
 
 export const ADVERT_SELL = 1;
 export const ADVERT_BUY = 2;
+
+const destroyForm = formName => ({
+    type: '@@redux-form/DESTROY',
+    meta: {
+        form: [
+            formName,
+        ]
+    }
+});
 
 export const setAdvertPreview = (formPreview, extraData) =>
     dispatch => {
@@ -36,10 +47,12 @@ export const createBuyAdvert = (advert) =>
     async dispatch => {
         await postBuyAdvert(advert);
         dispatch(push('/'));
+        dispatch(destroyForm('formPostingToBuy'));
     };
 
 export const createSellAdvert = (advert) =>
     async dispatch => {
         await postSellAdvert(advert);
         dispatch(push('/'));
+        dispatch(destroyForm(SellFormName));
     };

@@ -61,6 +61,7 @@ describe('postingsPreview actions', () => {
         it('should call postBuyAdvert api and dispatch a redux-router push action', () => {
             const expectedActions = [
                 { type: '@@router/CALL_HISTORY_METHOD', payload: { args: ['/'], method: 'push' } },
+                { type: '@@redux-form/DESTROY', meta: { form: ['formPostingToBuy'] } },
             ];
             const formStub = { id: 1 };
             api.postBuyAdvert = apiStubs.createBuyAdvertOk;
@@ -75,12 +76,13 @@ describe('postingsPreview actions', () => {
         it('should call postSellAdvert api and dispatch a redux-router push action', () => {
             const expectedActions = [
                 { type: '@@router/CALL_HISTORY_METHOD', payload: { args: ['/'], method: 'push' } },
+                { type: '@@redux-form/DESTROY', meta: { form: ['formPostingToSell'] } },
             ];
             const formStub = { id: 1 };
             api.postSellAdvert = apiStubs.createSellAdvertOk;
 
             const store = mockStore({});
-            return store.dispatch(actions.createBuyAdvert(formStub))
+            return store.dispatch(actions.createSellAdvert(formStub))
                 .then(() => expect(store.getActions()).toEqual(expectedActions));
         })
     });

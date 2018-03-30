@@ -75,8 +75,10 @@ const FormPostingToSell = ({ states, countries, country, skyPrice, handleSubmit,
     </Form>
 );
 
+export const SellFormName = 'formPostingToSell';
+
 const ReduxForm = reduxForm({
-    form: 'formPostingToSell',
+    form: SellFormName,
     destroyOnUnmount: false,
 })(FormPostingToSell);
 

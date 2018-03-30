@@ -63,8 +63,10 @@ const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting
     </Form>
 );
 
+export const BuyFormName = 'formPostingToBuy';
+
 const ReduxForm = reduxForm({
-    form: 'formPostingToBuy',
+    form: BuyFormName,
     destroyOnUnmount: false,
 })(FormPostingToBuy);
 
