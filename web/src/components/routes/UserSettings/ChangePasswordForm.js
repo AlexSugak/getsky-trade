@@ -2,7 +2,8 @@ import React from 'react';
 import { Field, reduxForm, Form } from 'redux-form';
 import { Box } from 'grid-styled';
 
-import { FormInput, Button, FormMessage, } from 'components/layout/Form';
+import { FormInput, FormMessage, } from 'components/layout/Form';
+import { Button } from 'components/layout/Button';
 import { required, minLength } from 'validation/rules';
 
 const r = required();

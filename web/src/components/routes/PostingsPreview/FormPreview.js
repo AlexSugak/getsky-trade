@@ -4,7 +4,8 @@ import { reduxForm, Form, Field } from 'redux-form';
 
 import { required } from 'validation/rules';
 import { AdvertSummary } from 'components/routes/AdvertDetails';
-import { Button, FormCaptcha } from 'components/layout/Form';
+import { FormCaptcha } from 'components/layout/Form';
+import { Button } from 'components/layout/Button';
 
 const r = required();
 

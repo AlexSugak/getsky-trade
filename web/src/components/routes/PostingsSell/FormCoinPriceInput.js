@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { Flex, Box } from 'grid-styled';
 
 import { B, Tip, Span } from 'components/layout/Text';
-import { ControlInput, FormItem, Button } from 'components/layout/Form';
+import { Button } from 'components/layout/Button';
+import { ControlInput, FormItem } from 'components/layout/Form';
 import TipToggles from 'components/layout/TipToggles';
 import { round } from 'utils/';
 

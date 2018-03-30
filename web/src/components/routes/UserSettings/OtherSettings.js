@@ -2,7 +2,8 @@ import React from 'react';
 import { Field, reduxForm, Form } from 'redux-form';
 import { Box } from 'grid-styled';
 
-import { FormInput, FormDropdown, Button, FormMessage, } from 'components/layout/Form';
+import { FormInput, FormDropdown, FormMessage, } from 'components/layout/Form';
+import { Button } from 'components/layout/Button';
 
 const distanceUnits = [
     { text: 'Kilometers', value: 'km' },

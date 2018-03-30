@@ -3,7 +3,8 @@ import { Field, reduxForm, Form } from 'redux-form';
 import moment from 'moment';
 import { Box } from 'grid-styled';
 
-import { FormInput, FormDropdown, Button, FormMessage, } from 'components/layout/Form';
+import { FormInput, FormDropdown, FormMessage, } from 'components/layout/Form';
+import { Button } from 'components/layout/Button';
 
 const UTC_OFFSET_FROM = -11;
 const UTC_OFFSET_TO = 14;

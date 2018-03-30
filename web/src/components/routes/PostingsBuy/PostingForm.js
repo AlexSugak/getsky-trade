@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { reduxForm, Form, Field, formValueSelector } from 'redux-form';
 import { Box } from 'grid-styled'
 
-import { FormRangedSingleInput, FormCheckboxGroup, FormDropdownInput, Button, FormGroup } from 'components/layout/Form';
+import { FormRangedSingleInput, FormCheckboxGroup, FormDropdownInput, FormGroup } from 'components/layout/Form';
+import { Button } from 'components/layout/Button';
 import { required, min, max, ranged, rangedRequired, rangedMin, rangedMax } from 'validation/rules';
 import { SkyAmountWarning, LocationFormGroup, AdditionalInformationSample, ACCEPT_TRADE_OPTIONS, DISTANCE_UNITS_OPTIONS, } from 'components/layout/PostingForm';
 

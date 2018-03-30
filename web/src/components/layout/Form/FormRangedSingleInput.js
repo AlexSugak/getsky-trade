@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { Flex, Box } from 'grid-styled';
 
 import { B, Tip } from 'components/layout/Text';
+import { Button } from 'components/layout/Button';
 
 import ControlInput from './ControlInput';
 import FormItem from './FormItem';
-import Button from './Button';
 
 const RANGED_MODE = 'RANGED_MODE';
 const SINGLE_MODE = 'SINGLE_MODE';

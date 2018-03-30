@@ -3,7 +3,8 @@ import { Field, reduxForm, Form } from 'redux-form';
 import { Box } from 'grid-styled';
 import PropTypes from 'prop-types';
 
-import { FormInput, Button } from '../../layout/Form';
+import { Button } from 'components/layout/Button';
+import { FormInput } from '../../layout/Form';
 
 const LoginForm = props => {
     const { handleSubmit, pristine, submitting } = props;
