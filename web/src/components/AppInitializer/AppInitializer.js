@@ -8,8 +8,7 @@ class AppInitializer extends React.Component {
         this.props.getCountries();
         this.props.getStates();
         this.props.getUserInfo();
-        // TODO: Remove hardcoded value if the app support different currencies
-        this.props.requestSkycoinPrice('USD');
+        this.props.app.currencies.forEach(c => this.props.requestSkycoinPrice(c));
     }
 
     render() {
@@ -18,7 +17,7 @@ class AppInitializer extends React.Component {
 }
 
 
-export default connect(null, {
+export default connect(({ app }) => ({ app }), {
     initApp,
     getCountries,
     getStates,

@@ -18,12 +18,12 @@ class FormPreview extends React.Component {
     }
 
     render() {
-        const { handleSubmit, pristine, submitting, countries, states, details, skyPrice } = this.props;
+        const { handleSubmit, pristine, submitting, countries, states, details, skyPrices } = this.props;
 
         return (
             <Form onSubmit={handleSubmit}>
                 {details &&
-                    <AdvertSummary countries={countries} states={states} details={details} skyPrice={skyPrice} />
+                    <AdvertSummary countries={countries} states={states} details={details} skyPrices={skyPrices} />
                 }
                 <Field name="recaptcha" component={FormCaptcha} validate={[r]} withRef ref={r => { this.recaptchaField = r }} isRequired />
                 <Button type="submit" disabled={pristine || submitting} text="Post advert" primary />

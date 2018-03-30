@@ -55,5 +55,5 @@ export const requestSkycoinPrice = currency =>
         const currencyFieldName = `price_${currency.toLowerCase()}`;
 
         const response = await getSkycoinPriceApi(currency);
-        dispatch({ type: SKYCOIN_PRICE_RESPONSE, price: response.data[0][currencyFieldName] });
+        dispatch({ type: SKYCOIN_PRICE_RESPONSE, currency, price: response.data[0][currencyFieldName] });
     };

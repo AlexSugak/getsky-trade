@@ -67,7 +67,7 @@ class PostingsPreview extends React.Component {
     }
 
     render() {
-        const { states, countries, preview, location, skyPrice } = this.props;
+        const { states, countries, preview, location, skyPrices } = this.props;
         const advertType = getAdvertTypeFromLocation(location);
 
         return (
@@ -78,7 +78,7 @@ class PostingsPreview extends React.Component {
                     ? <ExchangeRateWarningBuy />
                     : <ExchangeRateWarningSell />
                 }
-                <FormPreview onSubmit={this.onSubmit} countries={countries} states={states} details={preview} skyPrice={skyPrice} />
+                <FormPreview onSubmit={this.onSubmit} countries={countries} states={states} details={preview} skyPrices={skyPrices} />
             </Container>
         )
     }
@@ -88,7 +88,7 @@ const mapStateToProps = ({ preview, app }) => ({
     preview: preview.preview,
     countries: app.countries,
     states: app.states,
-    skyPrice: app.skyPrice,
+    skyPrices: app.skyPrices,
 });
 
 export default connect(mapStateToProps, { push, createBuyAdvert, createSellAdvert })(PostingsPreview);

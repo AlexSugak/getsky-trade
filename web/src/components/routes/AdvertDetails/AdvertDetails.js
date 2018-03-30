@@ -110,7 +110,7 @@ const getLocationByCode = (locations, code) => {
     return code;
 }
 
-export const AdvertSummary = ({ details, countries, states, skyPrice }) => (
+export const AdvertSummary = ({ details, countries, states, skyPrices }) => (
     <Panel flexDirection="row" flexWrap="wrap">
         <PanelHeading width={1}>
             <h3>{details.author} wants to {advertTypes[details.type]} Skycoin</h3>
@@ -127,7 +127,7 @@ export const AdvertSummary = ({ details, countries, states, skyPrice }) => (
                 </SummaryPosition>
                 <SummaryPosition
                     name="Price per SKY:">
-                    {details.fixedPrice || round(skyPrice, 3)} {details.currency}
+                    {details.fixedPrice || round(skyPrices[details.currency], 3)} {details.currency}
                 </SummaryPosition>
                 <SummaryPosition
                     name="Trade options:">
@@ -194,7 +194,7 @@ export default connect(
                     <h2>Advert summary</h2>
                     <AdvertSummary
                         details={advertDetails}
-                        skyPrice={app.skyPrice}
+                        skyPrices={app.skyPrices}
                         countries={app.countries}
                         states={app.states} />
                 </Box>

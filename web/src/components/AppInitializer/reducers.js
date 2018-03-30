@@ -9,8 +9,16 @@ export const initialState = {
     countries: [],
     states: [],
     userInfo: null,
-    skyPrice: 0,
+    skyPrices: {},
+    currencies: ['USD', 'EUR'],
 };
+
+const saveSkycoinPrice = (prices, currency, price) => {
+    const mutation = {};
+    mutation[currency] = price;
+
+    return { ...prices, ...mutation };
+}
 
 export default (state = initialState, action) => {
     switch (action.type) {
@@ -21,7 +29,7 @@ export default (state = initialState, action) => {
         case GET_USER_INFO_RESPONSE:
             return { ...state, userInfo: action.userInfo };
         case SKYCOIN_PRICE_RESPONSE:
-            return { ...state, skyPrice: action.price };
+            return { ...state, skyPrices: saveSkycoinPrice(state.skyPrices, action.currency, action.price) };
         default:
             return state;
     }

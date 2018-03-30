@@ -20,7 +20,7 @@ const rData = required(v => v ? v.data : v);
 const minData0 = min(0, v => v.data);
 const maxData9999 = max(9999, v => v.data);
 
-const FormPostingToSell = ({ states, countries, country, skyPrice, handleSubmit, submitting, pristine }) => (
+const FormPostingToSell = ({ states, countries, country, skyPrices, handleSubmit, submitting, pristine }) => (
     <Form onSubmit={handleSubmit} noValidate>
         <Box width={1 / 2}>
             <FormGroup>
@@ -40,7 +40,7 @@ const FormPostingToSell = ({ states, countries, country, skyPrice, handleSubmit,
                     component={FormCoinPriceInput}
                     placeholder={'USD'}
                     label={'Price per coin'}
-                    skyPrice={skyPrice}
+                    skyPrices={skyPrices}
                     isRequired
                     validate={[r]}
                     min={RANGED_MIN}
