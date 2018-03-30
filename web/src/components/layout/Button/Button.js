@@ -25,8 +25,8 @@ const Button = styled.button`
     }
 `;
 
-const ButtonControl = ({ text, type, disabled, onClick, style, primary }) => (
-    <Button type={type} disabled={disabled} onClick={onClick} style={style} primary={primary}>{text}</Button>
+const ButtonControl = ({ text, type, disabled, onClick, style, primary, className }) => (
+    <Button className={className} type={type} disabled={disabled} onClick={onClick} style={style} primary={primary}>{text}</Button>
 );
 
 ButtonControl.propTypes = {
@@ -36,6 +36,7 @@ ButtonControl.propTypes = {
     onClick: PropTypes.func,
     style: PropTypes.object,
     primary: PropTypes.bool,
+    className: PropTypes.string,
 };
 
 export default ButtonControl;

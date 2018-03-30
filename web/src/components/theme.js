@@ -7,6 +7,8 @@ export default {
         warning: '#ff6a00',
         lightGray: '#cecece',
         success: '#00ff40',
+        buyGreen: '#18B600',
+        sellBlue: '#00A4B6',
     },
     fontSizes: [12, 14, 16, 17, 25, 35],
     spaces: [5, 10, 15, 20, 25, 30, 35, 40, 50],
