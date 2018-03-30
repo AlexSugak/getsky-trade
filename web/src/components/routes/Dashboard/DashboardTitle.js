@@ -3,15 +3,18 @@ import PropTypes from 'prop-types';
 import { Flex, Box } from 'grid-styled';
 
 import { BuyButton, SellButton } from 'components/layout/Button';
+import { Span, B } from 'components/layout/Text';
 
 const DashboardTitle = ({ userName }) => (
-    <Flex>
-        <Box>
-            {userName}
-        </Box>
-        <Box>
-            <BuyButton />
-            <SellButton />
+    <Flex justifyContent='space-between' mt={2}>
+        <Flex alignItems='center' >
+            <Span>Hello, <B>{userName}</B></Span>
+        </Flex>
+        <Box width={230}>
+            <Flex justifyContent='space-between'>
+                <BuyButton />
+                <SellButton />
+            </Flex>
         </Box>
     </Flex>
 );

@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Box } from 'grid-styled';
 
 import Container from 'components/layout/Container';
 import DashboardTitle from './DashboardTitle';
