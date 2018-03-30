@@ -22,7 +22,7 @@ const CurrencySelectorContainer = styled.div`
         right: 5px;
     }
 
-    margin-right: ${theme.spaces[1]}px;
+    margin-left: ${theme.spaces[1]}px;
 `;
 
 export default class extends React.Component {
@@ -43,6 +43,9 @@ export default class extends React.Component {
         const { selectedCurrency } = this.state;
         return (
             <Flex justify="center" align="center">
+                <SkyPrice>
+                    Latest Skycoin (SKY) price {round(skyPrices[selectedCurrency], 3)} {selectedCurrency}
+                </SkyPrice>
                 <CurrencySelectorContainer>
                     <ControlDropdown
                         name="currencyDropdown"
@@ -50,9 +53,6 @@ export default class extends React.Component {
                         onChange={e => this.selectCurrency(e.target.value)}
                         input={{ value: selectedCurrency }} />
                 </CurrencySelectorContainer>
-                <SkyPrice>
-                    Latest Skycoin (SKY) price {round(skyPrices[selectedCurrency], 3)} {selectedCurrency}
-                </SkyPrice>
             </Flex>);
     }
 }
