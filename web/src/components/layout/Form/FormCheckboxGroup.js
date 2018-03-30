@@ -32,7 +32,7 @@ class FormCheckboxGroup extends React.Component {
             <FormItem name={name} label={label} isRequired={isRequired} description={description} showError={showError} error={error}>
                 {options.length > 0 &&
                     options.map(o =>
-                        <CheckBox key={`${name}_checkbox_${o.value}`} checked={isChecked(value, o.value)} onClick={() => this.check(o.value)} labelText={o.title} />
+                        <CheckBox key={`${name}_checkbox_${o.value}`} checked={isChecked(value, o.value)} onChange={() => this.check(o.value)} labelText={o.title} />
                     )
                 }
             </FormItem>

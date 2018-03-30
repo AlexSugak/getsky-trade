@@ -11,7 +11,7 @@ import FormCoinPriceInput from './FormCoinPriceInput';
 const shouldShowStates = currentCountry => currentCountry === 'US' || currentCountry === 'CA';
 
 const RANGED_MIN = 1;
-const RANGED_MAX = 999999;
+const RANGED_MAX = 999999.99;
 const rMin = rangedMin(RANGED_MIN);
 const rMax = rangedMax(RANGED_MAX);
 const r = required();
@@ -59,7 +59,7 @@ const FormPostingToSell = ({ states, countries, country, skyPrice, handleSubmit,
                     name={'distance'}
                     component={FormDropdownInput}
                     options={DISTANCE_UNITS_OPTIONS}
-                    parse={(v) => ({ ...v, data: parseInt(v.data, 10) })}
+                    parse={(v) => ({ ...v, data: v.data ? parseInt(v.data, 10) : '' })}
                     defaultValue={{ data: '', prefix: DISTANCE_UNITS_OPTIONS[0].value }}
                     label={'How far will you travel to trade?'}
                     isRequired
@@ -76,7 +76,8 @@ const FormPostingToSell = ({ states, countries, country, skyPrice, handleSubmit,
 );
 
 const ReduxForm = reduxForm({
-    form: 'formPostingToSell'
+    form: 'formPostingToSell',
+    destroyOnUnmount: false,
 })(FormPostingToSell);
 
 const selector = formValueSelector('formPostingToSell');

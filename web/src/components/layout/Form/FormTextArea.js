@@ -8,12 +8,12 @@ import TextArea from '../TextArea';
 
 const textAreaStyles = { height: 100 };
 
-const FormTextArea = ({ label, tip, isRequired, description, placeholder, meta: { touched, error, warning }, input: { name, onChange } }) => {
+const FormTextArea = ({ label, tip, isRequired, description, placeholder, meta: { touched, error, warning }, input: { name, value, onChange } }) => {
     const showError = !!(touched && (error || warning));
 
     return (
         <FormItem name={name} label={label} isRequired={isRequired} showError={showError} error={error}>
-            <TextArea name={name} style={textAreaStyles} placeholder={placeholder} onChange={onChange} />
+            <TextArea name={name} style={textAreaStyles} value={value} placeholder={placeholder} onChange={onChange} />
             {tip && <Tip>{tip}</Tip>}
         </FormItem>
     );

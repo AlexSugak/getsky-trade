@@ -39,11 +39,11 @@ const CheckBoxInput = styled.input`
     }
 `;
 
-const CheckBox = ({ labelText, checked, onClick }) => {
+const CheckBox = ({ labelText, checked, onClick, onChange }) => {
     return (
         <Flex alignItems='center'>
             <Box>
-                <CheckBoxInput type="checkbox" checked={checked} onClick={onClick} />
+                <CheckBoxInput type="checkbox" checked={checked} onChange={onChange} />
             </Box>
             <Box ml={1}>
                 <label>{labelText}</label>
@@ -55,7 +55,7 @@ const CheckBox = ({ labelText, checked, onClick }) => {
 CheckBox.propTypes = {
     labelText: PropTypes.string,
     checked: PropTypes.bool,
-    onClick: PropTypes.func,
+    onChange: PropTypes.func,
 };
 
 export default CheckBox;

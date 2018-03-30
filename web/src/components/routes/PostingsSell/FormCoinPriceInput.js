@@ -67,6 +67,18 @@ class FormCoinPriceInput extends React.Component {
         };
     };
 
+    componentDidMount() {
+        const { value } = this.props.input;
+
+        if (value !== '') {
+            if (value.type === PERCENTAGE_ADJUSTMENT) {
+                this.setState({ ...this.setState, mode: PERCENTAGE_ADJUSTMENT, percentageAdjustment: value.value })
+            } else {
+                this.setState({ ...this.setState, mode: FIXED_PRICE, fixedPrice: value.value })
+            }
+        }
+    }
+
     setMode(mode) {
         const { input: { onChange } } = this.props;
         if (mode === PERCENTAGE_ADJUSTMENT) {
