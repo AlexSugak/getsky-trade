@@ -67,3 +67,13 @@ func AdvertDetailsHandler(s *HTTPServer) httputil.APIHandler {
 		return json.NewEncoder(w).Encode(advert)
 	}
 }
+
+// MyAdvertsHandler returns list of user's adverts
+// Method: GET
+// Content-type: application/json
+// URI: /api/postings/my
+func MyAdvertsHandler(s *HTTPServer) httputil.APIHandler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		return nil
+	}
+}
