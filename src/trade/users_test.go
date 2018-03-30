@@ -23,7 +23,7 @@ type FakeAuthenticator struct {
 }
 
 func (fa *FakeAuthenticator) VerifyPassword(username string, password string) error {
-	if username == "testuser" {
+	if username == "testuser" && password != "wrong_password" {
 		return nil
 	}
 
@@ -188,7 +188,7 @@ func TestRegisterHandler(t *testing.T) {
 }
 
 func setupUpdateUserTests() func() {
-	execSQL("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('bob', 'bob@bob.com', 'foo', 0, 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName)
+	execSQL("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('testuser', 'testuser@testuser.com', 'foo', 0, 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName)
 	execSQL("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('alice', 'alice@alice.com', 'foo', 0, 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName)
 
 	return func() {
@@ -225,42 +225,24 @@ func TestUpdateUserSettings(t *testing.T) {
 			expectedBody:   "Invalid json request body: invalid character '<' looking for beginning of value",
 		},
 		{
-			name:           "should return 400 when UpdateSettingsRequest entity doesn't have one of required fields",
-			method:         "POST",
-			contentType:    "application/json",
-			url:            "/api/me/settings",
-			body:           `{"timeOffset":0,"countryCode":"GR","city":"Athens","postalCode":"0000","distanceUnits":"Athens","currency":"EUR"}`,
-			expectedStatus: http.StatusBadRequest,
-			expectedBody:   `[{"key":"UserName","message":"is required"}]`,
-		},
-		{
 			name:           "should return 400 when specified email is used by another user",
 			method:         "POST",
 			contentType:    "application/json",
 			url:            "/api/me/settings",
-			body:           `{"timeOffset":0,"username":"bob", "email":"alice@alice.com","countryCode":"GR","city":"Athens","postalCode":"0000","distanceUnits":"Athens","currency":"EUR"}`,
+			body:           `{"timeOffset":0, "email":"alice@alice.com","countryCode":"GR","city":"Athens","postalCode":"0000","distanceUnits":"Athens","currency":"EUR"}`,
 			expectedStatus: http.StatusBadRequest,
 			expectedBody:   `[{"key":"email","message":"Specified email address is already used by another user"}]`,
-		},
-		{
-			name:           "should return 404 when the user doesn't exist",
-			method:         "POST",
-			contentType:    "application/json",
-			url:            "/api/me/settings",
-			body:           `{"Id":2,"username":"foo","email":"foo@foo.com","timeOffset":1,"countryCode":"GR","city": "Athens","postalCode": "0000","distanceUnits":"Athens","currency": "USD"}`,
-			expectedStatus: http.StatusNotFound,
-			expectedBody:   "the user with the userName: 'foo' doesn't exist",
 		},
 		{
 			name:           "should return 200 when operation successful",
 			method:         "POST",
 			contentType:    "application/json",
 			url:            "/api/me/settings",
-			body:           `{"username":"bob","timeOffset":1,"email":"bob2@bob2.com","countryCode":null,"city":"New York","postalCode":"9999","distanceUnits":"Athens","currency":"USD","stateCode":null}`,
+			body:           `{"timeOffset":1,"email":"bob2@bob2.com","countryCode":null,"city":"New York","postalCode":"9999","distanceUnits":"Athens","currency":"USD","stateCode":null}`,
 			expectedStatus: http.StatusOK,
 			expectedBody:   "",
 			expectedUserSettings: models.UserSettings{
-				UserName:      "bob",
+				UserName:      "testuser",
 				Email:         "bob2@bob2.com",
 				TimeOffset:    1,
 				CountryCode:   models.JSONNullString{},
@@ -290,7 +272,14 @@ func TestUpdateUserSettings(t *testing.T) {
 		server := &HTTPServer{users: u, log: logger.InitLogger()}
 		server.validate = validator.New()
 
-		handler := server.setupRouter(test.StubSecure)
+		stubAuthHeader := func(h http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				r.Header.Set("name", "testuser")
+				h.ServeHTTP(w, r)
+			})
+		}
+
+		handler := server.setupRouter(stubAuthHeader)
 		handler.ServeHTTP(w, req)
 
 		require.Equal(t, tc.expectedStatus, w.Code, name)
@@ -300,9 +289,113 @@ func TestUpdateUserSettings(t *testing.T) {
 			userSettingds := &models.UserSettings{}
 
 			cmd := fmt.Sprintf("SELECT u.UserName, u.Email, u.TimeOffset, u.CountryCode, u.StateCode, u.City, u.PostalCode, u.DistanceUnits, u.Currency FROM %s.Users u WHERE u.UserName = ?", dbName)
-			err := sql.Get(userSettingds, cmd, "bob")
+			err := sql.Get(userSettingds, cmd, "testuser")
 			require.NoError(t, err)
 			require.Equal(t, tc.expectedUserSettings, *userSettingds)
+		}
+	}
+}
+
+func setupChangeUserPasswordTests() func() {
+	execSQL("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('testuser', 'bob@bob.com', 'foo', 0, 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName)
+
+	return func() {
+		clearTables()
+	}
+}
+
+func TestChangeUserPasswordSettings(t *testing.T) {
+	tests := []struct {
+		name             string
+		method           string
+		url              string
+		contentType      string
+		body             string
+		expectedStatus   int
+		expectedBody     string
+		expectedPassword string
+	}{
+		{
+			name:           "should validate content type",
+			method:         "POST",
+			contentType:    "application/xml",
+			url:            "/api/me/change-password",
+			expectedStatus: http.StatusUnsupportedMediaType,
+			expectedBody:   "Invalid content type, expected application/jsonInvalid json request body: EOF",
+		},
+		{
+			name:           "should return 400 when json body is not valid",
+			method:         "POST",
+			contentType:    "application/json",
+			url:            "/api/me/change-password",
+			body:           "<foo />",
+			expectedStatus: http.StatusBadRequest,
+			expectedBody:   "Invalid json request body: invalid character '<' looking for beginning of value",
+		},
+		{
+			name:           "should return 400 when request body doesn't have one of mandatory fields",
+			method:         "POST",
+			contentType:    "application/json",
+			url:            "/api/me/change-password",
+			body:           `{"oldPassword":"","newPassword":""}`,
+			expectedStatus: http.StatusBadRequest,
+			expectedBody:   `[{"key":"OldPassword","message":"is required"},{"key":"NewPassword","message":"is required"}]`,
+		},
+		{
+			name:           "should return 400 when old password is not valid",
+			method:         "POST",
+			contentType:    "application/json",
+			url:            "/api/me/change-password",
+			body:           `{"oldPassword":"wrong_password","newPassword":"new_password"}`,
+			expectedStatus: http.StatusBadRequest,
+			expectedBody:   `[{"key":"oldPassword","message":"Specified old password is invalid"}]`,
+		},
+		{
+			name:             "should return 200 when operation successful",
+			method:           "POST",
+			contentType:      "application/json",
+			url:              "/api/me/change-password",
+			body:             `{"oldPassword":"pass","newPassword":"new_password"}`,
+			expectedStatus:   http.StatusOK,
+			expectedBody:     "",
+			expectedPassword: "new_password",
+		},
+	}
+
+	teardownTests := setupChangeUserPasswordTests()
+	defer teardownTests()
+
+	for _, tc := range tests {
+		name := fmt.Sprintf("test case: TestChangeUserPasswordSettings %s", tc.name)
+		req, err := http.NewRequest(tc.method, tc.url, strings.NewReader(tc.body))
+		req.Header.Set("Content-Type", tc.contentType)
+
+		require.NoError(t, err)
+
+		sql := sqlx.NewDb(db, "mysql")
+		u := tradedb.NewUsers(sql)
+
+		w := httptest.NewRecorder()
+		server := &HTTPServer{users: u, log: logger.InitLogger()}
+		server.validate = validator.New()
+		server.authenticator = &FakeAuthenticator{}
+
+		stubAuthHeader := func(h http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				r.Header.Set("name", "testuser")
+				h.ServeHTTP(w, r)
+			})
+		}
+
+		handler := server.setupRouter(stubAuthHeader)
+		handler.ServeHTTP(w, req)
+
+		require.Equal(t, tc.expectedStatus, w.Code, name)
+		require.Equal(t, tc.expectedBody, strings.TrimSuffix(w.Body.String(), "\n"), name)
+
+		if tc.expectedPassword != "" {
+			a := tradedb.NewAuthenticator(sql)
+			require.NoError(t, a.VerifyPassword("testuser", tc.expectedPassword))
 		}
 	}
 }

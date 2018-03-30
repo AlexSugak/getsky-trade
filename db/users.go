@@ -110,3 +110,23 @@ func (u Users) UpdateSettings(userSettings models.UserSettings) error {
 	_, err := u.DB.NamedExec(cmd, &userSettings)
 	return err
 }
+
+// ChangePassword sets a new password to the specified user
+func (u Users) ChangePassword(username string, password string) error {
+	hashedPwd, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
+	update := &models.User{
+		UserName:     username,
+		PasswordHash: string(hashedPwd),
+	}
+
+	cmd := `UPDATE Users SET` +
+		`  PasswordHash = :PasswordHash` +
+		`  WHERE UserName = :UserName`
+
+	_, err = u.DB.NamedExec(cmd, update)
+	return err
+}

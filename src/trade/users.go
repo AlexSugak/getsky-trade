@@ -132,7 +132,6 @@ func RegisterHandler(s *HTTPServer) httputil.APIHandler {
 
 // UpdateSettingsRequest holds userDetails properties that should be updated
 type UpdateSettingsRequest struct {
-	UserName      string                `json:"username" validate:"required"`
 	Email         string                `json:"email"`
 	TimeOffset    int                   `json:"timeOffset"`
 	CountryCode   models.JSONNullString `json:"countryCode"`
@@ -150,6 +149,7 @@ type UpdateSettingsRequest struct {
 func UpdateUserSettingsHandler(s *HTTPServer) httputil.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		w.Header().Set("Accept", "application/json")
+		userName := r.Header.Get("name")
 
 		req := UpdateSettingsRequest{}
 		decoder := json.NewDecoder(r.Body)
@@ -165,9 +165,9 @@ func UpdateUserSettingsHandler(s *HTTPServer) httputil.APIHandler {
 			return ce.ValidatorErrorsResponse(err.(validator.ValidationErrors))
 		}
 
-		targetUser, err := s.users.Get(req.UserName)
+		targetUser, err := s.users.Get(userName)
 		if err != nil {
-			http.Error(w, fmt.Sprintf("the user with the userName: '%s' doesn't exist", req.UserName), http.StatusNotFound)
+			http.Error(w, fmt.Sprintf("the user with the userName: '%s' doesn't exist", userName), http.StatusNotFound)
 			return nil
 		}
 
@@ -177,7 +177,7 @@ func UpdateUserSettingsHandler(s *HTTPServer) httputil.APIHandler {
 		}
 
 		userSettings := models.UserSettings{
-			UserName:      req.UserName,
+			UserName:      userName,
 			Email:         req.Email,
 			TimeOffset:    req.TimeOffset,
 			CountryCode:   req.CountryCode,
@@ -207,5 +207,40 @@ func MeHandler(s *HTTPServer) httputil.APIHandler {
 		}
 
 		return json.NewEncoder(w).Encode(userDetails)
+	}
+}
+
+// ChangePasswordRequest represents a body of the change password request
+type ChangePasswordRequest struct {
+	OldPassword string `json:"oldPassword" validate:"required"`
+	NewPassword string `json:"newPassword" validate:"required"`
+}
+
+// ChangePasswordHandler sets a new password to the specified user
+// Method: POST
+// Accept: application/json
+// URI: /api/me/change-password
+func ChangePasswordHandler(s *HTTPServer) httputil.APIHandler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		userName := r.Header.Get("name")
+		body := &ChangePasswordRequest{}
+		if err := json.NewDecoder(r.Body).Decode(body); err != nil {
+			return httputil.StatusError{
+				Err:  fmt.Errorf("Invalid json request body: %v", err),
+				Code: http.StatusBadRequest,
+			}
+		}
+
+		err := s.validate.Struct(body)
+		if err != nil {
+			return ce.ValidatorErrorsResponse(err.(validator.ValidationErrors))
+		}
+
+		err = s.authenticator.VerifyPassword(userName, body.OldPassword)
+		if err != nil {
+			return ce.CreateSingleValidationError("oldPassword", "Specified old password is invalid")
+		}
+
+		return s.users.ChangePassword(userName, body.NewPassword)
 	}
 }
