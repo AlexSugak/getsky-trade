@@ -7,7 +7,7 @@ import { FormRangedSingleInput, FormCheckboxGroup, FormDropdownInput, Button, Fo
 import { required, min, max, ranged, rangedRequired, rangedMin, rangedMax } from 'validation/rules';
 import { SkyAmountWarning, LocationFormGroup, AdditionalInformationSample, ACCEPT_TRADE_OPTIONS, DISTANCE_UNITS_OPTIONS, } from 'components/layout/PostingForm';
 
-const shouldShowStates = currentCountry => currentCountry === 'US' || currentCountry === 'CA';
+const shouldShowStates = currentCountry => currentCountry === 'US';
 
 const RANGED_MIN = 1;
 const RANGED_MAX = 999999.99;
