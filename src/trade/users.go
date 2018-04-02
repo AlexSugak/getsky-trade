@@ -54,7 +54,12 @@ func AuthenticateHandler(s *HTTPServer) httputil.APIHandler {
 			}
 		}
 
-		token, err := auth.GetToken(req.UserName)
+		u, e := s.users.Get(req.UserName)
+		if e != nil {
+			return err
+		}
+
+		token, err := auth.GetToken(*u)
 		if err != nil {
 			return err
 		}

@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/AlexSugak/getsky-trade/db/models"
+
 	"github.com/dgrijalva/jwt-go"
 )
 
@@ -13,12 +15,13 @@ type Authenticator interface {
 }
 
 // GetToken creates new JWT token from user name
-func GetToken(name string) (string, error) {
+func GetToken(user models.UserDetails) (string, error) {
 	// TODO: hide secret
 	// TODO: update to RS256
 	signingKey := []byte("keymaker")
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"name": name,
+		"id":   user.ID,
+		"name": user.UserName,
 	})
 	tokenString, err := token.SignedString(signingKey)
 	return tokenString, err

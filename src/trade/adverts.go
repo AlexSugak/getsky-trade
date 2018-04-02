@@ -68,8 +68,8 @@ func AdvertDetailsHandler(s *HTTPServer) httputil.APIHandler {
 	}
 }
 
-// DashboardAdverts represents adverts for user's dashboard
-type DashboardAdverts struct {
+// DashboardAdvertsResponse represents adverts for user's dashboard
+type DashboardAdvertsResponse struct {
 	MyAdverts       []models.AdvertDetails `json:"myAdverts"`
 	EnquiredAdverts []models.AdvertDetails `json:"enquiredAdverts"`
 }
@@ -80,6 +80,26 @@ type DashboardAdverts struct {
 // URI: /api/postings/my
 func MyAdvertsHandler(s *HTTPServer) httputil.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
-		return nil
+		id, err := strconv.ParseInt(r.Header.Get("id"), 10, 64)
+		if err != nil {
+			return err
+		}
+
+		userAdverts, err := s.board.GetAdvertsByUserID(id)
+		if err != nil {
+			return err
+		}
+
+		enquiredAdverts, err := s.board.GetAdvertsEnquiredByUser(id)
+		if err != nil {
+			return err
+		}
+
+		dashboardAdverts := DashboardAdvertsResponse{
+			MyAdverts:       userAdverts,
+			EnquiredAdverts: enquiredAdverts,
+		}
+
+		return json.NewEncoder(w).Encode(&dashboardAdverts)
 	}
 }
