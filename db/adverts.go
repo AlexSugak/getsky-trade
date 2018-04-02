@@ -6,6 +6,27 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+const advertsFields = ` a.Id,` +
+	` a.Type,` +
+	` a.TradeCashInPerson, ` +
+	` a.TradeCashByMail,` +
+	` a.TradeMoneyOrderByMail,` +
+	` a.TradeOther,` +
+	` a.AmountFrom,` +
+	` a.AmountTo,` +
+	` a.FixedPrice,` +
+	` a.PercentageAdjustment,` +
+	` a.Currency,` +
+	` a.AdditionalInfo,` +
+	` a.TravelDistance,` +
+	` a.TravelDistanceUoM,` +
+	` a.CountryCode,` +
+	` a.StateCode,` +
+	` a.City,` +
+	` a.PostalCode,` +
+	` a.Status,` +
+	` a.CreatedAt`
+
 // Storage stands for main DB storage
 type Storage struct {
 	DB *sqlx.DB
@@ -14,6 +35,37 @@ type Storage struct {
 // NewStorage creates new Storage
 func NewStorage(db *sqlx.DB) Storage {
 	return Storage{db}
+}
+
+// GetAdvertsEnquiredByUser returns adverts that was enquired by the user
+func (s Storage) GetAdvertsEnquiredByUser(userID int64) ([]models.AdvertDetails, error) {
+	adverts := []models.AdvertDetails{}
+	err := s.DB.Select(&adverts,
+		`SELECT `+advertsFields+
+			` FROM Adverts a `+
+			` INNER JOIN Messages m ON a.Id = m.AdvertId`+
+			` WHERE AND a.Author <> ?`, userID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return adverts, nil
+}
+
+// GetAdvertsByUserID returns adverts was enquired by the user
+func (s Storage) GetAdvertsByUserID(userID int64) ([]models.AdvertDetails, error) {
+	adverts := []models.AdvertDetails{}
+	err := s.DB.Select(&adverts,
+		`SELECT `+advertsFields+
+			` FROM Adverts a `+
+			` WHERE a.Author = ?`, userID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return adverts, nil
 }
 
 // GetLatestAdverts returns 10 latest adverts

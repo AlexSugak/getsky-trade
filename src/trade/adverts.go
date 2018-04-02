@@ -68,6 +68,12 @@ func AdvertDetailsHandler(s *HTTPServer) httputil.APIHandler {
 	}
 }
 
+// DashboardAdverts represents adverts for user's dashboard
+type DashboardAdverts struct {
+	MyAdverts       []models.AdvertDetails `json:"myAdverts"`
+	EnquiredAdverts []models.AdvertDetails `json:"enquiredAdverts"`
+}
+
 // MyAdvertsHandler returns list of user's adverts
 // Method: GET
 // Content-type: application/json
