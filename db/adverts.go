@@ -44,7 +44,7 @@ func (s Storage) GetAdvertsEnquiredByUser(userID int64) ([]models.AdvertDetails,
 		`SELECT `+advertsFields+
 			` FROM Adverts a `+
 			` INNER JOIN Messages m ON a.Id = m.AdvertId`+
-			` WHERE AND a.Author <> ?`, userID)
+			` WHERE a.Author <> ?`, userID)
 
 	if err != nil {
 		return nil, err

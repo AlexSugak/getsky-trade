@@ -134,12 +134,12 @@ func (s *HTTPServer) setupRouter(Secure Secure) http.Handler {
 	r.Handle("/api/me/change-password", Secure(API(ChangePasswordHandler))).Methods("POST")
 
 	// NOTE: we should not use "adverts" word as part of api path since it can be blocked by AdBlock or similar browser extension
+	r.Handle("/api/postings/my", Secure(API(MyAdvertsHandler))).Methods("GET")
 	r.Handle("/api/postings/{id}", API(AdvertDetailsHandler)).Methods("GET")
 	r.Handle("/api/postings/sell/latest", API(LatestSellAdvertsHandler)).Methods("GET")
 	r.Handle("/api/postings/sell", Secure(API(SellAdvertHandler))).Methods("POST")
 	r.Handle("/api/postings/buy/latest", API(LatestBuyAdvertsHandler)).Methods("GET")
 	r.Handle("/api/postings/buy", Secure(API(BuyAdvertHandler))).Methods("POST")
-	r.Handle("/api/postings/my", Secure(API(MyAdvertsHandler))).Methods("GET")
 
 	r.Handle("/api/skycoin-price/{currency}", API(GetSkycoinPrice)).Methods("GET")
 

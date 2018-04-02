@@ -80,7 +80,9 @@ type DashboardAdvertsResponse struct {
 // URI: /api/postings/my
 func MyAdvertsHandler(s *HTTPServer) httputil.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
-		id, err := strconv.ParseInt(r.Header.Get("id"), 10, 64)
+		str := r.Header.Get("id")
+		id, err := strconv.ParseInt(str, 10, 64)
+
 		if err != nil {
 			return err
 		}

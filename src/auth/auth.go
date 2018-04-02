@@ -2,6 +2,7 @@ package auth
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/AlexSugak/getsky-trade/db/models"
@@ -63,7 +64,9 @@ func Middleware(next http.Handler) http.Handler {
 			return
 		}
 		name := claims.(jwt.MapClaims)["name"].(string)
+		id := claims.(jwt.MapClaims)["id"].(float64)
 
+		r.Header.Set("id", strconv.Itoa(int(id)))
 		r.Header.Set("name", name)
 
 		next.ServeHTTP(w, r)
