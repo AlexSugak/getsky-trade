@@ -6,7 +6,7 @@ import { BuyButton, SellButton } from 'components/layout/Button';
 import { Span, B } from 'components/layout/Text';
 
 const DashboardTitle = ({ userName }) => (
-    <Flex justifyContent='space-between' mt={2}>
+    <Flex justifyContent='space-between' mt={3}>
         <Flex alignItems='center' >
             <Span>Hello, <B>{userName}</B></Span>
         </Flex>

@@ -2,10 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Container from 'components/layout/Container';
-import { getAdverts } from './actions';
+import { SellAdvertRow, sellAdvertsColumns, BuyAdvertRow, buyAdvertsColumns } from 'components/routes/LatestAdverts';
 import DashboardTitle from './DashboardTitle';
 import Counters from './Counters';
-import AdvertsList from './AdvertsList';
+import AdvertsList, { RightCornerButton } from './AdvertsList';
+import { getAdverts } from './actions';
 
 const lengthOrZero = collection => collection ? collection.length : 0;
 
@@ -26,7 +27,38 @@ class Dashboard extends React.Component {
                     sellEnquiries={lengthOrZero(sellEnquiries)}
                     newMessages={newMessages}
                 />
-                <AdvertsList />
+                <AdvertsList
+                    title={'Your buyer adverts'}
+                    adverts={buyAdverts}
+                    noAdvertsMessage={'You have no active buyer adverts.'}
+                    columns={buyAdvertsColumns}
+                    rowComponent={BuyAdvertRow}
+                    rightCorner={RightCornerButton.BUY}
+                />
+                <AdvertsList
+                    title={'Your seller adverts'}
+                    adverts={sellAdverts}
+                    noAdvertsMessage={'You have no active seller adverts.'}
+                    columns={sellAdvertsColumns}
+                    rowComponent={SellAdvertRow}
+                    rightCorner={RightCornerButton.SELL}
+                />
+                <AdvertsList
+                    title={'Enquiries you\'ve made to buyers'}
+                    adverts={sellEnquiries}
+                    noAdvertsMessage={'There are no active buyer adverts you have made enquiries to.'}
+                    columns={buyAdvertsColumns}
+                    rowComponent={BuyAdvertRow}
+                    rightCorner={RightCornerButton.NONE}
+                />
+                <AdvertsList
+                    title={'Enquiries you\'ve made to sellers'}
+                    adverts={buyEnquiries}
+                    noAdvertsMessage={'There are no active seller adverts you have made enquiries to.'}
+                    columns={sellAdvertsColumns}
+                    rowComponent={SellAdvertRow}
+                    rightCorner={RightCornerButton.NONE}
+                />
             </Container>
         );
     }

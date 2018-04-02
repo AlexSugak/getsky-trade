@@ -5,7 +5,7 @@ import { Box, Flex } from 'grid-styled';
 import Card from './Card';
 
 const Counters = ({ buyAdverts, sellAdverts, buyEnquiries, sellEnquiries, newMessages }) => (
-    <Flex justifyContent={'space-between'}>
+    <Flex justifyContent={'space-between'} mt={3}>
         <Card
             width={1 / 3}
             title={'Adverts'}

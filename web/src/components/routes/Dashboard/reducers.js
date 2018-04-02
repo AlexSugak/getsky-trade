@@ -2,10 +2,10 @@ import { ADVERTS_DASHBOARD_RESPONSE } from './actions';
 import { ADVERT_SELL, ADVERT_BUY } from 'components/routes/PostingsPreview/actions';
 
 const initialState = {
-    buyAdverts: null,
-    sellAdverts: null,
-    buyEnquiries: null,
-    sellEnquiries: null,
+    buyAdverts: [],
+    sellAdverts: [],
+    buyEnquiries: [],
+    sellEnquiries: [],
     newMessages: 0,
 };
 

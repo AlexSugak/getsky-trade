@@ -91,13 +91,6 @@ const AuthorCell = ({ advert }) => (
     </Author>
 );
 
-const buyAdvertsColumns = [
-    { name: 'Seller' },
-    { name: 'Will sell' },
-    { name: 'Trade options' },
-    { name: 'Created' },
-];
-
 const LinkedTableRow = styled(withRouter(({ ...props, href, history }) =>
     (<TableRow {...props} onClick={() => history.push(href)} />))) `
         &:hover {
@@ -107,7 +100,14 @@ const LinkedTableRow = styled(withRouter(({ ...props, href, history }) =>
         }
     `;
 
-const BuyAdvertRow = (advert) => (
+export const buyAdvertsColumns = [
+    { name: 'Seller' },
+    { name: 'Will sell' },
+    { name: 'Trade options' },
+    { name: 'Created' },
+];
+
+export const BuyAdvertRow = (advert) => (
     <LinkedTableRow href={`/post/${advert.id}`}>
         <TableCell><AuthorCell advert={advert} /></TableCell>
         <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} {advert.currency}</TableCell>
@@ -116,14 +116,14 @@ const BuyAdvertRow = (advert) => (
     </LinkedTableRow>
 );
 
-const sellAdvertsColumns = [
+export const sellAdvertsColumns = [
     { name: 'Buyer' },
     { name: 'Will pay' },
     { name: 'Trade options' },
     { name: 'Created' },
 ];
 
-const SellAdvertRow = (advert) => (
+export const SellAdvertRow = (advert) => (
     <LinkedTableRow href={`/post/${advert.id}`}>
         <TableCell><AuthorCell advert={advert} /></TableCell>
         <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} {advert.currency}</TableCell>
