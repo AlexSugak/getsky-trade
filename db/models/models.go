@@ -113,3 +113,13 @@ type State struct {
 	Name string `db:"Name" json:"name"`
 	Code string `db:"Code" json:"code"`
 }
+
+// Message represents a message DB entity
+type Message struct {
+	ID        int64         `db:"Id" json:"id"`
+	Author    int64         `db:"Author" json:"author"`
+	AdvertID  int64         `db:"AdvertId" json:"advertId"`
+	Body      string        `db:"Body" json:"body"`
+	CreatedAt time.Time     `db:"CreatedAt" json:"createdAt"`
+	Recipient JSONNullInt64 `db:"Recipient" json:"recipient"`
+}
