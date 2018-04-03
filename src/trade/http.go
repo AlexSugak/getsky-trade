@@ -10,6 +10,7 @@ import (
 	"github.com/AlexSugak/getsky-trade/src/auth"
 	"github.com/AlexSugak/getsky-trade/src/board"
 	"github.com/AlexSugak/getsky-trade/src/geo"
+	"github.com/AlexSugak/getsky-trade/src/messages"
 	"github.com/AlexSugak/getsky-trade/src/skycoinPrice"
 	"github.com/AlexSugak/getsky-trade/src/user"
 	"github.com/AlexSugak/getsky-trade/src/util/httputil"
@@ -28,6 +29,7 @@ type HTTPServer struct {
 	geo            geo.Geo
 	board          board.Board
 	users          user.Users
+	messages       messages.Messages
 	authenticator  auth.Authenticator
 	validate       *validator.Validate
 	log            logrus.FieldLogger
@@ -37,7 +39,7 @@ type HTTPServer struct {
 }
 
 // NewHTTPServer creates new http server
-func NewHTTPServer(recaptchaSecret string, binding string, board board.Board, users user.Users, a auth.Authenticator, log logrus.FieldLogger, g geo.Geo) *HTTPServer {
+func NewHTTPServer(recaptchaSecret string, binding string, board board.Board, users user.Users, a auth.Authenticator, log logrus.FieldLogger, g geo.Geo, messages messages.Messages) *HTTPServer {
 	return &HTTPServer{
 		checkRecaptcha: auth.InitRecaptchaChecker(recaptchaSecret),
 		skycoinPrices:  skycoinPrice.NewSkycoinPrices(),
@@ -50,9 +52,10 @@ func NewHTTPServer(recaptchaSecret string, binding string, board board.Board, us
 		log: log.WithFields(logrus.Fields{
 			"prefix": "trade.http",
 		}),
-		geo:  g,
-		quit: make(chan os.Signal, 1),
-		done: make(chan struct{}),
+		geo:      g,
+		messages: messages,
+		quit:     make(chan os.Signal, 1),
+		done:     make(chan struct{}),
 	}
 }
 
@@ -140,6 +143,10 @@ func (s *HTTPServer) setupRouter(Secure Secure) http.Handler {
 	r.Handle("/api/postings/sell", Secure(API(SellAdvertHandler))).Methods("POST")
 	r.Handle("/api/postings/buy/latest", API(LatestBuyAdvertsHandler)).Methods("GET")
 	r.Handle("/api/postings/buy", Secure(API(BuyAdvertHandler))).Methods("POST")
+
+	r.Handle("/api/postings/{id}/messages", Secure(API(PostMessageHandler))).Methods("POST")
+	r.Handle("/api/postings/{id}/messages-authors", Secure(API(GetMessageAuthorsHandler))).Methods("GET")
+	r.Handle("/api/postings/{id}/messages/{authorName}", Secure(API(GetMessagesHandler))).Methods("GET")
 
 	r.Handle("/api/skycoin-price/{currency}", API(GetSkycoinPrice)).Methods("GET")
 
