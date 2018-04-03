@@ -12,7 +12,7 @@ import { Tab as UnstyledTab, Tabs, TabList as UnstyledTabList, TabPanel } from '
 import Promo from 'components/layout/Promo';
 import Container from 'components/layout/Container';
 import Table, { TableRow, TableCell } from 'components/layout/Table';
-import { TRADE_OPTIONS } from 'constants';
+import { TRADE_OPTIONS } from 'constants/index';
 import Spinner from 'components/layout/Spinner';
 
 import { getAdverts } from './actions';
