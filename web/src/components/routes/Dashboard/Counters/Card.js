@@ -19,24 +19,24 @@ const CenterText = { textAlign: 'center' };
 
 const Card = ({ width, title, totalAmount, leftTitle, leftAmount, rightTitle, rightAmount, tipMessage }) => (
     <BorderedBox width={width}>
-        <TopBox flex='1 1 auto'>
+        <TopBox flex='1 1 auto' p={2}>
             <Box style={CenterText}>{totalAmount}</Box>
             <Box style={CenterText}>{title}</Box>
         </TopBox>
         {!tipMessage &&
             <Flex>
-                <LeftBox flex='1 1 auto'>
+                <LeftBox flex='1 1 auto' p={2}>
                     <Box style={CenterText}>{leftAmount}</Box>
                     <Box style={CenterText}>{leftTitle}</Box>
                 </LeftBox>
-                <Box flex='1 1 auto'>
+                <Box flex='1 1 auto' p={2}>
                     <Box style={CenterText}>{rightAmount}</Box>
                     <Box style={CenterText}>{rightTitle}</Box>
                 </Box>
             </Flex>
         }
         {tipMessage &&
-            <Box style={CenterText}>
+            <Box style={CenterText} p={2}>
                 {tipMessage}
             </Box>
 
