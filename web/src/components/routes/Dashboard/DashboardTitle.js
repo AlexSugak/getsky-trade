@@ -10,7 +10,7 @@ const DashboardTitle = ({ userName }) => (
         <Flex alignItems='center' >
             <Span>Hello, <B>{userName}</B></Span>
         </Flex>
-        <Box width={230}>
+        <Box width={335}>
             <Flex justifyContent='space-between'>
                 <BuyButton />
                 <SellButton />

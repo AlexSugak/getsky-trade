@@ -9,7 +9,7 @@ const Button = styled(Btn) `
     color: ${props => props.theme.colors.sellBlue};
 `
 const SellButton = ({ push }) => {
-    return <Button text={'SellButton'} onClick={() => push('postings/sell')} primary />
+    return <Button text={'Post a seller advert'} onClick={() => push('postings/sell')} primary />
 };
 
 SellButton.propTypes = {
