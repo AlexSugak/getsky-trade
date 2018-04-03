@@ -170,7 +170,7 @@ func TestGetMessageAuthors(t *testing.T) {
 			contentType:    "application/json",
 			url:            "/api/postings/{advertID}/messages-authors",
 			expectedStatus: http.StatusOK,
-			expectedBody:   `["sam","bob"]`,
+			expectedBody:   `["bob","sam"]`,
 		},
 	}
 

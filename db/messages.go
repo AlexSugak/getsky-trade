@@ -49,9 +49,10 @@ func (m Messages) SaveMessage(msg *models.Message) (*models.Message, error) {
 // GetAdvertMessageAuthors returns usernames of all authors that wrote messages under specific advert
 func (m Messages) GetAdvertMessageAuthors(advertID int64) ([]string, error) {
 	res := []string{}
-	cmd := `SELECT DISTINCT U.UserName ` +
+	cmd := `SELECT DISTINCT U.UserName as UserName ` +
 		`FROM Messages M ` +
-		`INNER JOIN Users U ON U.Id = M.Author AND M.AdvertId = ?`
+		`INNER JOIN Users U ON U.Id = M.Author AND M.AdvertId = ?
+		 ORDER BY UserName`
 	rows, err := m.DB.Query(cmd, advertID)
 
 	if err != nil {
