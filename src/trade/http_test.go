@@ -83,8 +83,10 @@ func ensureTables() {
 
 func clearTables() {
 	fmt.Println("clearing tables")
+	execSQL("DELETE FROM `%s`.`Messages`;", dbName)
 	execSQL("DELETE FROM `%s`.`Adverts`;", dbName)
 	execSQL("DELETE FROM `%s`.`Users`;", dbName)
+	execSQL("ALTER TABLE `%s`.`Messages` AUTO_INCREMENT = 1;", dbName)
 	execSQL("ALTER TABLE `%s`.`Adverts` AUTO_INCREMENT = 1;", dbName)
 	execSQL("ALTER TABLE `%s`.`Users` AUTO_INCREMENT = 1;", dbName)
 }

@@ -38,6 +38,14 @@ func FakeRecaptchaChecker(response string) (bool, error) {
 	return false, nil
 }
 
+func setupAuthenticateHandlerTests() func() {
+	execSQL("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('testuser', 'bob@bob.com', 'foo', 0, 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName)
+
+	return func() {
+		clearTables()
+	}
+}
+
 func TestAuthenticateHandler(t *testing.T) {
 	tests := []struct {
 		name           string
@@ -80,6 +88,9 @@ func TestAuthenticateHandler(t *testing.T) {
 		},
 	}
 
+	teardownTests := setupAuthenticateHandlerTests()
+	defer teardownTests()
+
 	for _, tc := range tests {
 		name := fmt.Sprintf("test case: AuthenticateHandler %s", tc.name)
 		req, err := http.NewRequest(tc.method, tc.url, strings.NewReader(tc.body))
@@ -87,9 +98,11 @@ func TestAuthenticateHandler(t *testing.T) {
 		req.Header.Set("Content-Type", tc.contentType)
 
 		a := &FakeAuthenticator{}
+		sql := sqlx.NewDb(db, "mysql")
+		u := tradedb.NewUsers(sql)
 
 		w := httptest.NewRecorder()
-		server := &HTTPServer{authenticator: a, log: logger.InitLogger()}
+		server := &HTTPServer{authenticator: a, users: u, log: logger.InitLogger()}
 		handler := server.setupRouter(test.StubSecure)
 
 		handler.ServeHTTP(w, req)
