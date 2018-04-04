@@ -114,7 +114,7 @@ func (s Storage) GetAdvertsEnquiredByUserWithMessageCounts(userID int64) ([]mode
 
 		if userID == recipient {
 			totalMessagesAmount++
-			if isRead.Valid && bool(isRead.BitBool) {
+			if isRead.Valid && !bool(isRead.BitBool) {
 				newMessagesAmount++
 			}
 		} else {
@@ -204,7 +204,7 @@ func (s Storage) GetAdvertsWithMessageCountsByUserID(userID int64) ([]models.Adv
 		}
 
 		totalMessagesAmount++
-		if isRead.Valid && bool(isRead.BitBool) {
+		if isRead.Valid && !bool(isRead.BitBool) {
 			newMessagesAmount++
 		}
 	}
