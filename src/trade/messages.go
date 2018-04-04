@@ -111,12 +111,19 @@ func UpdateMessageHandler(s *HTTPServer) httputil.APIHandler {
 			return nil
 		}
 
-		if oldMessage.Author != u.ID {
+		advert, err := s.board.GetAdvertDetails(oldMessage.AdvertID)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("the advert with the id: '%d' doesn't exist", oldMessage.AdvertID), http.StatusNotFound)
+			return nil
+		}
+
+		if oldMessage.Author != u.ID && (oldMessage.Recipient.Valid == true && oldMessage.Recipient.Int64 != u.ID) && advert.Author != u.UserName {
 			http.Error(w, "You do not have rights to modify this content", http.StatusForbidden)
 			return nil
 		}
 
 		message := &models.Message{
+			ID:        oldMessage.ID,
 			AdvertID:  oldMessage.AdvertID,
 			Author:    u.ID,
 			Recipient: oldMessage.Recipient,

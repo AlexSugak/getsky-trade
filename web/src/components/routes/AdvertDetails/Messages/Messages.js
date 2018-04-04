@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { Flex, Box } from 'grid-styled';
 
+import Icon, { IconMap } from 'components/layout/Icon';
 import TextArea from 'components/layout/TextArea';
 import { Button } from 'components/layout/Button';
 import theme from 'components/theme';
@@ -13,6 +15,7 @@ import {
     getMessages,
     getMessagesAuthors,
     selectAuthor,
+    markMessageAsRead,
 } from './actions';
 
 const MessageInput = styled(TextArea) `
@@ -33,6 +36,27 @@ const getMessageAuthor = (advert, message, userInfo, selectedAuthor) => {
     } else return advert.author;
 };
 
+const Section = styled(Flex) `
+    margin: 5px 0px;
+    background-color: ${theme.colors.white};
+    padding: 5px 10px;
+`;
+const SectionPart = styled(Box) `
+    margin: 5px 0px;
+
+    svg {
+        margin-right: 5px;
+    }
+`;
+const UsernameSectionPart = styled(SectionPart) `
+    color: ${props => props.isRead ? theme.colors.gray : theme.colors.red};
+`;
+const Date = styled(SectionPart) `
+    color: ${theme.colors.lightGray};
+    font-size: 12px;
+    text-align: right;
+`;
+
 const MessagesContainer = ({
     advert,
     userInfo,
@@ -48,21 +72,48 @@ const MessagesContainer = ({
         <div>
             {selectedAuthor && <a onClick={backToUsers}>Back to users</a>}
             {messages.map((m, i) => (
-                <div key={i}>
-                    {getMessageAuthor(advert, m, userInfo, selectedAuthor)}: {m.body}
-                </div>
+                <Section key={i} flexDirection="row" flexWrap="wrap">
+                    <UsernameSectionPart w={1} isRead={m.author === userInfo.id || m.isRead}>
+                        <Icon name={IconMap.User} />
+                        {getMessageAuthor(advert, m, userInfo, selectedAuthor)}
+                    </UsernameSectionPart>
+                    <SectionPart w={1}>
+                        {m.body}
+                    </SectionPart>
+                    <Date w={1}>
+                        {m.createdAt}
+                    </Date>
+                </Section>
             ))}
             <MessagesInputForm onChange={onChange} messageText={messageText} sendMessage={sendMessage} />
         </div>
     );
 
+const UserSection = styled(Section) `
+    cursor: pointer;
+`;
+
 const UsersList = ({ authors, selectAuthor, userInfo }) => (
     <div>
-        {authors.filter(a => a !== userInfo.username).map((a, i) => (
-            <a key={i} onClick={() => selectAuthor(a)}>
-                {a}
-            </a>
-        ))}
+        {authors.filter(a => a !== userInfo.username)
+            .map((a, i) => (
+                <UserSection
+                    key={i}
+                    flexDirection="row"
+                    flexWrap="wrap"
+                    onClick={() => selectAuthor(a)}>
+                    <SectionPart w={1}>
+                        <Icon name={IconMap.Envelope} />
+                        0 new / 3 messages
+                    </SectionPart>
+                    <UsernameSectionPart w={1} isRead={true}>
+                        From <strong> {a} </strong>
+                    </UsernameSectionPart>
+                    <Date w={1}>
+                        Last message on 30 MAR'18 10:04 AM
+                    </Date>
+                </UserSection>
+            ))}
     </div>);
 
 export default connect(
@@ -80,17 +131,21 @@ export default connect(
         getMessages,
         getMessagesAuthors,
         selectAuthor,
+        markMessageAsRead,
     }
 )(
     class extends React.Component {
-        componentDidMount() {
-            const { setMessagesState, getMessages, advert, userInfo, getMessagesAuthors } = this.props;
+        async componentDidMount() {
+            const { setMessagesState, getMessages, advert, userInfo, getMessagesAuthors, markMessageAsRead } = this.props;
 
             setMessagesState(null);
             if (userInfo.username === advert.author) {
                 getMessagesAuthors(advert.id);
             } else {
-                getMessages(advert.id, userInfo.username);
+                const messages = await getMessages(advert.id, userInfo.username);
+                messages
+                    .filter(m => !m.isRead && m.author !== userInfo.id)
+                    .forEach(m => markMessageAsRead(m.id));
             }
         }
         sendMessage = () => {
@@ -108,9 +163,13 @@ export default connect(
             };
             postMessage(message);
         }
-        selectAuthor = author => {
-            this.props.getMessages(this.props.advert.id, author);
+        selectAuthor = async author => {
+            const messages = await this.props.getMessages(this.props.advert.id, author);
             this.props.selectAuthor(author);
+
+            messages
+                .filter(m => !m.isRead && m.author !== this.props.userInfo.id)
+                .forEach(m => this.props.markMessageAsRead(m.id));
         }
         reply = () => {
             const {

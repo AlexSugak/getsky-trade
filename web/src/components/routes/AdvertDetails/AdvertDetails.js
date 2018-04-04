@@ -201,7 +201,13 @@ export default connect(
                             states={app.states} />
                     </Box>
                     <Box width={[1, 1 / 3]}>
-                        {app.userInfo && <Messages advert={advertDetails} />}
+                        {app.userInfo
+                            && (<Panel flexDirection="row" flexWrap="wrap">
+                                <PanelBody>
+                                    <Messages advert={advertDetails} />
+                                </PanelBody>
+                            </Panel>)
+                        }
                     </Box>
                 </Flex>
             </Container>);

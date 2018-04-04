@@ -27,6 +27,8 @@ export const getMessages = (advertId, username) => async dispatch => {
     const response = await getAdvertMessages(advertId, username);
 
     dispatch({ type: GET_MESSAGES_RESPONSE, messages: response.data });
+
+    return response.data;
 };
 
 export const GET_MESSAGES_AUTHORS_REQUEST = 'GET_MESSAGES_AUTHORS_REQUEST';
