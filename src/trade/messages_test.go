@@ -40,7 +40,7 @@ func setupUpdateMessageTests() (int64, func()) {
 	msgID := insertSQL(fmt.Sprintf("INSERT INTO `%s`.`Messages` (Author, AdvertId, Body, CreatedAt, IsRead, Recipient) VALUES (%d, %d, 'message_body_2', '2018-03-06', false, %d)", dbName, userID, advertID, userID2))
 
 	return msgID, func() {
-		// clearTables()
+		clearTables()
 	}
 }
 
