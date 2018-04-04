@@ -2,7 +2,10 @@ package models
 
 import (
 	"database/sql"
+	"database/sql/driver"
 	"encoding/json"
+
+	"github.com/jmoiron/sqlx/types"
 )
 
 // JSONNullFloat64 wraps sql.NullFloat64 to provide JSON-friendly marshaling
@@ -87,4 +90,29 @@ func (v *JSONNullInt64) UnmarshalJSON(data []byte) error {
 		v.Valid = false
 	}
 	return nil
+}
+
+// NullBitBool is an implementation of a bool for the MySQL type BIT(1). This type also supports null value
+// This type allows you to avoid wasting an entire byte for MySQL's boolean type TINYINT.
+type NullBitBool struct {
+	types.BitBool
+	Valid bool // Valid is true if BitBool is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (n *NullBitBool) Scan(value interface{}) error {
+	if value == nil {
+		n.BitBool, n.Valid = false, false
+		return nil
+	}
+	n.Valid = true
+	return n.BitBool.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (n NullBitBool) Value() (driver.Value, error) {
+	if !n.Valid {
+		return nil, nil
+	}
+	return n.BitBool.Value()
 }
