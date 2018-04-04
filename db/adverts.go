@@ -53,19 +53,78 @@ func (s Storage) GetAdvertsEnquiredByUser(userID int64) ([]models.AdvertDetails,
 	return adverts, nil
 }
 
-// GetAdvertsByUserID returns adverts was enquired by the user
-func (s Storage) GetAdvertsByUserID(userID int64) ([]models.AdvertDetails, error) {
-	adverts := []models.AdvertDetails{}
-	err := s.DB.Select(&adverts,
-		`SELECT `+advertsFields+
-			` FROM Adverts a `+
-			` WHERE a.Author = ?`, userID)
+// GetAdvertsWithMessageCountsByUserID returns adverts was enquired by the user
+func (s Storage) GetAdvertsWithMessageCountsByUserID(userID int64) ([]models.AdvertsWithMessageCounts, error) {
+	cmd := `SELECT ` + advertsFields + `, ` +
+		` u.UserName as Author, ` +
+		` m.IsRead as IsRead` +
+		` FROM Adverts a` +
+		` INNER JOIN Users u ON a.Author = u.Id` +
+		` LEFT JOIN Messages m ON a.Id = m.AdvertId` +
+		` WHERE a.Author = ? AND (m.Recipient = ? OR m.Recipient IS NULL)`
 
+	rows, err := s.DB.Query(cmd, userID, userID)
 	if err != nil {
 		return nil, err
 	}
 
-	return adverts, nil
+	res := []models.AdvertsWithMessageCounts{}
+
+	awmc := models.AdvertsWithMessageCounts{}
+	newMessagesAmount := 0
+	totalMessagesAmount := 0
+
+	for rows.Next() {
+		ad := models.AdvertDetails{}
+		isRead := models.NullBitBool{}
+
+		err = rows.Scan(&ad.ID,
+			&ad.Type,
+			&ad.TradeCashInPerson,
+			&ad.TradeCashByMail,
+			&ad.TradeMoneyOrderByMail,
+			&ad.TradeOther,
+			&ad.AmountFrom,
+			&ad.AmountTo,
+			&ad.FixedPrice,
+			&ad.PercentageAdjustment,
+			&ad.Currency,
+			&ad.AdditionalInfo,
+			&ad.TravelDistance,
+			&ad.TravelDistanceUoM,
+			&ad.CountryCode,
+			&ad.StateCode,
+			&ad.City,
+			&ad.PostalCode,
+			&ad.Status,
+			&ad.CreatedAt,
+			&ad.Author,
+			&isRead)
+		if err != nil {
+			return nil, err
+		}
+
+		if awmc.AdvertDetails.ID == 0 {
+			awmc.AdvertDetails = ad
+		}
+
+		if awmc.AdvertDetails.ID != ad.ID {
+			awmc.AdvertDetails = ad
+			awmc.NewMessagesAmount = newMessagesAmount
+			awmc.TotalMessagesAmount = totalMessagesAmount
+			res = append(res, awmc)
+
+			newMessagesAmount = 0
+			totalMessagesAmount = 0
+		}
+
+		totalMessagesAmount++
+		if isRead.Valid && bool(isRead.BitBool) {
+			newMessagesAmount++
+		}
+	}
+
+	return res, nil
 }
 
 // GetLatestAdverts returns 10 latest adverts

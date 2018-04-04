@@ -70,8 +70,8 @@ func AdvertDetailsHandler(s *HTTPServer) httputil.APIHandler {
 
 // DashboardAdvertsResponse represents adverts for user's dashboard
 type DashboardAdvertsResponse struct {
-	MyAdverts       []models.AdvertDetails `json:"myAdverts"`
-	EnquiredAdverts []models.AdvertDetails `json:"enquiredAdverts"`
+	MyAdverts       []models.AdvertsWithMessageCounts `json:"myAdverts"`
+	EnquiredAdverts []models.AdvertDetails            `json:"enquiredAdverts"`
 }
 
 // MyAdvertsHandler returns list of user's adverts
@@ -87,7 +87,7 @@ func MyAdvertsHandler(s *HTTPServer) httputil.APIHandler {
 			return err
 		}
 
-		userAdverts, err := s.board.GetAdvertsByUserID(id)
+		userAdverts, err := s.board.GetAdvertsWithMessageCountsByUserID(id)
 		if err != nil {
 			return err
 		}
