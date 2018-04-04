@@ -6,11 +6,20 @@ import (
 	"github.com/jmoiron/sqlx/types"
 )
 
-// AdvertsWithMessageCounts represents advert detail with amount of messages
+// AdvertsWithMessageCounts represents advert detail with amount of sent messages
 type AdvertsWithMessageCounts struct {
 	AdvertDetails       AdvertDetails `json:"advert"`
 	NewMessagesAmount   int           `json:"newMessagesAmount"`
 	TotalMessagesAmount int           `json:"totalMessagesAmount"`
+}
+
+// EnquiredAdvertsWithMessageCounts represents advert detail with amount of sent and received messages
+type EnquiredAdvertsWithMessageCounts struct {
+	AdvertDetails             AdvertDetails `json:"advert"`
+	NewMessagesAmount         int           `json:"newMessagesAmount"`
+	TotalMessagesAmount       int           `json:"totalMessagesAmount"`
+	WrittenSellMessagesAmount int           `json:"writtenSellMessagesAmount"`
+	WrittenBuyMessagesAmount  int           `json:"writtenBuyMessagesAmount"`
 }
 
 // AdvertDetails represents Advert short details information

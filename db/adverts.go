@@ -37,20 +37,105 @@ func NewStorage(db *sqlx.DB) Storage {
 	return Storage{db}
 }
 
-// GetAdvertsEnquiredByUser returns adverts that was enquired by the user
-func (s Storage) GetAdvertsEnquiredByUser(userID int64) ([]models.AdvertDetails, error) {
-	adverts := []models.AdvertDetails{}
-	err := s.DB.Select(&adverts,
-		`SELECT `+advertsFields+
-			` FROM Adverts a `+
-			` INNER JOIN Messages m ON a.Id = m.AdvertId`+
-			` WHERE a.Author <> ?`, userID)
+// GetAdvertsEnquiredByUserWithMessageCounts returns adverts that was enquired by the user and amount of related messages
+func (s Storage) GetAdvertsEnquiredByUserWithMessageCounts(userID int64) ([]models.EnquiredAdvertsWithMessageCounts, error) {
+	cmd := `SELECT ` + advertsFields + `, ` +
+		` u.UserName as Author, ` +
+		` m.Recipient, ` +
+		` m.IsRead as IsRead` +
+		` FROM Adverts a` +
+		` INNER JOIN Users u ON a.Author = u.Id` +
+		` INNER JOIN Messages m ON a.Id = m.AdvertId` +
+		` WHERE (m.Author = ? OR m.Recipient = ?) AND a.Author <> ?`
 
+	rows, err := s.DB.Query(cmd, userID, userID, userID)
 	if err != nil {
 		return nil, err
 	}
 
-	return adverts, nil
+	res := []models.EnquiredAdvertsWithMessageCounts{}
+
+	eawmc := models.EnquiredAdvertsWithMessageCounts{}
+	newMessagesAmount := 0
+	totalMessagesAmount := 0
+	writtenBuyMessagesAmount := 0
+	writtenSellMessagesAmount := 0
+	ad := models.AdvertDetails{}
+
+	for rows.Next() {
+		isRead := models.NullBitBool{}
+		recipient := int64(0)
+
+		err = rows.Scan(&ad.ID,
+			&ad.Type,
+			&ad.TradeCashInPerson,
+			&ad.TradeCashByMail,
+			&ad.TradeMoneyOrderByMail,
+			&ad.TradeOther,
+			&ad.AmountFrom,
+			&ad.AmountTo,
+			&ad.FixedPrice,
+			&ad.PercentageAdjustment,
+			&ad.Currency,
+			&ad.AdditionalInfo,
+			&ad.TravelDistance,
+			&ad.TravelDistanceUoM,
+			&ad.CountryCode,
+			&ad.StateCode,
+			&ad.City,
+			&ad.PostalCode,
+			&ad.Status,
+			&ad.CreatedAt,
+			&ad.Author,
+			&recipient,
+			&isRead)
+		if err != nil {
+			return nil, err
+		}
+
+		if eawmc.AdvertDetails.ID == 0 {
+			eawmc.AdvertDetails = ad
+		}
+
+		if eawmc.AdvertDetails.ID != ad.ID {
+			eawmc.AdvertDetails = ad
+			eawmc.NewMessagesAmount = newMessagesAmount
+			eawmc.TotalMessagesAmount = totalMessagesAmount
+			eawmc.WrittenBuyMessagesAmount = writtenBuyMessagesAmount
+			eawmc.WrittenSellMessagesAmount = writtenSellMessagesAmount
+
+			res = append(res, eawmc)
+
+			newMessagesAmount = 0
+			totalMessagesAmount = 0
+			writtenBuyMessagesAmount = 0
+			writtenSellMessagesAmount = 0
+		}
+
+		if userID == recipient {
+			totalMessagesAmount++
+			if isRead.Valid && bool(isRead.BitBool) {
+				newMessagesAmount++
+			}
+		} else {
+			if ad.Type == int(board.Buy) {
+				writtenBuyMessagesAmount++
+			} else {
+				writtenSellMessagesAmount++
+			}
+		}
+	}
+
+	if ad.ID != 0 {
+		eawmc.AdvertDetails = ad
+		eawmc.NewMessagesAmount = newMessagesAmount
+		eawmc.TotalMessagesAmount = totalMessagesAmount
+		eawmc.WrittenBuyMessagesAmount = writtenBuyMessagesAmount
+		eawmc.WrittenSellMessagesAmount = writtenSellMessagesAmount
+		res = append(res, eawmc)
+	}
+
+	return res, nil
 }
 
 // GetAdvertsWithMessageCountsByUserID returns adverts was enquired by the user
@@ -73,9 +158,9 @@ func (s Storage) GetAdvertsWithMessageCountsByUserID(userID int64) ([]models.Adv
 	awmc := models.AdvertsWithMessageCounts{}
 	newMessagesAmount := 0
 	totalMessagesAmount := 0
+	ad := models.AdvertDetails{}
 
 	for rows.Next() {
-		ad := models.AdvertDetails{}
 		isRead := models.NullBitBool{}
 
 		err = rows.Scan(&ad.ID,
@@ -122,6 +207,13 @@ func (s Storage) GetAdvertsWithMessageCountsByUserID(userID int64) ([]models.Adv
 		if isRead.Valid && bool(isRead.BitBool) {
 			newMessagesAmount++
 		}
+	}
+
+	if ad.ID != 0 {
+		awmc.AdvertDetails = ad
+		awmc.NewMessagesAmount = newMessagesAmount
+		awmc.TotalMessagesAmount = totalMessagesAmount
+		res = append(res, awmc)
 	}
 
 	return res, nil
