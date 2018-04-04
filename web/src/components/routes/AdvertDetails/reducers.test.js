@@ -18,13 +18,4 @@ describe('advertDetails reducer', () => {
                 .toEqual(expectedState);
         });
     });
-
-    describe('SKYCOIN_PRICE_RESPONSE', () => {
-        it('should set loading false', () => {
-            const priceStub = 123;
-            const expectedState = { ...initialState, loading: false };
-            expect(reduce(initialState, { type: SKYCOIN_PRICE_RESPONSE }))
-                .toEqual(expectedState);
-        });
-    });
 });

@@ -28,12 +28,6 @@ const CurrencySelectorContainer = styled.div`
 export default class extends React.Component {
     state = {
         selectedCurrency: 'USD',
-        initialized: false,
-    }
-    componentWillReceiveProps(newProps) {
-        if (!this.state.initialized && newProps.defaultCurrency !== this.props.defaultCurrency) {
-            this.setState({ ...this.state, selectedCurrency: newProps.defaultCurrency, initialized: true });
-        }
     }
     selectCurrency = currency => {
         this.setState({ ...this.state, selectedCurrency: currency });
@@ -41,6 +35,7 @@ export default class extends React.Component {
     render() {
         const { skyPrices, currencies } = this.props;
         const { selectedCurrency } = this.state;
+
         return (
             <Flex justify="center" align="center">
                 <SkyPrice>

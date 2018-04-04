@@ -35,7 +35,7 @@ const authNavItems = [
 const Header = ({ authorized, userInfo, skyPrices, currencies, logout }) => (
     <header>
         <SubHeaderWrapper className="subheader">
-            <Container alignItems="center" justifyContent={authorized ? 'space-between' : 'flex-end'}>
+            <Container alignItems="center" justifyContent={'space-between'}>
                 {authorized && <UserSubmenu userInfo={userInfo} logout={logout} />}
                 <SkyPrice currencies={currencies} skyPrices={skyPrices} defaultCurrency={userInfo && userInfo.currency} />
                 <SocialMenu />

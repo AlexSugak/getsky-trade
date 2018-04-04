@@ -10,13 +10,14 @@ import { B } from 'components/layout/Text';
 import Icon, { IconMap } from 'components/layout/Icon';
 import { TRADE_OPTIONS } from 'constants/index'
 import Spinner from 'components/layout/Spinner';
+import Messages from './Messages';
 
 import {
     requestAdvertDetails,
 } from './actions';
 
 const Panel = styled(Flex) `
-    margin: 30px 0;
+    margin-bottom: 30px;
     margin-right: 80px;
 `;
 const PanelHeading = styled(Box) `
@@ -189,17 +190,20 @@ export default connect(
         if (advertDetails.loading) return <Spinner />;
 
         return (
-            <Container>
-                <Box width={[1, 2 / 3]}>
-                    <h2>Advert summary</h2>
-                    <AdvertSummary
-                        details={advertDetails}
-                        skyPrices={app.skyPrices}
-                        countries={app.countries}
-                        states={app.states} />
-                </Box>
-                <Box width={[1, 1 / 3]}>
-                </Box>
+            <Container flexDirection="row" wrap>
+                <h2>Advert summary</h2>
+                <Flex>
+                    <Box width={[1, 2 / 3]}>
+                        <AdvertSummary
+                            details={advertDetails}
+                            skyPrices={app.skyPrices}
+                            countries={app.countries}
+                            states={app.states} />
+                    </Box>
+                    <Box width={[1, 1 / 3]}>
+                        {app.userInfo && <Messages advert={advertDetails} />}
+                    </Box>
+                </Flex>
             </Container>);
     }
 });

@@ -47,3 +47,9 @@ export const changePasswordOk = form => new Promise((resolve, reject) => { resol
 export const createBuyAdvertOk = settings => new Promise((resolve, reject) => { resolve({}) });
 
 export const createSellAdvertOk = settings => new Promise((resolve, reject) => { resolve({}) });
+
+export const postAdvertMessageOk = (advertId, message) => new Promise((resolve, reject) => { resolve({ data: message }) });
+
+export const getAdvertMessagesOk = messagesStub => (advertId, username) => new Promise((resolve, reject) => { resolve({ data: messagesStub }) });
+
+export const getAdvertMessagesAuthorsOk = messagesAuthorsStub => advertId => new Promise((resolve, reject) => { resolve({ data: messagesAuthorsStub }) });

@@ -55,3 +55,12 @@ export const postSellAdvert = advert =>
 
 export const getAdvertsForDashboard = () =>
     axios.get(`${apiUrl}/postings/my`, headers)
+
+export const postAdvertMessage = (advertId, message) =>
+    axios.post(`${apiUrl}/postings/${advertId}/messages`, message, headers);
+
+export const getAdvertMessagesAuthors = advertId =>
+    axios.get(`${apiUrl}/postings/${advertId}/messages-authors`, headers);
+
+export const getAdvertMessages = (advertId, username) =>
+    axios.get(`${apiUrl}/postings/${advertId}/messages/${username}`, headers);
