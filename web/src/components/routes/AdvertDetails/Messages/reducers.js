@@ -7,6 +7,7 @@ import {
     GET_MESSAGES_RESPONSE,
     GET_MESSAGES_AUTHORS_RESPONSE,
     SELECT_AUTHOR,
+    MARK_MESSAGE_AS_READ_RESPONSE,
 } from './actions';
 
 const initialState = {

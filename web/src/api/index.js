@@ -64,3 +64,6 @@ export const getAdvertMessagesAuthors = advertId =>
 
 export const getAdvertMessages = (advertId, username) =>
     axios.get(`${apiUrl}/postings/${advertId}/messages/${username}`, headers);
+
+export const updateAdvertMessage = (messageId, message) =>
+    axios.put(`${apiUrl}/messages/${messageId}`, message, headers);

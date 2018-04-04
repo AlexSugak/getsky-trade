@@ -145,6 +145,7 @@ func (s *HTTPServer) setupRouter(Secure Secure) http.Handler {
 	r.Handle("/api/postings/buy", Secure(API(BuyAdvertHandler))).Methods("POST")
 
 	r.Handle("/api/postings/{id}/messages", Secure(API(PostMessageHandler))).Methods("POST")
+	r.Handle("/api/messages/{id}", Secure(API(UpdateMessageHandler))).Methods("PUT")
 	r.Handle("/api/postings/{id}/messages-authors", Secure(API(GetMessageAuthorsHandler))).Methods("GET")
 	r.Handle("/api/postings/{id}/messages/{authorName}", Secure(API(GetMessagesHandler))).Methods("GET")
 

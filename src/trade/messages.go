@@ -8,6 +8,7 @@ import (
 
 	"github.com/AlexSugak/getsky-trade/db/models"
 	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx/types"
 	validator "gopkg.in/go-playground/validator.v9"
 
 	ce "github.com/AlexSugak/getsky-trade/src/errors"
@@ -61,6 +62,69 @@ func PostMessageHandler(s *HTTPServer) httputil.APIHandler {
 		}
 		message, err = s.messages.SaveMessage(message)
 		if err != nil {
+			return err
+		}
+
+		return json.NewEncoder(w).Encode(message)
+	}
+}
+
+type updateMessageRequest struct {
+	IsRead bool `json:"isRead"`
+}
+
+// UpdateMessageHandler updates message
+// Method: PUT
+// Content-type: application/json
+// URI: /api/messages/{id}
+func UpdateMessageHandler(s *HTTPServer) httputil.APIHandler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		vars := mux.Vars(r)
+		messageID, err := strconv.ParseInt(vars["id"], 10, 64)
+		if err != nil {
+			http.Error(w, "id is not valid. id should be a number", http.StatusBadRequest)
+			return nil
+		}
+
+		body := &updateMessageRequest{}
+		if err = json.NewDecoder(r.Body).Decode(body); err != nil {
+			return httputil.StatusError{
+				Err:  fmt.Errorf("Invalid json request body: %v", err),
+				Code: http.StatusBadRequest,
+			}
+		}
+
+		if err = s.validate.Struct(body); err != nil {
+			return ce.ValidatorErrorsResponse(err.(validator.ValidationErrors))
+		}
+
+		userName := r.Header.Get("name")
+		u, err := s.users.Get(userName)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("the user with the userName: '%s' doesn't exist", userName), http.StatusNotFound)
+			return nil
+		}
+
+		oldMessage, err := s.messages.Get(messageID)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("the message with the id: '%d' doesn't exist", messageID), http.StatusNotFound)
+			return nil
+		}
+
+		if oldMessage.Author != u.ID {
+			http.Error(w, "You do not have rights to modify this content", http.StatusForbidden)
+			return nil
+		}
+
+		message := &models.Message{
+			AdvertID:  oldMessage.AdvertID,
+			Author:    u.ID,
+			Recipient: oldMessage.Recipient,
+			Body:      oldMessage.Body,
+			IsRead:    types.BitBool(body.IsRead),
+		}
+
+		if err = s.messages.UpdateMessage(message); err != nil {
 			return err
 		}
 

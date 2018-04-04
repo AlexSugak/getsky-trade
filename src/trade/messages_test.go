@@ -31,6 +31,19 @@ func setupPostMessageTests() (int64, func()) {
 	}
 }
 
+func setupUpdateMessageTests() (int64, func()) {
+	userID := insertSQL(fmt.Sprintf("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('bob', 'bob@bob.com', 'foo', 0, 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName))
+	userID2 := insertSQL(fmt.Sprintf("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('sam', 'sam@sam.com', 'foo', 0, 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName))
+
+	advertID := insertSQL(fmt.Sprintf("INSERT INTO `%s`.`Adverts` (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt) VALUES (1, %d, 100, null, null, null, 'EUR', '', 25, 'km', 'GR', null, 'Athens', '', 1, 1, 1, 1, 0, '2018-03-06')", dbName, userID))
+	insertSQL(fmt.Sprintf("INSERT INTO `%s`.`Messages` (Author, AdvertId, Body, CreatedAt, IsRead) VALUES (%d, %d, 'message_body', '2018-03-06', false)", dbName, userID2, advertID))
+	msgID := insertSQL(fmt.Sprintf("INSERT INTO `%s`.`Messages` (Author, AdvertId, Body, CreatedAt, IsRead, Recipient) VALUES (%d, %d, 'message_body_2', '2018-03-06', false, %d)", dbName, userID, advertID, userID2))
+
+	return msgID, func() {
+		// clearTables()
+	}
+}
+
 func stubAuthHeader(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r.Header.Set("name", "bob")
@@ -101,6 +114,98 @@ func TestPostNewMessage(t *testing.T) {
 	for _, tc := range tests {
 		name := fmt.Sprintf("test case: TestPostNewMessage %s", tc.name)
 		url := strings.Replace(tc.url, "{advertID}", fmt.Sprintf("%d", advertID), 1)
+		req, err := http.NewRequest(tc.method, url, bytes.NewBuffer(tc.body))
+		req.Header.Add("Content-type", tc.contentType)
+
+		require.NoError(t, err)
+
+		sql := sqlx.NewDb(db, "mysql")
+		s := tradedb.NewStorage(sql)
+		w := httptest.NewRecorder()
+		u := tradedb.NewUsers(sql)
+		m := tradedb.NewMessages(sql)
+		server := &HTTPServer{board: s, users: u, checkRecaptcha: FakeRecaptchaChecker, log: logger.InitLogger(), messages: m}
+		server.validate = validator.New()
+		server.serverTime = ServerTimeMock{}
+		handler := server.setupRouter(stubAuthHeader)
+
+		handler.ServeHTTP(w, req)
+		if w.Code == 200 {
+			expectedMsg := &models.Message{}
+			err = json.Unmarshal([]byte(tc.expectedBody), expectedMsg)
+			if err != nil {
+				panic(err)
+			}
+
+			actualMsg := &models.Message{}
+			err = json.NewDecoder(w.Body).Decode(actualMsg)
+			if err != nil {
+				panic(err)
+			}
+
+			expectedMsg.ID = actualMsg.ID
+			require.Equal(t, expectedMsg, actualMsg)
+		} else {
+			require.Equal(t, tc.expectedBody, strings.TrimSuffix(w.Body.String(), "\n"), name)
+		}
+		require.Equal(t, tc.expectedStatus, w.Code, name)
+	}
+}
+
+func TestUpdateMessage(t *testing.T) {
+	tests := []struct {
+		name           string
+		method         string
+		contentType    string
+		body           []byte
+		url            string
+		expectedBody   string
+		expectedStatus int
+	}{
+		{
+			name:           "should validate content type",
+			method:         "PUT",
+			contentType:    "application/xml",
+			body:           []byte(``),
+			url:            "/api/messages/{id}",
+			expectedStatus: http.StatusUnsupportedMediaType,
+			expectedBody:   "Invalid content type, expected application/jsonInvalid json request body: EOF",
+		},
+		{
+			name:           "should validate format of the request entity",
+			method:         "PUT",
+			contentType:    "application/json",
+			body:           []byte(``),
+			url:            "/api/messages/{id}",
+			expectedStatus: http.StatusBadRequest,
+			expectedBody:   "Invalid json request body: EOF",
+		},
+		{
+			name:           "should deny users to modify another messages except their own",
+			method:         "PUT",
+			contentType:    "application/json",
+			body:           []byte(`{  "isRead":true }`),
+			url:            "/api/messages/1",
+			expectedStatus: http.StatusForbidden,
+			expectedBody:   `You do not have rights to modify this content`,
+		},
+		{
+			name:           "should save message and return saved entity with 200 status",
+			method:         "PUT",
+			contentType:    "application/json",
+			body:           []byte(`{  "isRead":true }`),
+			url:            "/api/messages/{id}",
+			expectedStatus: http.StatusOK,
+			expectedBody:   `{"id":4,"author":1,"advertId":1,"body":"message_body_2","isRead":true,"createdAt":"0001-01-01T00:00:00Z","recipient":2}`,
+		},
+	}
+
+	messageID, teardownTests := setupUpdateMessageTests()
+	defer teardownTests()
+
+	for _, tc := range tests {
+		name := fmt.Sprintf("test case: TestPostNewMessage %s", tc.name)
+		url := strings.Replace(tc.url, "{id}", fmt.Sprintf("%d", messageID), 1)
 		req, err := http.NewRequest(tc.method, url, bytes.NewBuffer(tc.body))
 		req.Header.Add("Content-type", tc.contentType)
 

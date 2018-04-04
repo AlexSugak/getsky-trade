@@ -1,4 +1,4 @@
-import { postAdvertMessage, getAdvertMessages, getAdvertMessagesAuthors } from 'api';
+import { postAdvertMessage, getAdvertMessages, getAdvertMessagesAuthors, updateAdvertMessage } from 'api';
 export const messageStates = {
     users: 'users',
     messages: 'messages',
@@ -42,3 +42,13 @@ export const getMessagesAuthors = advertId => async dispatch => {
 
 export const SELECT_AUTHOR = 'SELECT_AUTHOR';
 export const selectAuthor = author => ({ type: SELECT_AUTHOR, author });
+
+export const MARK_MESSAGE_AS_READ_REQUEST = 'MARK_MESSAGE_AS_READ_REQUEST';
+export const MARK_MESSAGE_AS_READ_RESPONSE = 'MARK_MESSAGE_AS_READ_RESPONSE';
+export const markMessageAsRead = messageId => async dispatch => {
+    dispatch({ type: MARK_MESSAGE_AS_READ_REQUEST });
+
+    const response = await updateAdvertMessage(messageId, { isRead: true });
+
+    dispatch({ type: MARK_MESSAGE_AS_READ_RESPONSE, message: response.data });
+};

@@ -46,6 +46,16 @@ func (m Messages) SaveMessage(msg *models.Message) (*models.Message, error) {
 	return msg, nil
 }
 
+// UpdateMessage updates message record in the DB
+func (m Messages) UpdateMessage(msg *models.Message) error {
+	cmd := `UPDATE Messages ` +
+		`SET IsRead=:IsRead ` +
+		`WHERE Id=:Id`
+
+	_, err := m.DB.NamedExec(cmd, msg)
+	return err
+}
+
 // GetAdvertMessageAuthors returns usernames of all authors that wrote messages under specific advert
 func (m Messages) GetAdvertMessageAuthors(advertID int64) ([]string, error) {
 	res := []string{}
@@ -69,6 +79,31 @@ func (m Messages) GetAdvertMessageAuthors(advertID int64) ([]string, error) {
 	}
 
 	return res, nil
+}
+
+// Get tries to find a message by specified id. Returns error if message doesn't exist.
+func (m Messages) Get(id int64) (*models.Message, error) {
+	res := []models.Message{}
+	cmd := `SELECT Id, ` +
+		`Author, ` +
+		`AdvertId, ` +
+		`Body, ` +
+		`CreatedAt, ` +
+		`Recipient, ` +
+		`IsRead ` +
+		`FROM Messages ` +
+		`WHERE Id = ?`
+
+	err := m.DB.Select(&res, cmd, id)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(res) > 0 {
+		return &res[0], nil
+	}
+
+	return &res[0], nil
 }
 
 // GetAdvertMessagesByAuthor returns all messages of specified advert madden by specified author and all replies to this author

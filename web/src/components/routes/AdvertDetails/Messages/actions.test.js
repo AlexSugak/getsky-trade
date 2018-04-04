@@ -71,6 +71,22 @@ describe('Messages actions', () => {
         });
     });
 
+    describe('markMessageAsRead', () => {
+        it('should call PUT message API and dispatch actions', () => {
+            const messageStub = { id: 1, body: 'msg', isRead: true };
+            const expectedActions = [
+                { type: actions.MARK_MESSAGE_AS_READ_REQUEST },
+                { type: actions.MARK_MESSAGE_AS_READ_RESPONSE, message: messageStub }
+            ];
+
+            api.updateAdvertMessage = apiStubs.updateAdvertMessageOk(messageStub);
+
+            const store = mockStore({});
+            return store.dispatch(actions.markMessageAsRead(1))
+                .then(() => expect(store.getActions()).toEqual(expectedActions));
+        });
+    });
+
     describe('selectAuthor', () => {
         it('should create action with SELECT_AUTHOR type and specified author', () => {
             const author = 'bob';
