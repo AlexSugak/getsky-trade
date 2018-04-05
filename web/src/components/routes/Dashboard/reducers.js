@@ -6,6 +6,8 @@ const initialState = {
     sellAdverts: [],
     buyEnquiries: [],
     sellEnquiries: [],
+    enquiriesToBuyers: 0,
+    enquiriesToSellers: 0,
     newMessages: 0,
 };
 
@@ -22,6 +24,8 @@ export default (state = initialState, action) => {
 
             const myAdvertsNewMessages = myAdverts.reduce((acc, cur) => cur.newMessagesAmount + acc, 0);
             const enquiredAdvertsNewMessages = enquiredAdverts.reduce((acc, cur) => cur.newMessagesAmount + acc, 0);
+            const enquiriesToBuyers = enquiredAdverts.reduce((acc, cur) => cur.writtenBuyMessagesAmount + acc, 0);
+            const enquiriesToSellers = enquiredAdverts.reduce((acc, cur) => cur.writtenSellMessagesAmount + acc, 0);
 
             const buyAdverts = myAdverts.filter(a => a.advert.type === ADVERT_BUY).map(simplifyAdvert);
             const sellAdverts = myAdverts.filter(a => a.advert.type === ADVERT_SELL).map(simplifyAdvert);
@@ -29,7 +33,16 @@ export default (state = initialState, action) => {
             const buyEnquiries = enquiredAdverts.filter(a => a.advert.type === ADVERT_BUY).map(simplifyAdvert);
             const sellEnquiries = enquiredAdverts.filter(a => a.advert.type === ADVERT_SELL).map(simplifyAdvert);
 
-            return { ...state, buyAdverts, sellAdverts, buyEnquiries, sellEnquiries, newMessages: myAdvertsNewMessages + enquiredAdvertsNewMessages };
+            return {
+                ...state,
+                buyAdverts,
+                sellAdverts,
+                buyEnquiries,
+                sellEnquiries,
+                enquiriesToBuyers,
+                enquiriesToSellers,
+                newMessages: myAdvertsNewMessages + enquiredAdvertsNewMessages,
+            };
         default:
             return state;
     }

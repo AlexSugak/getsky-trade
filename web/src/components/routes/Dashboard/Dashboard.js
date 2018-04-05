@@ -15,7 +15,7 @@ class Dashboard extends React.Component {
         this.props.getAdverts();
     }
     render() {
-        const { userName, buyAdverts, sellAdverts, buyEnquiries, sellEnquiries, newMessages } = this.props;
+        const { userName, buyAdverts, sellAdverts, buyEnquiries, sellEnquiries, newMessages, enquiriesToBuyers, enquiriesToSellers } = this.props;
 
         return (
             <Container flex='1 0 auto' flexDirection="column">
@@ -23,8 +23,8 @@ class Dashboard extends React.Component {
                 <Counters
                     buyAdverts={lengthOrZero(buyAdverts)}
                     sellAdverts={lengthOrZero(sellAdverts)}
-                    buyEnquiries={lengthOrZero(buyEnquiries)}
-                    sellEnquiries={lengthOrZero(sellEnquiries)}
+                    buyEnquiries={enquiriesToBuyers}
+                    sellEnquiries={enquiriesToSellers}
                     newMessages={newMessages}
                 />
                 <AdvertsList
@@ -71,6 +71,8 @@ const mapStateToProps = ({ app, dashboard }) => ({
     buyEnquiries: dashboard.buyEnquiries,
     sellEnquiries: dashboard.sellEnquiries,
     newMessages: dashboard.newMessages,
+    enquiriesToBuyers: dashboard.enquiriesToBuyers,
+    enquiriesToSellers: dashboard.enquiriesToSellers,
 });
 
 export default connect(mapStateToProps, { getAdverts })(Dashboard);
