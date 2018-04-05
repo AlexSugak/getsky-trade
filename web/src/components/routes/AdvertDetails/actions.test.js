@@ -12,7 +12,7 @@ const mockStore = configureMockStore(middlewares);
 describe('advert details actions', () => {
     describe('getAdvertDetails', () => {
         it('should dispatch GET_ADVERT_DETAILS_RESPONSE action with advert details', () => {
-            const stubDetails = { id: 1, type: 1, author: "bob", tradeCashInPerson: true, };
+            const stubDetails = { id: 1, type: 1, author: "bob", tradeCashInPerson: true, amountFrom: null, amountTo: null };
             const expectedActions = [
                 { type: actions.GET_ADVERT_DETAILS_REQUEST },
                 { type: actions.GET_ADVERT_DETAILS_RESPONSE, details: stubDetails }
@@ -25,7 +25,7 @@ describe('advert details actions', () => {
         });
 
         it('should dispatch GET_ADVERT_DETAILS_RESPONSE action with notFound error status', () => {
-            const stubDetails = { id: 1, type: 1, author: "bob", tradeCashInPerson: true, };
+            const stubDetails = { id: 1, type: 1, author: "bob", tradeCashInPerson: true, amountFrom: 123 };
             const expectedActions = [
                 { type: actions.GET_ADVERT_DETAILS_REQUEST },
                 { type: actions.GET_ADVERT_DETAILS_RESPONSE, details: { notFound: true } }

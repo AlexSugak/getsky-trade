@@ -35,6 +35,7 @@ export const getCountries = () =>
 
 export const getStates = () =>
     axios.get(`${apiUrl}/states`, headers);
+    
 export const getAdvertDetails = id =>
     axios.get(`${apiUrl}/postings/${id}`, headers);
 

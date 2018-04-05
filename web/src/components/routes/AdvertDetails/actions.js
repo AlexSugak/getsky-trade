@@ -1,5 +1,5 @@
 import { Decimal } from "decimal.js-light";
-import { getAdvertDetails, getSkycoinPrice } from "../../../api";
+import { getAdvertDetails, getSkycoinPrice } from "api/index";
 
 export const GET_ADVERT_DETAILS_REQUEST = "GET_ADVERT_DETAILS_REQUEST";
 export const GET_ADVERT_DETAILS_RESPONSE = "GET_ADVERT_DETAILS_RESPONSE";
@@ -13,12 +13,13 @@ export const requestAdvertDetails = id => async dispatch => {
             type: GET_ADVERT_DETAILS_RESPONSE,
             details: {
                 ...details,
-                amountFrom: new Decimal(details.amountFrom),
-                amountTo: details.amountTo && new Decimal(details.amountTo)
+                amountFrom: details.amountFrom ? new Decimal(details.amountFrom) : null,
+                amountTo: details.amountTo ? new Decimal(details.amountTo) : null,
             }
         });
         return response.data;
     } catch (e) {
+        console.log(e)
         if (e.response.status === 404) {
             dispatch({
                 type: GET_ADVERT_DETAILS_RESPONSE,
