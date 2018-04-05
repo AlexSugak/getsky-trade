@@ -137,8 +137,9 @@ func SellAdvertHandler(s *HTTPServer) httputil.APIHandler {
 			return nil
 		}
 
-		if !advert.PercentageAdjustment.Valid && !advert.FixedPrice.Valid {
-			return ce.CreateSingleValidationError("percentageAdjustment,fixedPrice", "one of the props has to have a value")
+		if !advert.PercentageAdjustment.NullDecimal.Valid && !advert.FixedPrice.NullDecimal.Valid {
+			http.Error(w, fmt.Sprintf("percentageAdjustment or fixedPrice has to have a value"), http.StatusBadRequest)
+			return nil
 		}
 
 		advert.Type = int(board.Sell)
