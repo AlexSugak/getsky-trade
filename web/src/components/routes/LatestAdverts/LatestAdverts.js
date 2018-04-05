@@ -114,7 +114,7 @@ export const buyAdvertsColumns = [
 export const BuyAdvertRow = (advert) => (
     <LinkedTableRow href={`/post/${advert.id}`}>
         <TableCell><AuthorCell advert={advert} /></TableCell>
-        <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} {advert.currency}</TableCell>
+        <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} SKY</TableCell>
         <TableCell>{getTradeOptionsText(advert)}</TableCell>
         <TableCell>{moment(advert.createdAt).format('DD MMMM YY')}</TableCell>
     </LinkedTableRow>
@@ -130,7 +130,7 @@ export const sellAdvertsColumns = [
 export const SellAdvertRow = (advert) => (
     <LinkedTableRow href={`/post/${advert.id}`}>
         <TableCell><AuthorCell advert={advert} /></TableCell>
-        <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} {advert.currency}</TableCell>
+        <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} SKY</TableCell>
         <TableCell>{getTradeOptionsText(advert)}</TableCell>
         <TableCell>{moment(advert.createdAt).format('DD MMMM YY')}</TableCell>
     </LinkedTableRow>
