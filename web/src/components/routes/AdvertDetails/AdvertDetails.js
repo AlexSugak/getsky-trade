@@ -70,10 +70,10 @@ const SummaryPosition = ({ name, children }) => (
 
 const advertValueToString = (amountFrom, amountTo, price = 1) => {
     if (!amountTo) {
-        return round(amountFrom / price, 3);
+        return amountFrom.times(price).toString();
     }
 
-    return `${round(amountFrom / price, 3)} to ${round(amountTo / price, 3)}`;
+    return `${amountFrom.times(price).toString()} to ${amountTo.times(price).toString()}`;
 };
 
 const TradeOptionsList = styled.ul`
@@ -120,15 +120,15 @@ export const AdvertSummary = ({ details, countries, states, skyPrices }) => (
             <Flex flexDirection="row" flexWrap="wrap">
                 <SummaryPosition
                     name="Will sell:">
-                    <B>{advertValueToString(details.amountFrom, details.amountTo)} {details.currency}</B>
+                    <B>{advertValueToString(details.amountFrom, details.amountTo)} SKY</B>
                 </SummaryPosition>
                 <SummaryPosition
                     name="Which is approximately:">
-                    {advertValueToString(details.amountFrom, details.amountTo, details.fixedPrice || details.price)} SKY
+                    {advertValueToString(details.amountFrom, details.amountTo, details.fixedPrice || skyPrices[details.currency])} {details.currency}
                 </SummaryPosition>
                 <SummaryPosition
                     name="Price per SKY:">
-                    {details.fixedPrice || round(skyPrices[details.currency], 3)} {details.currency}
+                    {details.fixedPrice || skyPrices[details.currency]} {details.currency}
                 </SummaryPosition>
                 <SummaryPosition
                     name="Trade options:">

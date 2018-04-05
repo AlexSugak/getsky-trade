@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Form, Field, formValueSelector } from 'redux-form';
 import { Box } from 'grid-styled'
+import { Decimal } from 'decimal.js-light';
 
 import { FormRangedSingleInput, FormCheckboxGroup, FormDropdownInput, FormGroup } from 'components/layout/Form';
 import { Button } from 'components/layout/Button';
@@ -12,7 +13,7 @@ import { SkyAmountWarning, LocationFormGroup, AdditionalInformationSample, ACCEP
 const shouldShowStates = currentCountry => currentCountry === 'US';
 
 const RANGED_MIN = 1;
-const RANGED_MAX = 999999.99;
+const RANGED_MAX = 999999.9999999;
 const r = required();
 const rMin = rangedMin(RANGED_MIN);
 const rMax = rangedMax(RANGED_MAX);
@@ -28,14 +29,19 @@ const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting
                 <Field
                     name="cashAmount"
                     component={FormRangedSingleInput}
-                    placeholder={'USD'}
-                    label={'What is the amount of cash you will pay in USD?'}
+                    placeholder={'SKY'}
+                    label={'What is the amount of cash you will pay in SKY?'}
+                    parse={({ from, to }) => {
+                        return {
+                            from: new Decimal(from),
+                            to: to !== "" ? new Decimal(to) : ""
+                        };
+                    }}
                     isRequired
                     validate={[rangedRequired, ranged, rMin, rMax]}
                     min={RANGED_MIN}
                     max={RANGED_MAX}
                 />
-                <SkyAmountWarning />
                 <Field
                     name="acceptOptions"
                     component={FormCheckboxGroup}

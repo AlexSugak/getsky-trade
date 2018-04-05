@@ -8,6 +8,7 @@
     "@fortawesome/fontawesome-free-solid": "^5.0.8",
     "@fortawesome/react-fontawesome": "^0.0.17",
     "axios": "^0.18.0",
+    "decimal.js-light": "^2.3.1",
     "font-awesome": "^4.7.0",
     "grid-styled": "^3.2.0",
     "history": "^4.7.2",

@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Form, Field, formValueSelector } from 'redux-form';
 import { Box } from 'grid-styled'
+import { Decimal } from 'decimal.js-light';
 
 import { FormRangedSingleInput, FormCheckboxGroup, FormDropdownInput, FormGroup } from 'components/layout/Form';
 import { Button } from 'components/layout/Button';
@@ -13,7 +14,7 @@ import FormCoinPriceInput from './FormCoinPriceInput';
 const shouldShowStates = currentCountry => currentCountry === 'US';
 
 const RANGED_MIN = 1;
-const RANGED_MAX = 999999.99;
+const RANGED_MAX = 999999.9999999;
 const rMin = rangedMin(RANGED_MIN);
 const rMax = rangedMax(RANGED_MAX);
 const r = required();
@@ -29,14 +30,19 @@ const FormPostingToSell = ({ states, countries, country, skyPrices, handleSubmit
                 <Field
                     name="cashAmount"
                     component={FormRangedSingleInput}
-                    placeholder={'USD'}
-                    label={'What is the amount of cash you will pay in USD?'}
+                    placeholder={'SKY'}
+                    label={'What is the amount of cash you will pay in SKY?'}
                     isRequired
+                    parse={({ from, to }) => {
+                        return {
+                            from: new Decimal(from),
+                            to: to !== "" ? new Decimal(to) : ""
+                        };
+                    }}
                     validate={[rangedRequired, ranged, rMin, rMax]}
                     min={RANGED_MIN}
                     max={RANGED_MAX}
                 />
-                <SkyAmountWarning />
                 <Field
                     name="pricePerCoin"
                     component={FormCoinPriceInput}

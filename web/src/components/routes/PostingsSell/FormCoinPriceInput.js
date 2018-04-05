@@ -113,9 +113,11 @@ class FormCoinPriceInput extends React.Component {
     }
 
     render() {
-        const { isRequired, input, meta: { error, warning, touched }, skyPrice } = this.props;
+        const { isRequired, input, meta: { error, warning, touched }, skyPrices } = this.props;
         const { fixedPrice, percentageAdjustment } = this.state;
         const showError = !!(touched && (error || warning));
+
+        const skyPrice = skyPrices['USD'];
 
         return (
             <FormItem name={input.name} label={<Label skyPrice={skyPrice} />} isRequired={isRequired} showError={showError} error={error}>
