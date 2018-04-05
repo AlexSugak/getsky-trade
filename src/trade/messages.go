@@ -16,8 +16,8 @@ import (
 )
 
 type createMessageRequest struct {
-	Body      string               `json:"body" validate:"required"`
-	Recipient models.JSONNullInt64 `json:"recipient"`
+	Body      string                `json:"body" validate:"required"`
+	Recipient models.JSONNullString `json:"recipient"`
 }
 
 // PostMessageHandler represents an API endpoint that saves received message
@@ -52,10 +52,23 @@ func PostMessageHandler(s *HTTPServer) httputil.APIHandler {
 			return nil
 		}
 
+		var recipient *models.UserDetails
+		recipientID := models.JSONNullInt64{}
+		if body.Recipient.Valid {
+			recipient, err = s.users.Get(body.Recipient.String)
+			if err != nil {
+				http.Error(w, fmt.Sprintf("the user with the userName: '%s' doesn't exist", body.Recipient.String), http.StatusNotFound)
+				return nil
+			}
+			if err = recipientID.Scan(recipient.ID); err != nil {
+				return err
+			}
+		}
+
 		message := &models.Message{
 			AdvertID:  advertID,
 			Author:    u.ID,
-			Recipient: body.Recipient,
+			Recipient: recipientID,
 			Body:      body.Body,
 			CreatedAt: s.serverTime.Now(),
 			IsRead:    false,
@@ -65,7 +78,12 @@ func PostMessageHandler(s *HTTPServer) httputil.APIHandler {
 			return err
 		}
 
-		return json.NewEncoder(w).Encode(message)
+		messageDetails, err := s.messages.Get(message.ID)
+		if err != nil {
+			return err
+		}
+
+		return json.NewEncoder(w).Encode(messageDetails)
 	}
 }
 
@@ -117,16 +135,29 @@ func UpdateMessageHandler(s *HTTPServer) httputil.APIHandler {
 			return nil
 		}
 
-		if oldMessage.Author != u.ID && (oldMessage.Recipient.Valid && oldMessage.Recipient.Int64 != u.ID) && advert.Author != u.UserName {
+		if oldMessage.Author != u.UserName && (!oldMessage.Recipient.Valid || oldMessage.Recipient.String != u.UserName) && advert.Author != u.UserName {
 			http.Error(w, "You do not have rights to modify this content", http.StatusForbidden)
 			return nil
+		}
+
+		var recipient *models.UserDetails
+		recipientID := models.JSONNullInt64{}
+		if oldMessage.Recipient.Valid {
+			recipient, err = s.users.Get(oldMessage.Recipient.String)
+			if err != nil {
+				http.Error(w, fmt.Sprintf("the user with the userName: '%s' doesn't exist", oldMessage.Recipient.String), http.StatusNotFound)
+				return nil
+			}
+			if err = recipientID.Scan(recipient.ID); err != nil {
+				return err
+			}
 		}
 
 		message := &models.Message{
 			ID:        oldMessage.ID,
 			AdvertID:  oldMessage.AdvertID,
 			Author:    u.ID,
-			Recipient: oldMessage.Recipient,
+			Recipient: recipientID,
 			Body:      oldMessage.Body,
 			IsRead:    types.BitBool(body.IsRead),
 		}
@@ -135,7 +166,12 @@ func UpdateMessageHandler(s *HTTPServer) httputil.APIHandler {
 			return err
 		}
 
-		return json.NewEncoder(w).Encode(message)
+		messageDetails, err := s.messages.Get(message.ID)
+		if err != nil {
+			return err
+		}
+
+		return json.NewEncoder(w).Encode(messageDetails)
 	}
 }
 

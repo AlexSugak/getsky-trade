@@ -90,17 +90,19 @@ func (m Messages) GetAdvertMessageAuthors(advertID int64) ([]AdvertMessagesInfo,
 }
 
 // Get tries to find a message by specified id. Returns error if message doesn't exist.
-func (m Messages) Get(id int64) (*models.Message, error) {
-	res := []models.Message{}
-	cmd := `SELECT Id, ` +
-		`Author, ` +
-		`AdvertId, ` +
-		`Body, ` +
-		`CreatedAt, ` +
-		`Recipient, ` +
-		`IsRead ` +
-		`FROM Messages ` +
-		`WHERE Id = ?`
+func (m Messages) Get(id int64) (*models.MessageDetails, error) {
+	res := []models.MessageDetails{}
+	cmd := `SELECT M.Id, ` +
+		`UA.UserName AS Author, ` +
+		`M.AdvertId, ` +
+		`M.Body, ` +
+		`M.CreatedAt, ` +
+		`UR.UserName AS Recipient, ` +
+		`M.IsRead ` +
+		`FROM Messages M ` +
+		`INNER JOIN Users UA ON M.Author=UA.Id ` +
+		`LEFT JOIN Users UR ON M.Recipient=UR.Id ` +
+		`WHERE M.Id = ?`
 
 	err := m.DB.Select(&res, cmd, id)
 	if err != nil {
@@ -115,29 +117,31 @@ func (m Messages) Get(id int64) (*models.Message, error) {
 }
 
 // GetAdvertMessagesByAuthor returns all messages of specified advert madden by specified author and all replies to this author
-func (m Messages) GetAdvertMessagesByAuthor(advertID int64, username string) ([]models.Message, error) {
-	res := []models.Message{}
+func (m Messages) GetAdvertMessagesByAuthor(advertID int64, username string) ([]models.MessageDetails, error) {
+	res := []models.MessageDetails{}
 	cmd := `SELECT M.Id, ` +
-		`M.Author, ` +
+		`U.UserName AS Author, ` +
 		`M.AdvertId, ` +
 		`M.Body, ` +
 		`M.CreatedAt, ` +
-		`M.Recipient, ` +
+		`UR.UserName AS Recipient, ` +
 		`M.IsRead ` +
 		`FROM Messages M  ` +
 		`INNER JOIN Users U ON U.Id = M.Author AND M.AdvertId = ? AND U.UserName = ? ` +
+		`LEFT JOIN Users UR ON M.Recipient=UR.Id ` +
 
 		`UNION ALL ` +
 
 		`SELECT M.Id, ` +
-		`M.Author, ` +
+		`UA.UserName AS Author, ` +
 		`M.AdvertId,  ` +
 		`M.Body, ` +
 		`M.CreatedAt, ` +
-		`M.Recipient, ` +
+		`U.UserName AS Recipient, ` +
 		`M.IsRead ` +
 		`FROM Messages M ` +
 		`INNER JOIN Users U ON U.Id = M.Recipient AND M.AdvertId = ? AND U.UserName = ? ` +
+		`INNER JOIN Users UA ON UA.Id = M.Author ` +
 		`ORDER BY CreatedAt`
 
 	err := m.DB.Select(&res, cmd, advertID, username, advertID, username)

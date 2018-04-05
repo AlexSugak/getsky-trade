@@ -95,16 +95,16 @@ func TestPostNewMessage(t *testing.T) {
 			body:           []byte(`{ "body":"message_body" }`),
 			url:            "/api/postings/{advertID}/messages",
 			expectedStatus: http.StatusOK,
-			expectedBody:   `{"id":4,"author":1,"advertId":1,"body":"message_body","isRead":false,"createdAt":"2013-02-03T19:54:00Z","recipient":null}`,
+			expectedBody:   `{"id":4,"author":"bob","advertId":1,"body":"message_body","isRead":false,"createdAt":"2013-02-03T19:54:00Z","recipient":null}`,
 		},
 		{
-			name:           "should save message and return saved entity with 200 status",
+			name:           "should save message with recipient and return saved entity with 200 status",
 			method:         "POST",
 			contentType:    "application/json",
-			body:           []byte(`{ "body":"message_body", "recipient":2 }`),
+			body:           []byte(`{ "body":"message_body", "recipient":"sam" }`),
 			url:            "/api/postings/{advertID}/messages",
 			expectedStatus: http.StatusOK,
-			expectedBody:   `{"id":4,"author":1,"advertId":1,"body":"message_body","isRead":false,"createdAt":"2013-02-03T19:54:00Z","recipient":2}`,
+			expectedBody:   `{"id":4,"author":"bob","advertId":1,"body":"message_body","isRead":false,"createdAt":"2013-02-03T19:54:00Z","recipient":"sam"}`,
 		},
 	}
 
@@ -131,20 +131,20 @@ func TestPostNewMessage(t *testing.T) {
 
 		handler.ServeHTTP(w, req)
 		if w.Code == 200 {
-			expectedMsg := &models.Message{}
+			expectedMsg := &models.MessageDetails{}
 			err = json.Unmarshal([]byte(tc.expectedBody), expectedMsg)
 			if err != nil {
 				panic(err)
 			}
 
-			actualMsg := &models.Message{}
+			actualMsg := &models.MessageDetails{}
 			err = json.NewDecoder(w.Body).Decode(actualMsg)
 			if err != nil {
 				panic(err)
 			}
 
 			expectedMsg.ID = actualMsg.ID
-			require.Equal(t, expectedMsg, actualMsg)
+			require.Equal(t, expectedMsg, actualMsg, name)
 		} else {
 			require.Equal(t, tc.expectedBody, strings.TrimSuffix(w.Body.String(), "\n"), name)
 		}
@@ -181,22 +181,13 @@ func TestUpdateMessage(t *testing.T) {
 			expectedBody:   "Invalid json request body: EOF",
 		},
 		{
-			name:           "should deny users to modify another messages except their own",
-			method:         "PUT",
-			contentType:    "application/json",
-			body:           []byte(`{  "isRead":true }`),
-			url:            "/api/messages/1",
-			expectedStatus: http.StatusForbidden,
-			expectedBody:   `You do not have rights to modify this content`,
-		},
-		{
 			name:           "should save message and return saved entity with 200 status",
 			method:         "PUT",
 			contentType:    "application/json",
 			body:           []byte(`{  "isRead":true }`),
 			url:            "/api/messages/{id}",
 			expectedStatus: http.StatusOK,
-			expectedBody:   `{"id":4,"author":1,"advertId":1,"body":"message_body_2","isRead":true,"createdAt":"0001-01-01T00:00:00Z","recipient":2}`,
+			expectedBody:   `{"id":4,"author":"bob","advertId":1,"body":"message_body_2","isRead":true,"createdAt":"2018-03-06T00:00:00Z","recipient":"sam"}`,
 		},
 	}
 
@@ -223,13 +214,13 @@ func TestUpdateMessage(t *testing.T) {
 
 		handler.ServeHTTP(w, req)
 		if w.Code == 200 {
-			expectedMsg := &models.Message{}
+			expectedMsg := &models.MessageDetails{}
 			err = json.Unmarshal([]byte(tc.expectedBody), expectedMsg)
 			if err != nil {
 				panic(err)
 			}
 
-			actualMsg := &models.Message{}
+			actualMsg := &models.MessageDetails{}
 			err = json.NewDecoder(w.Body).Decode(actualMsg)
 			if err != nil {
 				panic(err)
@@ -275,7 +266,7 @@ func TestGetMessageAuthors(t *testing.T) {
 			contentType:    "application/json",
 			url:            "/api/postings/{advertID}/messages-authors",
 			expectedStatus: http.StatusOK,
-			expectedBody:   `["bob","sam"]`,
+			expectedBody:   `[{"author":"bob","totalMessages":1,"newMessages":0,"lastMessageTime":"2018-03-06T00:00:00Z"},{"author":"sam","totalMessages":1,"newMessages":1,"lastMessageTime":"2018-03-06T00:00:00Z"}]`,
 		},
 	}
 
@@ -338,7 +329,7 @@ func TestGetMessages(t *testing.T) {
 			contentType:    "application/json",
 			url:            "/api/postings/{advertID}/messages/sam",
 			expectedStatus: http.StatusOK,
-			expectedBody:   `[{"id":94,"author":2,"advertId":1,"body":"message_body","isRead":false,"createdAt":"2018-03-06T00:00:00Z","recipient":null},{"id":95,"author":1,"advertId":1,"body":"message_body_2","isRead":false,"createdAt":"2018-03-06T00:00:00Z","recipient":2}]`,
+			expectedBody:   `[{"id":1,"author":"sam","advertId":1,"body":"message_body","isRead":false,"createdAt":"2018-03-06T00:00:00Z","recipient":null},{"id":2,"author":"bob","advertId":1,"body":"message_body_2","isRead":false,"createdAt":"2018-03-06T00:00:00Z","recipient":"sam"}]`,
 		},
 	}
 
@@ -367,13 +358,13 @@ func TestGetMessages(t *testing.T) {
 
 		if w.Code == 200 {
 			fmt.Println(w.Body.String())
-			actualMsgs := &[]models.Message{}
+			actualMsgs := &[]models.MessageDetails{}
 			err = json.NewDecoder(w.Body).Decode(actualMsgs)
 			if err != nil {
 				panic(err)
 			}
 
-			expectedMsgs := &[]models.Message{}
+			expectedMsgs := &[]models.MessageDetails{}
 			err = json.Unmarshal([]byte(tc.expectedBody), expectedMsgs)
 			if err != nil {
 				panic(err)

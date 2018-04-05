@@ -74,3 +74,14 @@ type Message struct {
 	CreatedAt time.Time     `db:"CreatedAt" json:"createdAt"`
 	Recipient JSONNullInt64 `db:"Recipient" json:"recipient"`
 }
+
+// MessageDetails represents message short details information
+type MessageDetails struct {
+	ID        int64          `db:"Id" json:"id"`
+	Author    string         `db:"Author" json:"author"`
+	AdvertID  int64          `db:"AdvertId" json:"advertId"`
+	Body      string         `db:"Body" json:"body"`
+	IsRead    types.BitBool  `db:"IsRead" json:"isRead"`
+	CreatedAt time.Time      `db:"CreatedAt" json:"createdAt"`
+	Recipient JSONNullString `db:"Recipient" json:"recipient"`
+}
