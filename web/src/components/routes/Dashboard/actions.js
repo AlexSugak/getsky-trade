@@ -5,7 +5,7 @@ export const ADVERTS_DASHBOARD_RESPONSE = 'ADVERTS_DASHBOARD_RESPONSE';
 const advertsResponseAction = (myAdverts, enquiredAdverts) => ({
     type: ADVERTS_DASHBOARD_RESPONSE,
     myAdverts,
-    enquiredAdverts
+    enquiredAdverts,
 });
 
 export const getAdverts = () =>

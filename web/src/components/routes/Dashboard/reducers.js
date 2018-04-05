@@ -1,7 +1,7 @@
 import { ADVERTS_DASHBOARD_RESPONSE } from './actions';
 import { ADVERT_SELL, ADVERT_BUY } from 'components/routes/PostingsPreview/actions';
 
-const initialState = {
+export const initialState = {
     buyAdverts: [],
     sellAdverts: [],
     buyEnquiries: [],
