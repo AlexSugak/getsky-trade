@@ -98,7 +98,6 @@ func (s Storage) GetAdvertsEnquiredByUserWithMessageCounts(userID int64) ([]mode
 		}
 
 		if eawmc.AdvertDetails.ID != ad.ID {
-			eawmc.AdvertDetails = ad
 			eawmc.NewMessagesAmount = newMessagesAmount
 			eawmc.TotalMessagesAmount = totalMessagesAmount
 			eawmc.WrittenBuyMessagesAmount = writtenBuyMessagesAmount
@@ -106,6 +105,7 @@ func (s Storage) GetAdvertsEnquiredByUserWithMessageCounts(userID int64) ([]mode
 
 			res = append(res, eawmc)
 
+			eawmc.AdvertDetails = ad
 			newMessagesAmount = 0
 			totalMessagesAmount = 0
 			writtenBuyMessagesAmount = 0
@@ -194,11 +194,11 @@ func (s Storage) GetAdvertsWithMessageCountsByUserID(userID int64) ([]models.Adv
 		}
 
 		if awmc.AdvertDetails.ID != ad.ID {
-			awmc.AdvertDetails = ad
 			awmc.NewMessagesAmount = newMessagesAmount
 			awmc.TotalMessagesAmount = totalMessagesAmount
 			res = append(res, awmc)
 
+			awmc.AdvertDetails = ad
 			newMessagesAmount = 0
 			totalMessagesAmount = 0
 		}
