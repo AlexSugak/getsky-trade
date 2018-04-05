@@ -45,7 +45,7 @@ class Dashboard extends React.Component {
                 />
                 <AdvertsList
                     title={'Enquiries you\'ve made to buyers'}
-                    adverts={sellEnquiries}
+                    adverts={buyEnquiries}
                     noAdvertsMessage={'There are no active buyer adverts you have made enquiries to.'}
                     columns={buyAdvertsColumns}
                     rowComponent={BuyAdvertRow}
@@ -53,7 +53,7 @@ class Dashboard extends React.Component {
                 />
                 <AdvertsList
                     title={'Enquiries you\'ve made to sellers'}
-                    adverts={buyEnquiries}
+                    adverts={sellEnquiries}
                     noAdvertsMessage={'There are no active seller adverts you have made enquiries to.'}
                     columns={sellAdvertsColumns}
                     rowComponent={SellAdvertRow}
