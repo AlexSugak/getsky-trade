@@ -22,33 +22,61 @@ const MessageInput = styled(TextArea) `
     font-size: ${theme.fontSizes[1]}px;
 `;
 
+const MessageInputNote = styled.p`
+    font-size: ${theme.fontSizes[0]}px;
+    margin-top: 3px;
+    margin-bottom: 7px;
+
+    color: ${theme.colors.gray};
+`;
+
+const MessageInputError = styled(MessageInputNote) `
+    color: ${theme.colors.red};
+`;
+
 const MessagesInputForm = ({ onChange, messageText, sendMessage }) => (
     <div>
         <MessageInput placeholder="Your message" onChange={e => onChange(e.target.value)} value={messageText} />
-        <p>Up to 10,000 characters</p>
-        <Button text="Send message" onClick={sendMessage} />
+        <MessageInputNote>Up to 10,000 characters</MessageInputNote>
+        {messageText.length >= 10000 && <MessageInputError>Characters limit is exceeded</MessageInputError>}
+        <Button disabled={messageText.length >= 10000} text="Send message" onClick={sendMessage} />
     </div>
 );
 
 const Section = styled(Flex) `
-    margin: 5px 0px;
+    margin: ${theme.spaces[0]}px 0px;
     background-color: ${theme.colors.white};
-    padding: 5px 10px;
+    padding: ${theme.spaces[0]}px ${theme.spaces[1]}px;
 `;
 const SectionPart = styled(Box) `
-    margin: 5px 0px;
+    margin: ${theme.spaces[0]}px 0px;
 
     svg {
-        margin-right: 5px;
+        margin-right: ${theme.spaces[0]}px;
     }
 `;
-const UsernameSectionPart = styled(SectionPart) `
+const UsernameSectionPart = styled(({ isRead, children, ...rest }) => <SectionPart {...rest}>{children}</SectionPart>) `
     color: ${props => props.isRead ? theme.colors.gray : theme.colors.red};
 `;
-const Date = styled(SectionPart) `
+const DateView = styled(SectionPart) `
     color: ${theme.colors.lightGray};
-    font-size: 12px;
+    font-size: ${theme.fontSizes[0]}px;
     text-align: right;
+`;
+
+const dateToString = d => `${d.toLocaleDateString().toLocaleUpperCase()} ${d.toLocaleTimeString().toLocaleUpperCase()}`;
+
+const BackLink = styled.a`
+        cursor: pointer;
+    font-size: ${theme.fontSizes[1]}px;
+
+    svg {
+        margin - right: 3px;
+}
+
+    &:hover {
+        color: ${theme.colors.gray};
+}
 `;
 
 const MessagesContainer = ({
@@ -64,7 +92,11 @@ const MessagesContainer = ({
     sendMessage,
     backToUsers, }) => (
         <div>
-            {selectedAuthor && <a onClick={backToUsers}>Back to users</a>}
+            {selectedAuthor &&
+                <BackLink onClick={backToUsers}>
+                    <Icon name={IconMap.AngleLeft} />
+                    Back to users
+                </BackLink>}
             {messages.map((m, i) => (
                 <Section key={i} flexDirection="row" flexWrap="wrap">
                     <UsernameSectionPart w={1} isRead={m.author === userInfo.username || m.isRead}>
@@ -74,9 +106,9 @@ const MessagesContainer = ({
                     <SectionPart w={1}>
                         {m.body}
                     </SectionPart>
-                    <Date w={1}>
-                        {m.createdAt}
-                    </Date>
+                    <DateView w={1}>
+                        {dateToString(new Date(m.createdAt))}
+                    </DateView>
                 </Section>
             ))}
             <MessagesInputForm onChange={onChange} messageText={messageText} sendMessage={sendMessage} />
@@ -103,9 +135,9 @@ const UsersList = ({ authors, selectAuthor, userInfo }) => (
                     <UsernameSectionPart w={1} isRead={true}>
                         From <strong> {a.author} </strong>
                     </UsernameSectionPart>
-                    <Date w={1}>
-                        Last message on {a.lastMessageTime}
-                    </Date>
+                    <DateView w={1}>
+                        Last message on {dateToString(new Date(a.lastMessageTime))}
+                    </DateView>
                 </UserSection>
             ))}
     </div>);
