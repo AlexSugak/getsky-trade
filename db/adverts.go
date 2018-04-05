@@ -1,6 +1,8 @@
 package db
 
 import (
+	"database/sql"
+
 	"github.com/AlexSugak/getsky-trade/db/models"
 	"github.com/AlexSugak/getsky-trade/src/board"
 	"github.com/jmoiron/sqlx"
@@ -64,7 +66,7 @@ func (s Storage) GetAdvertsEnquiredByUserWithMessageCounts(userID int64) ([]mode
 
 	for rows.Next() {
 		isRead := models.NullBitBool{}
-		recipient := int64(0)
+		recipient := sql.NullInt64{}
 
 		err = rows.Scan(&ad.ID,
 			&ad.Type,
@@ -112,10 +114,12 @@ func (s Storage) GetAdvertsEnquiredByUserWithMessageCounts(userID int64) ([]mode
 			writtenSellMessagesAmount = 0
 		}
 
-		if userID == recipient {
-			totalMessagesAmount++
-			if isRead.Valid && !bool(isRead.BitBool) {
-				newMessagesAmount++
+		if recipient.Valid && userID == recipient.Int64 {
+			if isRead.Valid {
+				totalMessagesAmount++
+				if !bool(isRead.BitBool) {
+					newMessagesAmount++
+				}
 			}
 		} else {
 			if ad.Type == int(board.Buy) {
@@ -203,9 +207,11 @@ func (s Storage) GetAdvertsWithMessageCountsByUserID(userID int64) ([]models.Adv
 			totalMessagesAmount = 0
 		}
 
-		totalMessagesAmount++
-		if isRead.Valid && !bool(isRead.BitBool) {
-			newMessagesAmount++
+		if isRead.Valid {
+			totalMessagesAmount++
+			if !bool(isRead.BitBool) {
+				newMessagesAmount++
+			}
 		}
 	}
 
