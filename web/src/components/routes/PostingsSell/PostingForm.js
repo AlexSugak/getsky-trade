@@ -35,8 +35,8 @@ const FormPostingToSell = ({ states, countries, country, skyPrices, handleSubmit
                     isRequired
                     parse={({ from, to }) => {
                         return {
-                            from: new Decimal(from),
-                            to: to !== "" ? new Decimal(to) : ""
+                            from: from !== '' ? new Decimal(from) : '',
+                            to: (to && to !== '') ? new Decimal(to) : '',
                         };
                     }}
                     validate={[rangedRequired, ranged, rMin, rMax]}

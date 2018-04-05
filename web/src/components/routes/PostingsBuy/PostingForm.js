@@ -33,8 +33,8 @@ const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting
                     label={'What is the amount of cash you will pay in SKY?'}
                     parse={({ from, to }) => {
                         return {
-                            from: new Decimal(from),
-                            to: to !== "" ? new Decimal(to) : ""
+                            from: from !== '' ? new Decimal(from) : '',
+                            to: (to && to !== '') ? new Decimal(to) : '',
                         };
                     }}
                     isRequired
