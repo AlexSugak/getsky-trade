@@ -57,7 +57,7 @@ describe('Messages actions', () => {
 
     describe('getMessagesAuthors', () => {
         it('should call get messages authors API and dispatch actions', () => {
-            const messagesAuthorsStub = ['bob', 'sam'];
+            const messagesAuthorsStub = [{ author: 'sam', totalMessages: 3 }, { author: 'bob', totalMessages: 1 }];;
             const expectedActions = [
                 { type: actions.GET_MESSAGES_AUTHORS_REQUEST },
                 { type: actions.GET_MESSAGES_AUTHORS_RESPONSE, authors: messagesAuthorsStub }

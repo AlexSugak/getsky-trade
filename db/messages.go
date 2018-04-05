@@ -1,6 +1,8 @@
 package db
 
 import (
+	"time"
+
 	"github.com/AlexSugak/getsky-trade/db/models"
 	"github.com/jmoiron/sqlx"
 )
@@ -56,26 +58,32 @@ func (m Messages) UpdateMessage(msg *models.Message) error {
 	return err
 }
 
+// AdvertMessagesInfo represents an information about the messages
+type AdvertMessagesInfo struct {
+	Author          string    `json:"author" db:"Author"`
+	TotalMessages   int       `json:"totalMessages" db:"TotalMessages"`
+	NewMessages     int       `json:"newMessages" db:"NewMessages"`
+	LastMessageTime time.Time `json:"lastMessageTime" db:"LastMessageTime"`
+}
+
 // GetAdvertMessageAuthors returns usernames of all authors that wrote messages under specific advert
-func (m Messages) GetAdvertMessageAuthors(advertID int64) ([]string, error) {
-	res := []string{}
-	cmd := `SELECT DISTINCT U.UserName as UserName ` +
+func (m Messages) GetAdvertMessageAuthors(advertID int64) ([]AdvertMessagesInfo, error) {
+	res := []AdvertMessagesInfo{}
+	cmd := `SELECT U.UserName AS Author, COUNT(*) AS TotalMessages, ` +
+
+		`(SELECT COUNT(*) ` +
+		`FROM Messages M2 ` +
+		`INNER JOIN Adverts A ON A.Id = M2.AdvertId ` +
+		`WHERE M2.AdvertId = ? AND M2.Author = U.Id AND M2.IsRead = 0 AND M2.Author <> A.Author) AS NewMessages, ` +
+
+		`MAX(M.CreatedAt) AS LastMessageTime ` +
+
 		`FROM Messages M ` +
-		`INNER JOIN Users U ON U.Id = M.Author AND M.AdvertId = ?
-		 ORDER BY UserName`
-	rows, err := m.DB.Query(cmd, advertID)
+		`INNER JOIN Users U ON U.Id = M.Author AND M.AdvertId = ? ` +
+		`GROUP BY UserName ASC`
 
-	if err != nil {
+	if err := m.DB.Select(&res, cmd, advertID, advertID); err != nil {
 		return nil, err
-	}
-
-	for rows.Next() {
-		r := new(string)
-		err := rows.Scan(r)
-		if err != nil {
-			return nil, err
-		}
-		res = append(res, *r)
 	}
 
 	return res, nil

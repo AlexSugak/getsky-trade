@@ -190,7 +190,7 @@ export default connect(
         if (advertDetails.loading) return <Spinner />;
 
         return (
-            <Container flexDirection="row" wrap>
+            <Container flexDirection="row" flexWrap="wrap">
                 <h2>Advert summary</h2>
                 <Flex>
                     <Box width={[1, 2 / 3]}>

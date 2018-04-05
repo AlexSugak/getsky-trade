@@ -31,8 +31,10 @@ const MessagesInputForm = ({ onChange, messageText, sendMessage }) => (
 );
 
 const getMessageAuthor = (advert, message, userInfo, selectedAuthor) => {
-    if (message.author === userInfo.id && !selectedAuthor) {
+    if (message.author === userInfo.id) {
         return userInfo.username;
+    } else if (selectedAuthor) {
+        return selectedAuthor;
     } else return advert.author;
 };
 
@@ -95,22 +97,22 @@ const UserSection = styled(Section) `
 
 const UsersList = ({ authors, selectAuthor, userInfo }) => (
     <div>
-        {authors.filter(a => a !== userInfo.username)
+        {authors.filter(a => a.author !== userInfo.username)
             .map((a, i) => (
                 <UserSection
                     key={i}
                     flexDirection="row"
                     flexWrap="wrap"
-                    onClick={() => selectAuthor(a)}>
+                    onClick={() => selectAuthor(a.author)}>
                     <SectionPart w={1}>
                         <Icon name={IconMap.Envelope} />
-                        0 new / 3 messages
+                        {a.newMessages} new / {a.totalMessages} messages
                     </SectionPart>
                     <UsernameSectionPart w={1} isRead={true}>
-                        From <strong> {a} </strong>
+                        From <strong> {a.author} </strong>
                     </UsernameSectionPart>
                     <Date w={1}>
-                        Last message on 30 MAR'18 10:04 AM
+                        Last message on {a.lastMessageTime}
                     </Date>
                 </UserSection>
             ))}

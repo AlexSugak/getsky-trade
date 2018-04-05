@@ -48,7 +48,7 @@ describe('messages reducers', () => {
     describe('GET_MESSAGES_AUTHORS_RESPONSE', () => {
         it('should save received messages authors to the store', () => {
             const initialState = { authors: [], };
-            const authors = ['sam', 'bob'];
+            const authors = [{ author: 'sam', totalMessages: 3 }, { author: 'bob', totalMessages: 1 }];
             const action = { type: actions.GET_MESSAGES_AUTHORS_RESPONSE, authors };
             const expectedState = { authors };
 

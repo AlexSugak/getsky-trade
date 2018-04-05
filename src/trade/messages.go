@@ -117,7 +117,7 @@ func UpdateMessageHandler(s *HTTPServer) httputil.APIHandler {
 			return nil
 		}
 
-		if oldMessage.Author != u.ID && (oldMessage.Recipient.Valid == true && oldMessage.Recipient.Int64 != u.ID) && advert.Author != u.UserName {
+		if oldMessage.Author != u.ID && (oldMessage.Recipient.Valid && oldMessage.Recipient.Int64 != u.ID) && advert.Author != u.UserName {
 			http.Error(w, "You do not have rights to modify this content", http.StatusForbidden)
 			return nil
 		}
