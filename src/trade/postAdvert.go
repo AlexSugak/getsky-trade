@@ -8,6 +8,7 @@ import (
 	"github.com/AlexSugak/getsky-trade/db/models"
 	"github.com/AlexSugak/getsky-trade/src/board"
 	ce "github.com/AlexSugak/getsky-trade/src/errors"
+	"github.com/shopspring/decimal"
 	validator "gopkg.in/go-playground/validator.v9"
 
 	"github.com/AlexSugak/getsky-trade/src/util/httputil"
@@ -21,9 +22,10 @@ type PostAdvertRequest struct {
 	TradeCashByMail       types.BitBool          `json:"tradeCashByMail"`
 	TradeMoneyOrderByMail types.BitBool          `json:"tradeMoneyOrderByMail"`
 	TradeOther            types.BitBool          `json:"tradeOther"`
-	AmountFrom            float64                `json:"amountFrom" validate:"required"`
-	AmountTo              models.JSONNullFloat64 `json:"amountTo"`
-	PercentageAdjustment  float64                `json:"percentageAdjustment"`
+	AmountFrom            decimal.Decimal        `json:"amountFrom" validate:"required"`
+	AmountTo              models.JSONNullDecimal `json:"amountTo"`
+	PercentageAdjustment  models.JSONNullDecimal `json:"percentageAdjustment"`
+	FixedPrice            models.JSONNullDecimal `json:"fixedPrice"`
 	Currency              string                 `json:"currency" validate:"required"`
 	AdditionalInfo        string                 `json:"additionalInfo"`
 
@@ -77,8 +79,8 @@ func prepareAdvert(s *HTTPServer, w http.ResponseWriter, r *http.Request) (*mode
 		TradeOther:            body.TradeOther,
 		AmountFrom:            body.AmountFrom,
 		AmountTo:              body.AmountTo,
-		FixedPrice:            models.JSONNullFloat64{},
-		PercentageAdjustment:  models.JSONNullFloat64{},
+		FixedPrice:            body.FixedPrice,
+		PercentageAdjustment:  body.PercentageAdjustment,
 		Currency:              body.Currency,
 		AdditionalInfo:        body.AdditionalInfo,
 		TravelDistance:        body.TravelDistance,
@@ -133,6 +135,10 @@ func SellAdvertHandler(s *HTTPServer) httputil.APIHandler {
 		}
 		if advert == nil {
 			return nil
+		}
+
+		if !advert.PercentageAdjustment.Valid && !advert.FixedPrice.Valid {
+			return ce.CreateSingleValidationError("percentageAdjustment,fixedPrice", "one of the props has to have a value")
 		}
 
 		advert.Type = int(board.Sell)

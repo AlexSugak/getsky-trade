@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx/types"
+	"github.com/shopspring/decimal"
 )
 
 // AdvertsWithMessageCounts represents advert detail with amount of sent messages
@@ -31,10 +32,10 @@ type AdvertDetails struct {
 	TradeCashByMail       types.BitBool   `db:"TradeCashByMail" json:"tradeCashByMail"`
 	TradeMoneyOrderByMail types.BitBool   `db:"TradeMoneyOrderByMail" json:"tradeMoneyOrderByMail"`
 	TradeOther            types.BitBool   `db:"TradeOther" json:"tradeOther"`
-	AmountFrom            float64         `db:"AmountFrom" json:"amountFrom"`
-	AmountTo              JSONNullFloat64 `db:"AmountTo" json:"amountTo"`
-	FixedPrice            JSONNullFloat64 `db:"FixedPrice" json:"fixedPrice"`
-	PercentageAdjustment  JSONNullFloat64 `db:"PercentageAdjustment" json:"percentageAdjustment"`
+	AmountFrom            decimal.Decimal `db:"AmountFrom" json:"amountFrom"`
+	AmountTo              JSONNullDecimal `db:"AmountTo" json:"amountTo"`
+	FixedPrice            JSONNullDecimal `db:"FixedPrice" json:"fixedPrice"`
+	PercentageAdjustment  JSONNullDecimal `db:"PercentageAdjustment" json:"percentageAdjustment"`
 	Currency              string          `db:"Currency" json:"currency"`
 	AdditionalInfo        string          `db:"AdditionalInfo" json:"additionalInfo"`
 	TravelDistance        int64           `db:"TravelDistance" json:"travelDistance"`
@@ -56,10 +57,10 @@ type Advert struct {
 	TradeCashByMail       types.BitBool   `db:"TradeCashByMail" json:"tradeCashByMail"`
 	TradeMoneyOrderByMail types.BitBool   `db:"TradeMoneyOrderByMail" json:"tradeMoneyOrderByMail"`
 	TradeOther            types.BitBool   `db:"TradeOther" json:"tradeOther"`
-	AmountFrom            float64         `db:"AmountFrom" json:"amountFrom"`
-	AmountTo              JSONNullFloat64 `db:"AmountTo" json:"amountTo"`
-	FixedPrice            JSONNullFloat64 `db:"FixedPrice" json:"fixedPrice"`
-	PercentageAdjustment  JSONNullFloat64 `db:"PercentageAdjustment" json:"percentageAdjustment"`
+	AmountFrom            decimal.Decimal `db:"AmountFrom" json:"amountFrom"`
+	AmountTo              JSONNullDecimal `db:"AmountTo" json:"amountTo"`
+	FixedPrice            JSONNullDecimal `db:"FixedPrice" json:"fixedPrice"`
+	PercentageAdjustment  JSONNullDecimal `db:"PercentageAdjustment" json:"percentageAdjustment"`
 	Currency              string          `db:"Currency" json:"currency"`
 	AdditionalInfo        string          `db:"AdditionalInfo" json:"additionalInfo"`
 	TravelDistance        int64           `db:"TravelDistance" json:"travelDistance"`

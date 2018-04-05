@@ -5,31 +5,33 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 
+	"github.com/shopspring/decimal"
+
 	"github.com/jmoiron/sqlx/types"
 )
 
-// JSONNullFloat64 wraps sql.NullFloat64 to provide JSON-friendly marshaling
-type JSONNullFloat64 struct {
-	sql.NullFloat64
+// JSONNullDecimal wraps decimal.NullDecimal to provide JSON-friendly marshaling
+type JSONNullDecimal struct {
+	decimal.NullDecimal
 }
 
 // MarshalJSON converts JSONNullFloat64 value to json
-func (v JSONNullFloat64) MarshalJSON() ([]byte, error) {
+func (v JSONNullDecimal) MarshalJSON() ([]byte, error) {
 	if v.Valid {
-		return json.Marshal(v.Float64)
+		return json.Marshal(v.Decimal)
 	}
 	return json.Marshal(nil)
 }
 
 // UnmarshalJSON converts json value to JSONNullFloat64
-func (v *JSONNullFloat64) UnmarshalJSON(data []byte) error {
-	var x *float64
+func (v *JSONNullDecimal) UnmarshalJSON(data []byte) error {
+	var x *decimal.Decimal
 	if err := json.Unmarshal(data, &x); err != nil {
 		return err
 	}
 	if x != nil {
 		v.Valid = true
-		v.Float64 = *x
+		v.Decimal = *x
 	} else {
 		v.Valid = false
 	}
@@ -64,7 +66,7 @@ func (v *JSONNullString) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// JSONNullInt64 wraps sql.NullFloat64 to provide JSON-friendly marshaling
+// JSONNullInt64 wraps sql.JSONNullInt64 to provide JSON-friendly marshaling
 type JSONNullInt64 struct {
 	sql.NullInt64
 }
