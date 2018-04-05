@@ -55,3 +55,5 @@ export const getAdvertMessagesOk = messagesStub => (advertId, username) => new P
 export const getAdvertMessagesAuthorsOk = messagesAuthorsStub => advertId => new Promise((resolve, reject) => { resolve({ data: messagesAuthorsStub }) });
 
 export const updateAdvertMessageOk = messageStub => (messageId, message) => new Promise((resolve, reject) => { resolve({ data: messageStub }) });
+
+export const getAdvertsForDashboardOk = (advertsStub) => () => new Promise((resolve, reject) => resolve({ data: advertsStub }));
