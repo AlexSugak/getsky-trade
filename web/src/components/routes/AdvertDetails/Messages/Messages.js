@@ -30,14 +30,6 @@ const MessagesInputForm = ({ onChange, messageText, sendMessage }) => (
     </div>
 );
 
-const getMessageAuthor = (advert, message, userInfo, selectedAuthor) => {
-    if (message.author === userInfo.id) {
-        return userInfo.username;
-    } else if (selectedAuthor) {
-        return selectedAuthor;
-    } else return advert.author;
-};
-
 const Section = styled(Flex) `
     margin: 5px 0px;
     background-color: ${theme.colors.white};
@@ -75,9 +67,9 @@ const MessagesContainer = ({
             {selectedAuthor && <a onClick={backToUsers}>Back to users</a>}
             {messages.map((m, i) => (
                 <Section key={i} flexDirection="row" flexWrap="wrap">
-                    <UsernameSectionPart w={1} isRead={m.author === userInfo.id || m.isRead}>
+                    <UsernameSectionPart w={1} isRead={m.author === userInfo.username || m.isRead}>
                         <Icon name={IconMap.User} />
-                        {getMessageAuthor(advert, m, userInfo, selectedAuthor)}
+                        {m.author}
                     </UsernameSectionPart>
                     <SectionPart w={1}>
                         {m.body}
@@ -146,7 +138,7 @@ export default connect(
             } else {
                 const messages = await getMessages(advert.id, userInfo.username);
                 messages
-                    .filter(m => !m.isRead && m.author !== userInfo.id)
+                    .filter(m => !m.isRead && m.author !== userInfo.username)
                     .forEach(m => markMessageAsRead(m.id));
             }
         }
@@ -170,7 +162,7 @@ export default connect(
             this.props.selectAuthor(author);
 
             messages
-                .filter(m => !m.isRead && m.author !== this.props.userInfo.id)
+                .filter(m => !m.isRead && m.author !== this.props.userInfo.username)
                 .forEach(m => this.props.markMessageAsRead(m.id));
         }
         reply = () => {
