@@ -5,6 +5,7 @@ export default {
         red: '#f00',
         gray: '#424242',
         warning: '#ff6a00',
+        warningLight: '#ffb887',
         lightGray: '#cecece',
         success: '#00ff40',
         buyGreen: '#18B600',

@@ -19,7 +19,7 @@ const AdvertsList = ({ title, adverts, noAdvertsMessage, rightCorner, columns, r
             <Box>{rightCorner}</Box>
         </Flex>
         {adverts.length > 0 &&
-            <Table columns={columns} rowComponent={rowComponent} rowData={adverts.map(a => a.advert)} />
+            <Table columns={columns} rowComponent={rowComponent} rowData={adverts} />
         }
         {adverts.length === 0 &&
             <Box mb={3}>

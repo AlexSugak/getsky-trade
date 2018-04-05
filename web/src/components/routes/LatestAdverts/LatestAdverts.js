@@ -10,6 +10,7 @@ import pickBy from 'lodash/pickBy';
 import { Tab as UnstyledTab, Tabs, TabList as UnstyledTabList, TabPanel } from 'react-tabs';
 
 import Promo from 'components/layout/Promo';
+import { NewMessageCount } from 'components/layout/Badge';
 import Container from 'components/layout/Container';
 import Table, { TableRow, TableCell } from 'components/layout/Table';
 import { TRADE_OPTIONS } from 'constants/index';
@@ -20,7 +21,7 @@ import bgImage from './intro-bg.jpg';
 
 const Intro = styled.div`
     background: ${props => props.theme.colors.black} url(${bgImage}) 50% 20% no-repeat;
-    background-size: cover;    
+    background-size: cover;
     padding: ${props => props.theme.spaces[8] * 2}px 0 ${props => props.theme.introTabsHeight + props.theme.spaces[8] * 2}px;
     color: ${props => props.theme.colors.white};
     text-align: center;
@@ -86,6 +87,9 @@ const getTradeOptionsText = advert => {
 
 const AuthorCell = ({ advert }) => (
     <Author>
+        {advert.totalMessagesAmount !== undefined &&
+            <NewMessageCount newMessages={advert.newMessagesAmount} totalMessages={advert.totalMessagesAmount} />
+        }
         <strong className="name">{advert.author}</strong>
         {advert.countryCode}, <span>{advert.city} {advert.stateCode} {advert.postalCode}</span>
     </Author>
