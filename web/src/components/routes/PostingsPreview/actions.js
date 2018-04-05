@@ -1,7 +1,6 @@
 import { push } from 'react-router-redux';
 import { postBuyAdvert, postSellAdvert } from 'api/';
-import { SellFormName } from 'components/routes/PostingsSell';
-import { BuyFormName } from 'components/routes/PostingsBuy';
+import { SellFormName, BuyFormName } from 'constants/index'
 
 export const SET_FORM_PREVIEW = 'SET_FORM_PREVIEW ';
 

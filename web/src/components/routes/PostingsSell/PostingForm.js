@@ -6,6 +6,7 @@ import { Box } from 'grid-styled'
 import { FormRangedSingleInput, FormCheckboxGroup, FormDropdownInput, FormGroup } from 'components/layout/Form';
 import { Button } from 'components/layout/Button';
 import { required, min, max, ranged, rangedRequired, rangedMin, rangedMax } from 'validation/rules';
+import { SellFormName } from 'constants/index'
 import { SkyAmountWarning, LocationFormGroup, AdditionalInformationSample, ACCEPT_TRADE_OPTIONS, DISTANCE_UNITS_OPTIONS } from 'components/layout/PostingForm';
 import FormCoinPriceInput from './FormCoinPriceInput';
 
@@ -75,8 +76,6 @@ const FormPostingToSell = ({ states, countries, country, skyPrices, handleSubmit
         </Box>
     </Form>
 );
-
-export const SellFormName = 'formPostingToSell';
 
 const ReduxForm = reduxForm({
     form: SellFormName,
