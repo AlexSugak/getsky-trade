@@ -16,6 +16,8 @@ import faExclamationCircle from '@fortawesome/fontawesome-free-solid/faExclamati
 import faEnvelope from '@fortawesome/fontawesome-free-solid/faEnvelope';
 
 import faUser from '@fortawesome/fontawesome-free-solid/faUserCircle';
+import faClock from '@fortawesome/fontawesome-free-solid/faClock';
+import faTrash from '@fortawesome/fontawesome-free-solid/faTrash';
 
 export const IconMap = {
     Facebook: faFacebook,
@@ -32,6 +34,9 @@ export const IconMap = {
 
     User: faUser,
     Envelope: faEnvelope,
+    
+    Clock: faClock,
+    Trash: faTrash,
 }
 
 const Icon = ({ name }) => (

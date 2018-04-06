@@ -19,7 +19,6 @@ export const requestAdvertDetails = id => async dispatch => {
         });
         return response.data;
     } catch (e) {
-        console.log(e)
         if (e.response.status === 404) {
             dispatch({
                 type: GET_ADVERT_DETAILS_RESPONSE,

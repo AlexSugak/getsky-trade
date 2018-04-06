@@ -7,29 +7,41 @@ import DashboardTitle from './DashboardTitle';
 import Counters from './Counters';
 import AdvertsList, { RightCornerButton } from './AdvertsList';
 import ExtendConfirm from './ExtendConfirm';
-import { getAdverts, extendExpirationDate } from './actions';
+import DeleteConfirm from './DeleteConfirm';
+import { getAdverts, extendExpirationDate, deleteAdvert } from './actions';
 
 const lengthOrZero = collection => collection ? collection.length : 0;
 
 class Dashboard extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            extendConfirmation: false,
-            selectedAdvert: null,
-        }
-
-        this.onExtendRequest = this.onExtendRequest.bind(this);
-        this.onExtendRequestCancel = this.onExtendRequestCancel.bind(this);
+    state = {
+        extendConfirmation: false,
+        deleteConfirmationVisible: false,
+        selectedAdvert: null,
     }
 
-    onExtendRequest(advert) {
-        this.setState({ ...this.state, selectedAdvert: advert, extendConfirmation: true })
+    toggleExtendConfirmation = advert => {
+        this.setState({
+            ...this.state,
+            extendConfirmation: !this.state.extendConfirmation,
+            selectedAdvert: advert,
+        })
     }
 
-    onExtendRequestCancel() {
-        this.setState({ ...this.state, extendConfirmation: false })
+    extendAdvert = () => {
+        this.toggleExtendConfirmation();
+        this.props.extendExpirationDate(this.state.selectedAdvert.id);
+    }
+    deleteAdvert = () => {
+        this.props.deleteAdvert(this.state.selectedAdvert.id);
+        this.toggleDeleteConfirmation();
+
+    }
+    toggleDeleteConfirmation = advert => {
+        this.setState({
+            ...this.state,
+            deleteConfirmationVisible: !this.state.deleteConfirmationVisible,
+            selectedAdvert: advert,
+        });
     }
 
     componentDidMount() {
@@ -43,8 +55,13 @@ class Dashboard extends React.Component {
             <Container flex='1 0 auto' flexDirection="column">
                 <ExtendConfirm
                     isOpen={this.state.extendConfirmation}
-                    onConfirm={advert => this.props.extendExpirationDate(advert.Id)}
-                    onClose={this.onExtendRequestCancel}
+                    onConfirm={this.extendAdvert}
+                    onClose={this.toggleExtendConfirmation}
+                />
+                <DeleteConfirm
+                    isOpen={this.state.deleteConfirmationVisible}
+                    onConfirm={this.deleteAdvert}
+                    onClose={this.toggleDeleteConfirmation}
                 />
                 <DashboardTitle userName={userName} />
                 <Counters
@@ -55,6 +72,10 @@ class Dashboard extends React.Component {
                     newMessages={newMessages}
                 />
                 <AdvertsList
+                    rowOperations={{
+                        deleteAdvert: this.toggleDeleteConfirmation,
+                        extendAdvert: this.toggleExtendConfirmation,
+                    }}
                     title={'Your buyer adverts'}
                     adverts={buyAdverts}
                     noAdvertsMessage={'You have no active buyer adverts.'}
@@ -63,6 +84,10 @@ class Dashboard extends React.Component {
                     rightCorner={RightCornerButton.BUY}
                 />
                 <AdvertsList
+                    rowOperations={{
+                        deleteAdvert: this.toggleDeleteConfirmation,
+                        extendAdvert: this.toggleExtendConfirmation,
+                    }}
                     title={'Your seller adverts'}
                     adverts={sellAdverts}
                     noAdvertsMessage={'You have no active seller adverts.'}
@@ -102,4 +127,4 @@ const mapStateToProps = ({ app, dashboard }) => ({
     enquiriesToSellers: dashboard.enquiriesToSellers,
 });
 
-export default connect(mapStateToProps, { getAdverts, extendExpirationDate })(Dashboard);
+export default connect(mapStateToProps, { getAdverts, extendExpirationDate, deleteAdvert })(Dashboard);

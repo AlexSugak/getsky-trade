@@ -27,16 +27,17 @@ export const TableCell = styled.td`
     line-height: 1.4;
 `;
 
-export default ({ columns, rowComponent: RowComponent, rowData }) => (
+export default ({ columns, rowComponent: RowComponent, rowData, rowOperations }) => (
     <div className="table-container">
         <Table>
             <TableHead>
                 <TableRow>
-                    {columns.map((col, i) => <TableCell key={i}>{col.name}</TableCell> )}
+                    {columns.map((col, i) => <TableCell key={i}>{col.name}</TableCell>)}
+                    {rowOperations && <TableCell></TableCell>}
                 </TableRow>
             </TableHead>
             <TableBody>
-                {rowData.map((item, i) => <RowComponent key={i} {...item}/>)}
+                {rowData.map((item, i) => <RowComponent key={i} data={item} rowOperations={rowOperations} />)}
             </TableBody>
         </Table>
     </div>

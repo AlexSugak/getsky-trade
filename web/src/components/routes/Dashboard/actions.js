@@ -1,6 +1,7 @@
 import {
     getAdvertsForDashboard,
     extendExpirationDate as extendExpirationDateReq,
+    deleteAdvert as deleteAdvertRequest
 } from 'api/';
 
 export const ADVERTS_DASHBOARD_RESPONSE = 'ADVERTS_DASHBOARD_RESPONSE';
@@ -26,3 +27,10 @@ export const extendExpirationDate = (advertId) =>
             type: EXTEND_EXPIRATION_DATE,
         });
     };
+
+export const DELETE_ADVERT = 'DELETE_ADVERT';
+export const deleteAdvert = advertId => async dispatch => {
+    await deleteAdvertRequest(advertId);
+    dispatch({ type: DELETE_ADVERT, advertId, });
+    dispatch(getAdverts());
+};

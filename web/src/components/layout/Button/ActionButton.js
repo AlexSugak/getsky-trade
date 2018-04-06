@@ -28,16 +28,16 @@ const Container = styled.div`
 const Btn = styled.button`
     width: 30px;
     height: 30px;
-    background: ${props => props.theme.colors.white};
+    background: ${props => props.isDanger ? props.theme.colors.red : props.theme.colors.white};
     border: 1px solid ${props => props.theme.colors.gray};
 `;
 
-const ActionButton = ({ tip, icon, onClick }) => (
+const ActionButton = ({ tip, icon, onClick, isDanger }) => (
     <Container onClick={onClick}>
         <Box className="label">
             {tip}
         </Box>
-        <Btn>
+        <Btn isDanger={isDanger}>
             {icon}
         </Btn>
     </Container>
@@ -47,6 +47,7 @@ ActionButton.propTypes = {
     tip: PropTypes.string.isRequired,
     icon: PropTypes.element.isRequired,
     onClick: PropTypes.func.isRequired,
+    isDanger: PropTypes.bool,
 };
 
 export default ActionButton;

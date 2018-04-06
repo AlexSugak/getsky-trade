@@ -9,12 +9,14 @@ import pick from 'lodash/pick';
 import pickBy from 'lodash/pickBy';
 import { Tab as UnstyledTab, Tabs, TabList as UnstyledTabList, TabPanel } from 'react-tabs';
 
+import Icon, { IconMap } from 'components/layout/Icon';
 import Promo from 'components/layout/Promo';
 import { NewMessageCount } from 'components/layout/Badge';
 import Container from 'components/layout/Container';
 import Table, { TableRow, TableCell } from 'components/layout/Table';
 import { TRADE_OPTIONS } from 'constants/index';
 import Spinner from 'components/layout/Spinner';
+import ActionButton from 'components/layout/Button/ActionButton';
 
 import { getAdverts } from './actions';
 import bgImage from './intro-bg.jpg';
@@ -98,7 +100,6 @@ const AuthorCell = ({ advert }) => (
 const LinkedTableRow = styled(withRouter(({ ...props, href, history }) =>
     (<TableRow {...props} onClick={() => history.push(href)} />))) `
         &:hover {
-            opacity: 0.5;
             cursor: pointer;
             background-color: rgba(0,0,0, 0.1);
         }
@@ -111,14 +112,37 @@ export const buyAdvertsColumns = [
     { name: 'Created' },
 ];
 
-export const BuyAdvertRow = (advert) => (
-    <LinkedTableRow href={`/post/${advert.id}`}>
-        <TableCell><AuthorCell advert={advert} /></TableCell>
-        <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} SKY</TableCell>
-        <TableCell>{getTradeOptionsText(advert)}</TableCell>
-        <TableCell>{moment(advert.createdAt).format('DD MMMM YY')}</TableCell>
-    </LinkedTableRow>
-);
+export const BuyAdvertRow = ({ data, rowOperations }) => {
+    const advert = data;
+    return (
+        <LinkedTableRow href={`/post/${advert.id}`}>
+            <TableCell><AuthorCell advert={advert} /></TableCell>
+            <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} SKY</TableCell>
+            <TableCell>{getTradeOptionsText(advert)}</TableCell>
+            <TableCell>{moment(advert.createdAt).format('DD MMMM YY')}</TableCell>
+            {rowOperations && (rowOperations.extendAdvert || rowOperations.deleteAdvert)
+                && <TableCell>
+                    <ActionButton
+                        onClick={e => {
+                            e.nativeEvent.stopImmediatePropagation();
+                            e.stopPropagation();
+                            rowOperations.extendAdvert(advert);
+                        }}
+                        tip="Extend"
+                        icon={<Icon name={IconMap.Clock} />} />
+                    <ActionButton
+                        isDanger={true}
+                        onClick={e => {
+                            e.nativeEvent.stopImmediatePropagation();
+                            e.stopPropagation();
+                            rowOperations.deleteAdvert(advert);
+                        }}
+                        tip="Delete"
+                        icon={<Icon name={IconMap.Trash} />} />
+                </TableCell>}
+        </LinkedTableRow>
+    );
+}
 
 export const sellAdvertsColumns = [
     { name: 'Buyer' },
@@ -127,14 +151,37 @@ export const sellAdvertsColumns = [
     { name: 'Created' },
 ];
 
-export const SellAdvertRow = (advert) => (
-    <LinkedTableRow href={`/post/${advert.id}`}>
-        <TableCell><AuthorCell advert={advert} /></TableCell>
-        <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} SKY</TableCell>
-        <TableCell>{getTradeOptionsText(advert)}</TableCell>
-        <TableCell>{moment(advert.createdAt).format('DD MMMM YY')}</TableCell>
-    </LinkedTableRow>
-);
+export const SellAdvertRow = ({ data, rowOperations }) => {
+    const advert = data;
+    return (
+        <LinkedTableRow href={`/post/${advert.id}`}>
+            <TableCell><AuthorCell advert={advert} /></TableCell>
+            <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} SKY</TableCell>
+            <TableCell>{getTradeOptionsText(advert)}</TableCell>
+            <TableCell>{moment(advert.createdAt).format('DD MMMM YY')}</TableCell>
+            {rowOperations && (rowOperations.extendAdvert || rowOperations.deleteAdvert)
+                && <TableCell>
+                    <ActionButton
+                        onClick={e => {
+                            e.nativeEvent.stopImmediatePropagation();
+                            e.stopPropagation();
+                            rowOperations.extendAdvert(advert);
+                        }}
+                        tip="Extend"
+                        icon={<Icon name={IconMap.Clock} />} />
+                    <ActionButton
+                        isDanger={true}
+                        onClick={e => {
+                            e.nativeEvent.stopImmediatePropagation();
+                            e.stopPropagation();
+                            rowOperations.deleteAdvert(advert);
+                        }}
+                        tip="Delete"
+                        icon={<Icon name={IconMap.Trash} />} />
+                </TableCell>}
+        </LinkedTableRow>
+    );
+}
 
 class LatestAdverts extends React.Component {
     componentWillMount() {
