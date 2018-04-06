@@ -357,7 +357,6 @@ func TestGetMessages(t *testing.T) {
 		handler.ServeHTTP(w, req)
 
 		if w.Code == 200 {
-			fmt.Println(w.Body.String())
 			actualMsgs := &[]models.MessageDetails{}
 			err = json.NewDecoder(w.Body).Decode(actualMsgs)
 			if err != nil {
