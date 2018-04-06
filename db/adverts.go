@@ -48,7 +48,7 @@ func (s Storage) GetAdvertsEnquiredByUserWithMessageCounts(userID int64) ([]mode
 		` FROM Adverts a` +
 		` INNER JOIN Users u ON a.Author = u.Id` +
 		` INNER JOIN Messages m ON a.Id = m.AdvertId` +
-		` WHERE (m.Author = ? OR m.Recipient = ?) AND a.Author <> ?`
+		` WHERE (m.Author = ? OR m.Recipient = ?) AND a.Author <> ? AND a.IsDeleted = 0`
 
 	rows, err := s.DB.Query(cmd, userID, userID, userID)
 	if err != nil {
@@ -150,7 +150,7 @@ func (s Storage) GetAdvertsWithMessageCountsByUserID(userID int64) ([]models.Adv
 		` FROM Adverts a` +
 		` INNER JOIN Users u ON a.Author = u.Id` +
 		` LEFT JOIN Messages m ON a.Id = m.AdvertId` +
-		` WHERE a.Author = ? AND (m.Recipient = ? OR m.Recipient IS NULL)`
+		` WHERE a.Author = ? AND (m.Recipient = ? OR m.Recipient IS NULL) AND a.IsDeleted = 0`
 
 	rows, err := s.DB.Query(cmd, userID, userID)
 	if err != nil {
@@ -253,7 +253,7 @@ func (s Storage) GetLatestAdverts(t board.AdvertType, limit int) ([]models.Adver
 			` a.CreatedAt`+
 			` FROM Adverts a`+
 			` LEFT JOIN Users u ON a.Author = u.Id`+
-			` WHERE a.Type = ?`+
+			` WHERE a.Type = ? AND a.IsDeleted = 0`+
 			` ORDER BY CreatedAt LIMIT ?`, t, limit)
 	if err != nil {
 		return nil, err
@@ -291,7 +291,7 @@ func (s Storage) GetAdvertDetails(advertID int64) (models.AdvertDetails, error) 
 			` a.CreatedAt`+
 			` FROM getskytrade.Adverts a`+
 			` LEFT JOIN getskytrade.Users u ON a.Author = u.Id`+
-			` WHERE a.Id = ?`, advertID)
+			` WHERE a.Id = ? AND a.IsDeleted = 0`, advertID)
 
 	if err != nil {
 		return models.AdvertDetails{}, err
@@ -302,6 +302,13 @@ func (s Storage) GetAdvertDetails(advertID int64) (models.AdvertDetails, error) 
 	}
 
 	return models.AdvertDetails{}, nil
+}
+
+// DeleteAdvert removes advert from the DB
+func (s Storage) DeleteAdvert(advertID int64) error {
+	cmd := `UPDATE Adverts SET IsDeleted = 1 WHERE Id = ?`
+	_, err := s.DB.Exec(cmd, advertID)
+	return err
 }
 
 // InsertAdvert inserts a new advert record to the DB

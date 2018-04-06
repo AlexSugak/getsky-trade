@@ -164,3 +164,73 @@ func TestMyAdverts(t *testing.T) {
 		require.Equal(t, tc.expectedBody, strings.TrimSuffix(w.Body.String(), "\n"), name)
 	}
 }
+
+func setupDeleteAdvertTests() func() {
+	userID1 := insertSQL(fmt.Sprintf("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('bob', 'bob@bob.com', 'foo', 0, 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName))
+	execSQL("INSERT INTO `%s`.`Adverts` (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt) VALUES (1, %d, 100.1, null, null, null, 'EUR', '', 25, 'km', 'GR', null, 'Athens', '', 1, 1, 1, 1, 0, '2018-03-06')", dbName, userID1)
+
+	userID2 := insertSQL(fmt.Sprintf("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('bib', 'bib@bib.com', 'foo', 0, 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName))
+	execSQL("INSERT INTO `%s`.`Adverts` (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt) VALUES (1, %d, 100.1, null, null, null, 'EUR', '', 25, 'km', 'US', null, 'United States of America', '', 1, 1, 1, 1, 0, '2018-03-06')", dbName, userID2)
+
+	return func() {
+		clearTables()
+	}
+}
+
+func TestDeleteAdvert(t *testing.T) {
+	tests := []struct {
+		name           string
+		method         string
+		url            string
+		expectedBody   string
+		expectedStatus int
+	}{
+		{
+			name:           "should return 404 error if advert with specified id is not exists",
+			method:         "DELETE",
+			url:            "/api/postings/3",
+			expectedStatus: http.StatusNotFound,
+			expectedBody:   `advert with such id doesn't exist`,
+		},
+		{
+			name:           "should deny deletion of the adverts that were created by another user",
+			method:         "DELETE",
+			url:            "/api/postings/2",
+			expectedStatus: http.StatusForbidden,
+			expectedBody:   `You don't have rights to manage this resource`,
+		},
+		{
+			name:           "should return 200 status code and delete advert from DB",
+			method:         "DELETE",
+			url:            "/api/postings/1",
+			expectedStatus: http.StatusOK,
+			expectedBody:   ``,
+		},
+	}
+
+	teardownTests := setupDeleteAdvertTests()
+	defer teardownTests()
+
+	for _, tc := range tests {
+		name := fmt.Sprintf("test case: DeleteAdvertTests %s", tc.name)
+		req, err := http.NewRequest(tc.method, tc.url, nil)
+
+		require.NoError(t, err)
+		stubAuthHeader := func(h http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				r.Header.Set("name", "bob")
+				h.ServeHTTP(w, r)
+			})
+		}
+
+		sql := sqlx.NewDb(db, "mysql")
+		s := tradedb.NewStorage(sql)
+		w := httptest.NewRecorder()
+		server := &HTTPServer{board: s}
+		handler := server.setupRouter(stubAuthHeader)
+
+		handler.ServeHTTP(w, req)
+		require.Equal(t, tc.expectedStatus, w.Code, name)
+		require.Equal(t, tc.expectedBody, strings.TrimSuffix(w.Body.String(), "\n"), name)
+	}
+}

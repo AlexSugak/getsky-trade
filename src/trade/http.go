@@ -143,6 +143,7 @@ func (s *HTTPServer) setupRouter(Secure Secure) http.Handler {
 	r.Handle("/api/postings/sell", Secure(API(SellAdvertHandler))).Methods("POST")
 	r.Handle("/api/postings/buy/latest", API(LatestBuyAdvertsHandler)).Methods("GET")
 	r.Handle("/api/postings/buy", Secure(API(BuyAdvertHandler))).Methods("POST")
+	r.Handle("/api/postings/{id}", Secure(API(DeleteAdvertHandler))).Methods("DELETE")
 
 	r.Handle("/api/postings/{id}/messages", Secure(API(PostMessageHandler))).Methods("POST")
 	r.Handle("/api/messages/{id}", Secure(API(UpdateMessageHandler))).Methods("PUT")
