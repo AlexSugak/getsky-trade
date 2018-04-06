@@ -6,6 +6,7 @@ import { SellAdvertRow, sellAdvertsColumns, BuyAdvertRow, buyAdvertsColumns } fr
 import DashboardTitle from './DashboardTitle';
 import Counters from './Counters';
 import AdvertsList, { RightCornerButton } from './AdvertsList';
+import ExtendConfirm from './ExtendConfirm';
 import { getAdverts } from './actions';
 
 const lengthOrZero = collection => collection ? collection.length : 0;
@@ -14,11 +15,13 @@ class Dashboard extends React.Component {
     componentDidMount() {
         this.props.getAdverts();
     }
+
     render() {
         const { userName, buyAdverts, sellAdverts, buyEnquiries, sellEnquiries, newMessages, enquiriesToBuyers, enquiriesToSellers } = this.props;
 
         return (
             <Container flex='1 0 auto' flexDirection="column">
+                <ExtendConfirm isOpen={false} onConfirm={() => { }} onClose={() => { }} />
                 <DashboardTitle userName={userName} />
                 <Counters
                     buyAdverts={lengthOrZero(buyAdverts)}
