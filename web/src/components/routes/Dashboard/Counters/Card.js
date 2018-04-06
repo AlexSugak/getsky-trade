@@ -39,7 +39,6 @@ const Card = ({ width, title, totalAmount, leftTitle, leftAmount, rightTitle, ri
             <Box style={CenterText} p={2}>
                 {tipMessage}
             </Box>
-
         }
     </BorderedBox>
 );
