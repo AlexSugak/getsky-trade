@@ -68,3 +68,6 @@ export const getAdvertMessages = (advertId, username) =>
 
 export const updateAdvertMessage = (messageId, message) =>
     axios.put(`${apiUrl}/messages/${messageId}`, message, headers);
+
+export const extendExpirationDate = advertId =>
+    axios.post(`${apiUrl}/postings/${advertId}/extend`, headers);

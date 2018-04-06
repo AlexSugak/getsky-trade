@@ -7,11 +7,31 @@ import DashboardTitle from './DashboardTitle';
 import Counters from './Counters';
 import AdvertsList, { RightCornerButton } from './AdvertsList';
 import ExtendConfirm from './ExtendConfirm';
-import { getAdverts } from './actions';
+import { getAdverts, extendExpirationDate } from './actions';
 
 const lengthOrZero = collection => collection ? collection.length : 0;
 
 class Dashboard extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            extendConfirmation: false,
+            selectedAdvert: null,
+        }
+
+        this.onExtendRequest = this.onExtendRequest.bind(this);
+        this.onExtendRequestCancel = this.onExtendRequestCancel.bind(this);
+    }
+
+    onExtendRequest(advert) {
+        this.setState({ ...this.state, selectedAdvert: advert, extendConfirmation: true })
+    }
+
+    onExtendRequestCancel() {
+        this.setState({ ...this.state, extendConfirmation: false })
+    }
+
     componentDidMount() {
         this.props.getAdverts();
     }
@@ -21,7 +41,11 @@ class Dashboard extends React.Component {
 
         return (
             <Container flex='1 0 auto' flexDirection="column">
-                <ExtendConfirm isOpen={false} onConfirm={() => { }} onClose={() => { }} />
+                <ExtendConfirm
+                    isOpen={this.state.extendConfirmation}
+                    onConfirm={advert => this.props.extendExpirationDate(advert.Id)}
+                    onClose={this.onExtendRequestCancel}
+                />
                 <DashboardTitle userName={userName} />
                 <Counters
                     buyAdverts={lengthOrZero(buyAdverts)}
@@ -78,4 +102,4 @@ const mapStateToProps = ({ app, dashboard }) => ({
     enquiriesToSellers: dashboard.enquiriesToSellers,
 });
 
-export default connect(mapStateToProps, { getAdverts })(Dashboard);
+export default connect(mapStateToProps, { getAdverts, extendExpirationDate })(Dashboard);

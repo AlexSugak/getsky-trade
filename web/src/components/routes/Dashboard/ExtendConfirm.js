@@ -4,6 +4,8 @@ import { Flex, Box } from 'grid-styled';
 
 import { Button } from 'components/layout/Button';
 import { ConfirmModal } from 'components/layout/Modal';
+import { H1, P, B } from 'components/layout/Text';
+import { Warning } from 'components/layout/Alerts';
 
 const style = {
     content: {
@@ -31,8 +33,14 @@ const ExtendConfirm = ({ isOpen, onConfirm, onClose }) => {
             isOpen={isOpen}
             style={style}
             footer={<Footer onConfirm={onConfirm} onClose={onClose} />}>
-            <Box>
-                hello world
+            <Box pb={3}>
+                <H1>Extend advert?</H1>
+                <P>Extending an advert
+                    <B> increases the expiration date by 4 weeks.</B>
+                </P>
+                <Warning>
+                    If you extend this advert, the new expiration date will be: <B>13 Sep '18 06:23 pm</B>
+                </Warning>
             </Box>
         </ConfirmModal>
     );
