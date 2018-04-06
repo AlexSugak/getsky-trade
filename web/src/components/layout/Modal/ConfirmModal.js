@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 
 const ConfirmModal = ({ isOpen, style, children, footer }) => {
     return (
-        <Modal isOpen={isOpen} style={style}>
+        <Modal ariaHideApp={false} isOpen={isOpen} style={style}>
             {children}
             {footer}
         </Modal>
