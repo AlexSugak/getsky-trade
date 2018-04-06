@@ -54,6 +54,9 @@ export const postBuyAdvert = advert =>
 export const postSellAdvert = advert =>
     axios.post(`${apiUrl}/postings/sell`, advert, headers)
 
+export const deleteAdvert = advertId =>
+    axios.delete(`${apiUrl}/postings/${advertId}`, headers);
+
 export const getAdvertsForDashboard = () =>
     axios.get(`${apiUrl}/postings/my`, headers)
 
