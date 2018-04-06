@@ -3,7 +3,6 @@ import { Flex, Box } from 'grid-styled';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { round } from 'utils/';
 import theme from 'components/theme';
 import Container from 'components/layout/Container';
 import { B } from 'components/layout/Text';

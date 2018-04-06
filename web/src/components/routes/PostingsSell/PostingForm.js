@@ -8,7 +8,7 @@ import { FormRangedSingleInput, FormCheckboxGroup, FormDropdownInput, FormGroup 
 import { Button } from 'components/layout/Button';
 import { required, min, max, ranged, rangedRequired, rangedMin, rangedMax } from 'validation/rules';
 import { SellFormName } from 'constants/index'
-import { SkyAmountWarning, LocationFormGroup, AdditionalInformationSample, ACCEPT_TRADE_OPTIONS, DISTANCE_UNITS_OPTIONS } from 'components/layout/PostingForm';
+import { LocationFormGroup, AdditionalInformationSample, ACCEPT_TRADE_OPTIONS, DISTANCE_UNITS_OPTIONS } from 'components/layout/PostingForm';
 import FormCoinPriceInput from './FormCoinPriceInput';
 
 const shouldShowStates = currentCountry => currentCountry === 'US';
