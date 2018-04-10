@@ -20,12 +20,11 @@ export const getAdverts = () =>
 
 export const EXTEND_EXPIRATION_DATE = 'EXTEND_EXPIRATION_DATE';
 
-export const extendExpirationDate = (advertId) =>
+export const extendExpirationDate = advertId =>
     async dispatch => {
         await extendExpirationDateReq(advertId);
-        dispatch({
-            type: EXTEND_EXPIRATION_DATE,
-        });
+        dispatch({ type: EXTEND_EXPIRATION_DATE });
+        dispatch(getAdverts());
     };
 
 export const DELETE_ADVERT = 'DELETE_ADVERT';

@@ -14,17 +14,16 @@ const lengthOrZero = collection => collection ? collection.length : 0;
 
 class Dashboard extends React.Component {
     state = {
-        extendConfirmation: false,
+        extendConfirmationVisible: false,
         deleteConfirmationVisible: false,
-        selectedAdvert: null,
+        selectedAdvert: {},
     }
 
     toggleExtendConfirmation = advert => {
-        this.setState({
-            ...this.state,
-            extendConfirmation: !this.state.extendConfirmation,
-            selectedAdvert: advert,
-        })
+        this.setState(() => ({
+            extendConfirmationVisible: !this.state.extendConfirmationVisible,
+            selectedAdvert: advert || {},
+        }));
     }
 
     extendAdvert = () => {
@@ -54,9 +53,10 @@ class Dashboard extends React.Component {
         return (
             <Container flex='1 0 auto' flexDirection="column">
                 <ExtendConfirm
-                    isOpen={this.state.extendConfirmation}
+                    isOpen={this.state.extendConfirmationVisible}
                     onConfirm={this.extendAdvert}
                     onClose={this.toggleExtendConfirmation}
+                    advert={this.state.selectedAdvert}
                 />
                 <DeleteConfirm
                     isOpen={this.state.deleteConfirmationVisible}

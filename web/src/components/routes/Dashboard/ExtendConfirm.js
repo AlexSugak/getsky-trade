@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Flex, Box } from 'grid-styled';
+import moment from 'moment';
 
 import { Button } from 'components/layout/Button';
 import { ConfirmModal } from 'components/layout/Modal';
@@ -27,7 +28,7 @@ const Footer = ({ onConfirm, onClose }) => (
     </Flex>
 )
 
-const ExtendConfirm = ({ isOpen, onConfirm, onClose }) => {
+const ExtendConfirm = ({ isOpen, onConfirm, onClose, advert }) => {
     return (
         <ConfirmModal
             isOpen={isOpen}
@@ -39,7 +40,7 @@ const ExtendConfirm = ({ isOpen, onConfirm, onClose }) => {
                     <B> increases the expiration date by 4 weeks.</B>
                 </P>
                 <Warning>
-                    If you extend this advert, the new expiration date will be: <B>13 Sep '18 06:23 pm</B>
+                    If you extend this advert, the new expiration date will be: <B>{moment(advert.expiredAt).format('LLLL')}</B>
                 </Warning>
             </Box>
         </ConfirmModal>
@@ -50,6 +51,7 @@ ExtendConfirm.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onConfirm: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
+    advert: PropTypes.object.isRequired,
 };
 
 export default ExtendConfirm;
