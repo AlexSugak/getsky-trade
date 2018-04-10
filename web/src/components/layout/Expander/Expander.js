@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import styled from 'styled-components';
-
+import { Flex } from 'grid-styled';
 import Icon, { IconMap } from 'components/layout/Icon';
 
-const ExpanderLabel = styled.a`
+const ExpanderLabel = styled(Flex) `
     &:hover {
-        opacity: 0.5;
+        opacity: 0.75;
         cursor: pointer;
     }
 `;
 
-const ExpanderIcon = styled(Icon) `
-    vertical-align: bottom;
+const TextLabel = styled.span`
+    margin-right: 10px;
 `;
 
 const hiddenStyle = { display: 'none' };
@@ -49,9 +49,9 @@ export default class extends React.Component {
         return (
             <div>
                 <ExpanderLabel onClick={() => this.toggleExpander(!visible)}>
-                    {this.props.label}
-                    {visible && <ExpanderIcon name={IconMap.AngleUp} />}
-                    {!visible && <ExpanderIcon name={IconMap.AngleDown} />}
+                    <TextLabel>{this.props.label}</TextLabel>
+                    {visible && <Icon name={IconMap.CaretUp} color={'white'} />}
+                    {!visible && <Icon name={IconMap.CaretDown} color={'white'} />}
                 </ExpanderLabel>
                 <div style={visible ? visibleStyle : hiddenStyle}>
                     {this.props.children}

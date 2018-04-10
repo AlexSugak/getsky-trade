@@ -1,16 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-import Icon, { IconMap } from 'components/layout/Icon';
 import Expander from 'components/layout/Expander';
 import theme from 'components/theme';
 
-const UserMenuContainer = styled.div`
-`;
-
 const UserName = styled.span`
-    margin: 0 3px;
+    color: ${theme.colors.white};
+    font-size: ${theme.fontSizes[0]}px;
 `;
 
 const UserMenu = styled.ul`
@@ -54,24 +52,29 @@ const NavLink = styled(Link) `
     }
 `;
 
-export default ({ userInfo, logout }) => (
-    <UserMenuContainer>
-        <Expander label={
-            <UserName>
-                <Icon name={IconMap.User} /> {userInfo && userInfo.username}
-            </UserName>
-        }>
-            <UserMenu>
-                <UserMenuItem>
-                    <NavLink to="/dashboard">Dashboard</NavLink>
-                </UserMenuItem>
-                <UserMenuItem>
-                    <NavLink to="/user-settings">Settings</NavLink>
-                </UserMenuItem>
-                <UserMenuItem onClick={logout}>
-                    <span>Log out</span>
-                </UserMenuItem>
-            </UserMenu>
-        </Expander>
-    </UserMenuContainer>
+const UserSubmenu = ({ userInfo, logout }) => (
+    <Expander label={
+        <UserName>
+            {userInfo && userInfo.username}
+        </UserName>
+    }>
+        <UserMenu>
+            <UserMenuItem>
+                <NavLink to="/dashboard">Dashboard</NavLink>
+            </UserMenuItem>
+            <UserMenuItem>
+                <NavLink to="/user-settings">Settings</NavLink>
+            </UserMenuItem>
+            <UserMenuItem onClick={logout}>
+                <span>Log out</span>
+            </UserMenuItem>
+        </UserMenu>
+    </Expander>
 );
+
+UserSubmenu.propTypes = {
+    userInfo: PropTypes.object,
+    logout: PropTypes.func,
+};
+
+export default UserSubmenu;
