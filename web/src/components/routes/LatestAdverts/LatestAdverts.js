@@ -109,7 +109,7 @@ export const buyAdvertsColumns = [
     { name: 'Seller' },
     { name: 'Will sell' },
     { name: 'Trade options' },
-    { name: 'Created' },
+    { name: 'Expired' },
 ];
 
 export const BuyAdvertRow = ({ data, rowOperations }) => {
@@ -119,7 +119,7 @@ export const BuyAdvertRow = ({ data, rowOperations }) => {
             <TableCell><AuthorCell advert={advert} /></TableCell>
             <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} SKY</TableCell>
             <TableCell>{getTradeOptionsText(advert)}</TableCell>
-            <TableCell>{moment(advert.createdAt).format('DD MMMM YY')}</TableCell>
+            <TableCell>{moment(advert.expiredAt).format('DD MMMM YY')}</TableCell>
             {rowOperations && (rowOperations.extendAdvert || rowOperations.deleteAdvert)
                 && <TableCell>
                     <ActionButton
@@ -148,7 +148,7 @@ export const sellAdvertsColumns = [
     { name: 'Buyer' },
     { name: 'Will pay' },
     { name: 'Trade options' },
-    { name: 'Created' },
+    { name: 'Expired' },
 ];
 
 export const SellAdvertRow = ({ data, rowOperations }) => {
@@ -158,7 +158,7 @@ export const SellAdvertRow = ({ data, rowOperations }) => {
             <TableCell><AuthorCell advert={advert} /></TableCell>
             <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} SKY</TableCell>
             <TableCell>{getTradeOptionsText(advert)}</TableCell>
-            <TableCell>{moment(advert.createdAt).format('DD MMMM YY')}</TableCell>
+            <TableCell>{moment(advert.expiredAt).format('DD MMMM YY')}</TableCell>
             {rowOperations && (rowOperations.extendAdvert || rowOperations.deleteAdvert)
                 && <TableCell>
                     <ActionButton
