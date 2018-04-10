@@ -46,6 +46,7 @@ type AdvertDetails struct {
 	PostalCode            string          `db:"PostalCode" json:"postalCode"`
 	Status                int             `db:"Status" json:"status"`
 	CreatedAt             time.Time       `db:"CreatedAt" json:"createdAt"`
+	ExpiredAt             time.Time       `db:"ExpiredAt" json:"expiredAt"`
 }
 
 // Advert represents Advert DB entity
@@ -71,4 +72,5 @@ type Advert struct {
 	PostalCode            string          `db:"PostalCode" json:"postalCode"`
 	Status                int             `db:"Status" json:"status"`
 	CreatedAt             time.Time       `db:"CreatedAt" json:"createdAt"`
+	ExpiredAt             time.Time       `db:"ExpiredAt" json:"expiredAt"`
 }

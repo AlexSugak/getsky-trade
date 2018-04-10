@@ -106,7 +106,7 @@ func MyAdvertsHandler(s *HTTPServer) httputil.APIHandler {
 	}
 }
 
-// DeleteAdvertHandler delets specified advert
+// DeleteAdvertHandler deletes specified advert
 // Method: DELETE
 // Content-type: application/json
 // URI: /api/postings/{id}
@@ -136,5 +136,46 @@ func DeleteAdvertHandler(s *HTTPServer) httputil.APIHandler {
 		}
 
 		return s.board.DeleteAdvert(advertID)
+	}
+}
+
+// ExtendAdvertHandler deletes specified advert
+// Method: POST
+// Content-type: application/json
+// URI: /api/postings/{id}/extend
+func ExtendAdvertHandler(s *HTTPServer) httputil.APIHandler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		vars := mux.Vars(r)
+		advertID, err := strconv.ParseInt(vars["id"], 10, 64)
+
+		if err != nil {
+			http.Error(w, "id is not valid. id should be a number", http.StatusBadRequest)
+			return nil
+		}
+
+		advert, err := s.board.GetAdvertDetails(advertID)
+
+		if err != nil {
+			return err
+		} else if advert == (models.AdvertDetails{}) {
+			http.Error(w, "advert with such id doesn't exist", http.StatusNotFound)
+			return nil
+		}
+
+		userName := r.Header.Get("name")
+		if advert.Author != userName {
+			http.Error(w, "You don't have rights to manage this resource", http.StatusForbidden)
+			return nil
+		}
+
+		nextExpirationDate := GetExtendedDate(advert.ExpiredAt)
+		err = s.board.ExtendExperationTime(advert.ID, nextExpirationDate)
+
+		if err != nil {
+			return err
+		}
+
+		advert.ExpiredAt = nextExpirationDate
+		return json.NewEncoder(w).Encode(advert)
 	}
 }

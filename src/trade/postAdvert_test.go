@@ -95,7 +95,7 @@ func TestPostBuyAdverts(t *testing.T) {
 			body:           []byte(`{"author":"bob", "tradeCashInPerson":true, "tradeCashByMail":true, "tradeMoneyOrderByMail":true, "tradeOther":true, "amountFrom":12.2, "amountTo": null, "percentageAdjustment":0,"currency":"EUR", "additionalInfo":"", "travelDistance":12, "travelDistanceUoM":"km", "countryCode":"GR","stateCode":null,"city":"Athens","postalCode":"", "recaptcha":"pass" }`),
 			url:            "/api/postings/buy",
 			expectedStatus: http.StatusOK,
-			expectedBody:   `{"id":1,"type":2,"author":"bob","tradeCashInPerson":true,"tradeCashByMail":true,"tradeMoneyOrderByMail":true,"tradeOther":true,"amountFrom":"12.2","amountTo":null,"fixedPrice":null,"percentageAdjustment":"0","currency":"EUR","additionalInfo":"","travelDistance":12,"travelDistanceUoM":"km","countryCode":"GR","stateCode":null,"city":"Athens","postalCode":"","status":1,"createdAt":"2013-02-03T19:54:00Z"}`,
+			expectedBody:   `{"id":1,"type":2,"author":"bob","tradeCashInPerson":true,"tradeCashByMail":true,"tradeMoneyOrderByMail":true,"tradeOther":true,"amountFrom":"12.2","amountTo":null,"fixedPrice":null,"percentageAdjustment":"0","currency":"EUR","additionalInfo":"","travelDistance":12,"travelDistanceUoM":"km","countryCode":"GR","stateCode":null,"city":"Athens","postalCode":"","status":1,"createdAt":"2013-02-03T19:54:00Z","expiredAt":"2013-03-03T19:54:00Z"}`,
 		},
 	}
 
@@ -186,10 +186,10 @@ func TestPostSellAdverts(t *testing.T) {
 			body:           []byte(`{"author":"bob", "tradeCashInPerson":true, "tradeCashByMail":true, "tradeMoneyOrderByMail":true, "tradeOther":true, "amountFrom":12.2, "amountTo": null, "percentageAdjustment":0,"currency":"EUR", "additionalInfo":"", "travelDistance":12, "travelDistanceUoM":"km", "countryCode":"GR","stateCode":null,"city":"Athens","postalCode":"", "recaptcha":"pass" }`),
 			url:            "/api/postings/sell",
 			expectedStatus: http.StatusOK,
-			expectedBody:   `{"id":1,"type":1,"author":"bob","tradeCashInPerson":true,"tradeCashByMail":true,"tradeMoneyOrderByMail":true,"tradeOther":true,"amountFrom":"12.2","amountTo":null,"fixedPrice":null,"percentageAdjustment":"0","currency":"EUR","additionalInfo":"","travelDistance":12,"travelDistanceUoM":"km","countryCode":"GR","stateCode":null,"city":"Athens","postalCode":"","status":1,"createdAt":"2013-02-03T19:54:00Z"}`,
+			expectedBody:   `{"id":1,"type":1,"author":"bob","tradeCashInPerson":true,"tradeCashByMail":true,"tradeMoneyOrderByMail":true,"tradeOther":true,"amountFrom":"12.2","amountTo":null,"fixedPrice":null,"percentageAdjustment":"0","currency":"EUR","additionalInfo":"","travelDistance":12,"travelDistanceUoM":"km","countryCode":"GR","stateCode":null,"city":"Athens","postalCode":"","status":1,"createdAt":"2013-02-03T19:54:00Z","expiredAt":"2013-03-03T19:54:00Z"}`,
 		},
 		{
-			name:           "should save advert and return saved entity with 200 status",
+			name:           "should return 400 if a request doesn't have both percentageAdjustment and fixedPrice",
 			method:         "POST",
 			contentType:    "application/json",
 			body:           []byte(`{"author":"bob", "tradeCashInPerson":true, "tradeCashByMail":true, "tradeMoneyOrderByMail":true, "tradeOther":true, "amountFrom":12.2, "amountTo": null, "percentageAdjustment":null,"currency":"EUR", "additionalInfo":"", "travelDistance":12, "travelDistanceUoM":"km", "countryCode":"GR","stateCode":null,"city":"Athens","postalCode":"", "recaptcha":"pass" }`),

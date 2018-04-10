@@ -1,6 +1,10 @@
 package board
 
-import "github.com/AlexSugak/getsky-trade/db/models"
+import (
+	"time"
+
+	"github.com/AlexSugak/getsky-trade/db/models"
+)
 
 // AdvertType represents the type of advert
 type AdvertType int
@@ -19,5 +23,6 @@ type Board interface {
 	GetLatestAdverts(AdvertType, int) ([]models.AdvertDetails, error)
 	GetAdvertDetails(int64) (models.AdvertDetails, error)
 	InsertAdvert(*models.Advert) (int64, error)
+	ExtendExperationTime(int64, time.Time) error
 	DeleteAdvert(advertID int64) error
 }

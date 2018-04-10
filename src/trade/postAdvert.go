@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/AlexSugak/getsky-trade/db/models"
 	"github.com/AlexSugak/getsky-trade/src/board"
@@ -14,6 +15,11 @@ import (
 	"github.com/AlexSugak/getsky-trade/src/util/httputil"
 	"github.com/jmoiron/sqlx/types"
 )
+
+// GetExtendedDate returns extended expiration date
+func GetExtendedDate(current time.Time) time.Time {
+	return current.AddDate(0, 0, 28)
+}
 
 // PostAdvertRequest represents a POST advert request model
 type PostAdvertRequest struct {
@@ -69,6 +75,7 @@ func prepareAdvert(s *HTTPServer, w http.ResponseWriter, r *http.Request) (*mode
 		return nil, ce.CreateSingleValidationError("recaptcha", "is not valid")
 	}
 
+	currentTime := s.serverTime.Now()
 	return &models.Advert{
 		ID:                    0,
 		Type:                  int(board.Buy),
@@ -90,7 +97,8 @@ func prepareAdvert(s *HTTPServer, w http.ResponseWriter, r *http.Request) (*mode
 		City:                  body.City,
 		PostalCode:            body.PostalCode,
 		Status:                1,
-		CreatedAt:             s.serverTime.Now(),
+		CreatedAt:             currentTime,
+		ExpiredAt:             GetExtendedDate(currentTime),
 	}, nil
 }
 

@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/AlexSugak/getsky-trade/db/models"
 	"github.com/AlexSugak/getsky-trade/src/board"
@@ -27,7 +28,8 @@ const advertsFields = ` a.Id,` +
 	` a.City,` +
 	` a.PostalCode,` +
 	` a.Status,` +
-	` a.CreatedAt`
+	` a.CreatedAt, ` +
+	` a.ExpiredAt`
 
 // Storage stands for main DB storage
 type Storage struct {
@@ -88,6 +90,7 @@ func (s Storage) GetAdvertsEnquiredByUserWithMessageCounts(userID int64) ([]mode
 			&ad.PostalCode,
 			&ad.Status,
 			&ad.CreatedAt,
+			&ad.ExpiredAt,
 			&ad.Author,
 			&recipient,
 			&isRead)
@@ -187,6 +190,7 @@ func (s Storage) GetAdvertsWithMessageCountsByUserID(userID int64) ([]models.Adv
 			&ad.PostalCode,
 			&ad.Status,
 			&ad.CreatedAt,
+			&ad.ExpiredAt,
 			&ad.Author,
 			&isRead)
 		if err != nil {
@@ -250,7 +254,8 @@ func (s Storage) GetLatestAdverts(t board.AdvertType, limit int) ([]models.Adver
 			` a.City,`+
 			` a.PostalCode,`+
 			` a.Status,`+
-			` a.CreatedAt`+
+			` a.CreatedAt, `+
+			` a.ExpiredAt`+
 			` FROM Adverts a`+
 			` LEFT JOIN Users u ON a.Author = u.Id`+
 			` WHERE a.Type = ? AND a.IsDeleted = 0`+
@@ -288,7 +293,8 @@ func (s Storage) GetAdvertDetails(advertID int64) (models.AdvertDetails, error) 
 			` a.City,`+
 			` a.PostalCode,`+
 			` a.Status,`+
-			` a.CreatedAt`+
+			` a.CreatedAt, `+
+			` a.ExpiredAt`+
 			` FROM getskytrade.Adverts a`+
 			` LEFT JOIN getskytrade.Users u ON a.Author = u.Id`+
 			` WHERE a.Id = ? AND a.IsDeleted = 0`, advertID)
@@ -335,7 +341,8 @@ func (s Storage) InsertAdvert(advert *models.Advert) (int64, error) {
 		` City, ` +
 		` PostalCode, ` +
 		` Status, ` +
-		` CreatedAt) ` +
+		` CreatedAt, ` +
+		` ExpiredAt)` +
 
 		` VALUES ` +
 		` (:Type, ` +
@@ -359,7 +366,8 @@ func (s Storage) InsertAdvert(advert *models.Advert) (int64, error) {
 		` :City, ` +
 		` :PostalCode, ` +
 		` :Status, ` +
-		` :CreatedAt) `
+		` :CreatedAt, ` +
+		` :ExpiredAt)`
 
 	res, err := s.DB.NamedExec(cmd, advert)
 	if err != nil {
@@ -370,4 +378,15 @@ func (s Storage) InsertAdvert(advert *models.Advert) (int64, error) {
 		return 0, err
 	}
 	return lastInsertID, err
+}
+
+// ExtendExperationTime updates expiredAt of an advert
+func (s Storage) ExtendExperationTime(ID int64, expirationDate time.Time) error {
+	cmd := `UPDATE Adverts` +
+		` SET ExpiredAt = ? ` +
+		` WHERE Id = ?`
+
+	_, err := s.DB.Exec(cmd, expirationDate, ID)
+
+	return err
 }
