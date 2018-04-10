@@ -17,7 +17,7 @@ import (
 // URI: /api/postings/sell/latest
 func LatestSellAdvertsHandler(s *HTTPServer) httputil.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
-		adverts, err := s.board.GetLatestAdverts(board.Sell, 10)
+		adverts, err := s.board.GetLatestAdverts(board.Sell, 10, s.serverTime.Now())
 		if err != nil {
 			return err
 		}
@@ -32,7 +32,7 @@ func LatestSellAdvertsHandler(s *HTTPServer) httputil.APIHandler {
 // URI: /api/postings/buy/latest
 func LatestBuyAdvertsHandler(s *HTTPServer) httputil.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
-		adverts, err := s.board.GetLatestAdverts(board.Buy, 10)
+		adverts, err := s.board.GetLatestAdverts(board.Buy, 10, s.serverTime.Now())
 		if err != nil {
 			return err
 		}
@@ -139,7 +139,7 @@ func DeleteAdvertHandler(s *HTTPServer) httputil.APIHandler {
 	}
 }
 
-// ExtendAdvertHandler deletes specified advert
+// ExtendAdvertHandler extends expiration data of the specified advert
 // Method: POST
 // Content-type: application/json
 // URI: /api/postings/{id}/extend

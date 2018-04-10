@@ -20,6 +20,7 @@ func setupAdvertsTests() func() {
 	userID := insertSQL(fmt.Sprintf("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('bob', 'bob@bob.com', 'foo', 0, 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName))
 	execSQL("INSERT INTO `%s`.`Adverts` (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt, ExpiredAt) VALUES (1, %d, 100.1, null, null, null, 'EUR', '', 25, 'km', 'GR', null, 'Athens', '', 1, 1, 1, 1, 0, '2018-03-06', '2018-03-06')", dbName, userID)
 	execSQL("INSERT INTO `%s`.`Adverts` (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt, ExpiredAt) VALUES (2, %d, 100.1, null, null, null, 'USD', '', 30, 'km', 'GR', null, 'Athens', '', 1, 1, 1, 1, 0, '2018-03-06', '2018-03-06')", dbName, userID)
+	execSQL("INSERT INTO `%s`.`Adverts` (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt, ExpiredAt) VALUES (2, %d, 100.1, null, null, null, 'USD', '', 30, 'km', 'GR', null, 'Athens', '', 1, 1, 1, 1, 0, '2000-03-06', '2000-03-06')", dbName, userID)
 
 	return func() {
 		clearTables()
@@ -84,6 +85,7 @@ func TestAdverts(t *testing.T) {
 		s := tradedb.NewStorage(sql)
 		w := httptest.NewRecorder()
 		server := &HTTPServer{board: s}
+		server.serverTime = ServerTimeMock{}
 		handler := server.setupRouter(test.StubSecure)
 
 		handler.ServeHTTP(w, req)

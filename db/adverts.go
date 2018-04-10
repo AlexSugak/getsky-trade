@@ -230,7 +230,7 @@ func (s Storage) GetAdvertsWithMessageCountsByUserID(userID int64) ([]models.Adv
 }
 
 // GetLatestAdverts returns 10 latest adverts
-func (s Storage) GetLatestAdverts(t board.AdvertType, limit int) ([]models.AdvertDetails, error) {
+func (s Storage) GetLatestAdverts(t board.AdvertType, limit int, time time.Time) ([]models.AdvertDetails, error) {
 	adverts := []models.AdvertDetails{}
 	err := s.DB.Select(&adverts,
 		`SELECT `+
@@ -258,8 +258,8 @@ func (s Storage) GetLatestAdverts(t board.AdvertType, limit int) ([]models.Adver
 			` a.ExpiredAt`+
 			` FROM Adverts a`+
 			` LEFT JOIN Users u ON a.Author = u.Id`+
-			` WHERE a.Type = ? AND a.IsDeleted = 0`+
-			` ORDER BY CreatedAt LIMIT ?`, t, limit)
+			` WHERE a.Type = ? AND a.ExpiredAt > ? AND a.IsDeleted = 0`+
+			` ORDER BY CreatedAt LIMIT ?`, t, time, limit)
 	if err != nil {
 		return nil, err
 	}
