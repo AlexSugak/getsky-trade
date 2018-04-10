@@ -51,10 +51,10 @@ INSERT INTO `getskytrade`.`Adverts`
 `TradeCashInPerson`,
 `TradeCashByMail`,
 `TradeMoneyOrderByMail`,
-`TradeOther`)
+`TradeOther`,
+`ExpiredAt`)
 VALUES
-(1, 1, 100, null, 25, null, "USD", "will sell 100 USD of SKY with fixed price of 25 USD per 1 SKY", 12, "mi", "US", "CA", "Los Angeles", "", 1, 1, 0, 1, 0),
-(1, 1, 200, null, 25, null, "USD", "will sell 200 USD of SKY with fixed price of 25 USD per 1 SKY", 12, "mi", "US", "CA", "Los Angeles", "", 1, 1, 0, 1, 0),
-(2, 2, 100, null, null, null, "EUR", "will buy 100 USD of SKY", 25, "km", "GR", null, "Athens", "", 1, 1, 1, 1, 0),
-(2, 2, 200, null, null, null, "EUR", "will buy 200 USD of SKY", 25, "km", "GR", null, "Athens", "", 1, 1, 1, 1, 0);
-
+(1, 1, 100, null, 25, null, "USD", "will sell 100 USD of SKY with fixed price of 25 USD per 1 SKY", 12, "mi", "US", "CA", "Los Angeles", "", 1, 1, 0, 1, 0, NOW() + INTERVAL 28 DAY),
+(1, 1, 200, null, 25, null, "USD", "will sell 200 USD of SKY with fixed price of 25 USD per 1 SKY", 12, "mi", "US", "CA", "Los Angeles", "", 1, 1, 0, 1, 0, NOW() + INTERVAL 28 DAY),
+(2, 2, 100, null, null, null, "EUR", "will buy 100 USD of SKY", 25, "km", "GR", null, "Athens", "", 1, 1, 1, 1, 0, NOW() + INTERVAL 28 DAY),
+(2, 2, 200, null, null, null, "EUR", "will buy 200 USD of SKY", 25, "km", "GR", null, "Athens", "", 1, 1, 1, 1, 0, NOW() + INTERVAL 28 DAY);
