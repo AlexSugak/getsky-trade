@@ -2,13 +2,18 @@ package trade
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/AlexSugak/getsky-trade/db/models"
 	"github.com/AlexSugak/getsky-trade/src/board"
+	ce "github.com/AlexSugak/getsky-trade/src/errors"
 	"github.com/AlexSugak/getsky-trade/src/util/httputil"
 	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx/types"
+	"github.com/shopspring/decimal"
+	validator "gopkg.in/go-playground/validator.v9"
 )
 
 // LatestSellAdvertsHandler returns 10 latest sell adverts
@@ -136,6 +141,91 @@ func DeleteAdvertHandler(s *HTTPServer) httputil.APIHandler {
 		}
 
 		return s.board.DeleteAdvert(advertID)
+	}
+}
+
+type updateAdvertRequest struct {
+	TradeCashInPerson     types.BitBool `json:"tradeCashInPerson"`
+	TradeCashByMail       types.BitBool `json:"tradeCashByMail"`
+	TradeMoneyOrderByMail types.BitBool `json:"tradeMoneyOrderByMail"`
+	TradeOther            types.BitBool `json:"tradeOther"`
+
+	AmountFrom           decimal.Decimal        `json:"amountFrom" validate:"required"`
+	AmountTo             models.JSONNullDecimal `json:"amountTo"`
+	FixedPrice           models.JSONNullDecimal `json:"fixedPrice"`
+	PercentageAdjustment models.JSONNullDecimal `json:"percentageAdjustment"`
+
+	Currency          string `json:"currency" validate:"required"`
+	AdditionalInfo    string `json:"additionalInfo"`
+	TravelDistance    int64  `json:"travelDistance" validate:"required"`
+	TravelDistanceUoM string `json:"travelDistanceUoM"`
+
+	CountryCode string                `json:"countryCode" validate:"required"`
+	StateCode   models.JSONNullString `json:"stateCode"`
+	City        string                `json:"city" validate:"required"`
+	PostalCode  string                `json:"postalCode"`
+}
+
+// UpdateAdvertHandler updates specified advert
+// Method: PUT
+// Content-type: application/json
+// URI: /api/postings/{id}
+func UpdateAdvertHandler(s *HTTPServer) httputil.APIHandler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		vars := mux.Vars(r)
+		advertID, err := strconv.ParseInt(vars["id"], 10, 64)
+		if err != nil {
+			http.Error(w, "id is not valid. id should be a number", http.StatusBadRequest)
+			return nil
+		}
+
+		body := &updateAdvertRequest{}
+		if err = json.NewDecoder(r.Body).Decode(body); err != nil {
+			return httputil.StatusError{
+				Err:  fmt.Errorf("Invalid json request body: %v", err),
+				Code: http.StatusBadRequest,
+			}
+		}
+
+		if err = s.validate.Struct(body); err != nil {
+			return ce.ValidatorErrorsResponse(err.(validator.ValidationErrors))
+		}
+
+		advert, err := s.board.GetAdvertDetails(advertID)
+		if err != nil || (advert == models.AdvertDetails{}) {
+			http.Error(w, "advert with specified id does not exist", http.StatusNotFound)
+			return nil
+		}
+
+		if userName := r.Header.Get("name"); advert.Author != userName {
+			http.Error(w, "You don't have rights to manage this resource", http.StatusForbidden)
+			return nil
+		}
+
+		model := &models.Advert{
+			ID:                    advertID,
+			TradeCashInPerson:     body.TradeCashInPerson,
+			TradeCashByMail:       body.TradeCashByMail,
+			TradeMoneyOrderByMail: body.TradeMoneyOrderByMail,
+			TradeOther:            body.TradeOther,
+
+			AmountFrom:           body.AmountFrom,
+			AmountTo:             body.AmountTo,
+			FixedPrice:           body.FixedPrice,
+			PercentageAdjustment: body.PercentageAdjustment,
+
+			Currency:          body.Currency,
+			AdditionalInfo:    body.AdditionalInfo,
+			TravelDistance:    body.TravelDistance,
+			TravelDistanceUoM: body.TravelDistanceUoM,
+
+			CountryCode: body.CountryCode,
+			StateCode:   body.StateCode,
+			City:        body.City,
+			PostalCode:  body.PostalCode,
+		}
+
+		return s.board.UpdateAdvert(model)
 	}
 }
 

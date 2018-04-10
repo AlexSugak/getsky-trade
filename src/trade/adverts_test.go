@@ -9,8 +9,10 @@ import (
 	"testing"
 
 	"github.com/jmoiron/sqlx"
+	validator "gopkg.in/go-playground/validator.v9"
 
 	tradedb "github.com/AlexSugak/getsky-trade/db"
+	"github.com/AlexSugak/getsky-trade/src/util/logger"
 	"github.com/AlexSugak/getsky-trade/src/util/test"
 	_ "github.com/mattes/migrate/source/file"
 	"github.com/stretchr/testify/require"
@@ -283,6 +285,114 @@ func TestExtendAdvertHandler(t *testing.T) {
 		w := httptest.NewRecorder()
 		server := &HTTPServer{board: s}
 		handler := server.setupRouter(test.StubAuthHeader("1", "bob"))
+
+		handler.ServeHTTP(w, req)
+		require.Equal(t, tc.expectedStatus, w.Code, name)
+		require.Equal(t, tc.expectedBody, strings.TrimSuffix(w.Body.String(), "\n"), name)
+	}
+}
+
+func setupUpdateAdvertTests() func() {
+	userID1 := insertSQL(fmt.Sprintf("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('bob', 'bob@bob.com', 'foo', 0, 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName))
+	execSQL("INSERT INTO `%s`.`Adverts` (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt) VALUES (1, %d, 100.1, null, null, null, 'EUR', '', 25, 'km', 'GR', null, 'Athens', '', 1, 1, 1, 1, 0, '2018-03-06')", dbName, userID1)
+
+	userID2 := insertSQL(fmt.Sprintf("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('bib', 'bib@bib.com', 'foo', 0, 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName))
+	execSQL("INSERT INTO `%s`.`Adverts` (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt) VALUES (1, %d, 100.1, null, null, null, 'EUR', '', 25, 'km', 'US', null, 'United States of America', '', 1, 1, 1, 1, 0, '2018-03-06')", dbName, userID2)
+
+	return func() {
+		clearTables()
+	}
+}
+
+func TestUpdateAdvert(t *testing.T) {
+	tests := []struct {
+		name           string
+		method         string
+		contentType    string
+		url            string
+		body           string
+		expectedBody   string
+		expectedStatus int
+	}{
+		{
+			name:           "should validate content type",
+			method:         "PUT",
+			contentType:    "application/xml",
+			url:            "/api/postings/1",
+			body:           ``,
+			expectedStatus: http.StatusUnsupportedMediaType,
+			expectedBody:   `Invalid content type, expected application/jsonInvalid json request body: EOF`,
+		},
+		{
+			name:           "should validate format of the request entity",
+			method:         "PUT",
+			contentType:    "application/json",
+			body:           ``,
+			url:            "/api/postings/1",
+			expectedStatus: http.StatusBadRequest,
+			expectedBody:   "Invalid json request body: EOF",
+		},
+		{
+			name:           "should return 415 error if body doesn't contain mandatory fields",
+			method:         "PUT",
+			contentType:    "application/json",
+			url:            "/api/postings/1",
+			body:           `{}`,
+			expectedStatus: http.StatusBadRequest,
+			expectedBody:   `[{"key":"Currency","message":"is required"},{"key":"TravelDistance","message":"is required"},{"key":"CountryCode","message":"is required"},{"key":"City","message":"is required"}]`,
+		},
+		{
+			name:           "should return 404 error if advert with specified id is not exists",
+			method:         "PUT",
+			url:            "/api/postings/100",
+			contentType:    "application/json",
+			body:           `{"tradeCashInPerson":true, "tradeCashByMail":true, "tradeMoneyOrderByMail":true, "tradeOther":true, "amountFrom":12.2, "amountTo": null, "percentageAdjustment":0,"currency":"EUR", "additionalInfo":"", "travelDistance":12, "travelDistanceUoM":"km", "countryCode":"GR","stateCode":null,"city":"Athens","postalCode":"" }`,
+			expectedStatus: http.StatusNotFound,
+			expectedBody:   `advert with specified id does not exist`,
+		},
+		{
+			name:           "should deny updating of the adverts that were created by another user",
+			method:         "PUT",
+			url:            "/api/postings/2",
+			contentType:    "application/json",
+			body:           `{"tradeCashInPerson":true, "tradeCashByMail":true, "tradeMoneyOrderByMail":true, "tradeOther":true, "amountFrom":12.2, "amountTo": null, "percentageAdjustment":0,"currency":"EUR", "additionalInfo":"", "travelDistance":12, "travelDistanceUoM":"km", "countryCode":"GR","stateCode":null,"city":"Athens","postalCode":"" }`,
+			expectedStatus: http.StatusForbidden,
+			expectedBody:   `You don't have rights to manage this resource`,
+		},
+		{
+			name:           "should return 200 status code and update advert from DB",
+			method:         "PUT",
+			contentType:    "application/json",
+			body:           `{"tradeCashInPerson":true, "tradeCashByMail":true, "tradeMoneyOrderByMail":true, "tradeOther":true, "amountFrom":12.2, "amountTo": null, "percentageAdjustment":0,"currency":"EUR", "additionalInfo":"", "travelDistance":12, "travelDistanceUoM":"km", "countryCode":"GR","stateCode":null,"city":"Athens","postalCode":"" }`,
+			url:            "/api/postings/1",
+			expectedStatus: http.StatusOK,
+			expectedBody:   ``,
+		},
+	}
+
+	teardownTests := setupUpdateAdvertTests()
+	defer teardownTests()
+
+	for _, tc := range tests {
+		name := fmt.Sprintf("test case: TestUpdateAdvert %s", tc.name)
+		req, err := http.NewRequest(tc.method, tc.url, strings.NewReader(tc.body))
+		req.Header.Add("Content-type", tc.contentType)
+
+		require.NoError(t, err)
+		stubAuthHeader := func(h http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				r.Header.Set("name", "bob")
+				h.ServeHTTP(w, r)
+			})
+		}
+
+		sql := sqlx.NewDb(db, "mysql")
+		s := tradedb.NewStorage(sql)
+		w := httptest.NewRecorder()
+		u := tradedb.NewUsers(sql)
+		server := &HTTPServer{board: s, users: u, log: logger.InitLogger()}
+		server.validate = validator.New()
+		handler := server.setupRouter(stubAuthHeader)
 
 		handler.ServeHTTP(w, req)
 		require.Equal(t, tc.expectedStatus, w.Code, name)

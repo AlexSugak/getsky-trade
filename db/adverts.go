@@ -317,6 +317,35 @@ func (s Storage) DeleteAdvert(advertID int64) error {
 	return err
 }
 
+// UpdateAdvert updates fields of the specified advert in the DB
+func (s Storage) UpdateAdvert(advert *models.Advert) error {
+	cmd := `UPDATE Adverts ` +
+		`SET ` +
+		` TradeCashInPerson=:TradeCashInPerson, ` +
+		` TradeCashByMail = :TradeCashByMail, ` +
+		` TradeMoneyOrderByMail = :TradeMoneyOrderByMail, ` +
+		` TradeOther = :TradeOther, ` +
+
+		` AmountFrom = :AmountFrom, ` +
+		` AmountTo = :AmountTo, ` +
+		` FixedPrice = :FixedPrice, ` +
+		` PercentageAdjustment = :PercentageAdjustment, ` +
+		` Currency = :Currency, ` +
+		` AdditionalInfo = :AdditionalInfo, ` +
+
+		` TravelDistance = :TravelDistance, ` +
+		` TravelDistanceUoM = :TravelDistanceUoM, ` +
+		` CountryCode = :CountryCode, ` +
+		` StateCode = :StateCode, ` +
+		` City = :City, ` +
+		` PostalCode = :PostalCode, ` +
+		` Status = :Status ` +
+		` WHERE Id = :Id `
+
+	_, err := s.DB.NamedExec(cmd, advert)
+	return err
+}
+
 // InsertAdvert inserts a new advert record to the DB
 func (s Storage) InsertAdvert(advert *models.Advert) (int64, error) {
 	cmd := `INSERT INTO Adverts` +
