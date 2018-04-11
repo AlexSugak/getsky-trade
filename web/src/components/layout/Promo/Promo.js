@@ -44,17 +44,18 @@ const BgImg = styled.img`
     width: ${props => props.theme.container.width};
     max-width: ${props => props.theme.container.maxWidth};
     height: 400px;
-    z-index: -1;
+    z-index: 1;
 `
 
 const Promo = styled.section`
     color: ${props => props.theme.colors.white};
     height: 400px;
     text-align: center;
+    z-index: 2;
 `;
 
 export default () => (
-    <Container flexDirection="column" py={4}>
+    <Container flexDirection="column" py={4} style={{ zIndex: 10000 }} >
         <BgImg src={bg} />
         <Promo>
             <Title>Can't find the advert for you?</Title>

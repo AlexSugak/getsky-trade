@@ -9,6 +9,6 @@ const Brand = styled(Link) `
 
 export default () => (
     <Brand to="/">
-        <img src={logo} />>
+        <img src={logo} />
     </Brand>
 );
