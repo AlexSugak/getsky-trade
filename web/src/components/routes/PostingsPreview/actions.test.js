@@ -44,7 +44,7 @@ describe('postingsPreview actions', () => {
                     tradeMoneyOrderByMail: false,
                     tradeOther: false,
                     travelDistance: 1,
-                    travel: 'mi',
+                    travelDistanceUoM: 'mi',
                     currency: 'USD',
                     id: null,
                     ...extraDataStub,
