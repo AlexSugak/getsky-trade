@@ -1,6 +1,7 @@
 export default {
     colors: {
         black: '#222',
+        deepBlack: '#000',
         white: '#fff',
         red: '#f00',
         gray: '#424242',
@@ -13,12 +14,13 @@ export default {
         blue: '#0072FF',
         darkBlue: '#07172E',
         grayBlue: "#687B93",
+        mint: '#38F0B8',
     },
     fontSizes: [12, 14, 16, 17, 25, 35],
     spaces: [5, 10, 15, 20, 25, 30, 35, 40, 50],
     fontLight: '\'skycoin-light\'',
     fontBold: '\'skycoin-bold\'',
-    introTabsHeight: 70,
+    introTabsHeight: 96,
     controlHeight: 40,
     logoSize: 30,
 };

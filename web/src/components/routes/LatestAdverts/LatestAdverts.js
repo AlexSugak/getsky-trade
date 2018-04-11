@@ -7,7 +7,6 @@ import keys from 'lodash/keys';
 import values from 'lodash/values';
 import pick from 'lodash/pick';
 import pickBy from 'lodash/pickBy';
-import { Tab as UnstyledTab, Tabs, TabList as UnstyledTabList, TabPanel } from 'react-tabs';
 
 import Icon, { IconMap } from 'components/layout/Icon';
 import Promo from 'components/layout/Promo';
@@ -18,6 +17,7 @@ import { TRADE_OPTIONS } from 'constants/index';
 import Spinner from 'components/layout/Spinner';
 import ActionButton from 'components/layout/Button/ActionButton';
 
+import { Tab, Tabs, TabList, TabPanel } from './Tabs';
 import { getAdverts } from './actions';
 import bgImage from './intro-bg.png';
 
@@ -40,40 +40,6 @@ const Intro = styled.div`
         line-height: 30px;
     }
 `;
-
-const TabList = styled(UnstyledTabList) `
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    height: ${props => props.theme.introTabsHeight}px;
-    margin-top: -${props => props.theme.introTabsHeight}px;
-`;
-
-const Tab = styled(UnstyledTab) `
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    list-style: none;
-    height: ${props => props.theme.introTabsHeight}px;
-    padding: 0 ${props => props.theme.spaces[4]}px;
-    margin: 0 2px;
-    border-radius: 3px 3px 0 0;
-    background-color: ${props => props.selected ? props.theme.colors.white : props.theme.colors.black};
-    color: ${props => props.selected ? props.theme.colors.black : props.theme.colors.white};
-    font-size: ${props => props.theme.fontSizes[1]}px;
-    text-align: center;
-    cursor: pointer;
-    user-select: none;
-
-    strong {
-        display: block;
-        font-size: ${props => props.theme.fontSizes[4]}px;
-        margin-top: ${props => props.theme.spaces[0]}px;
-    }
-`;
-
-TabList.tabsRole = 'TabList';
-Tab.tabsRole = 'Tab';
 
 const Author = styled.div`
     .name {
@@ -198,22 +164,24 @@ class LatestAdverts extends React.Component {
                         <p>We never store Skycoin on this site so your money can't be hacked or stolen. All transactions are completely peer-to-peer (seller to buyer) and no email is required.</p>
                     </Container>
                 </Intro>
-                <Container flex='1 0 auto' flexDirection="column" pb={4}>
-                    <Tabs>
-                        <TabList>
-                            <Tab><span>I want to</span><strong>Buy Skycoin</strong></Tab>
-                            <Tab><span>I want to</span><strong>Sell Skycoin</strong></Tab>
-                        </TabList>
-                        <TabPanel>
+                <Tabs>
+                    <TabList>
+                        <Tab><strong>Buy Skycoin</strong></Tab>
+                        <Tab><strong>Sell Skycoin</strong></Tab>
+                    </TabList>
+                    <TabPanel>
+                        <Container flex='1 0 auto' flexDirection="column" pb={4}>
                             {this.props.loading && <Spinner />}
                             <Table columns={buyAdvertsColumns} rowComponent={BuyAdvertRow} rowData={this.props.sellAdverts} />
-                        </TabPanel>
-                        <TabPanel>
+                        </Container>
+                    </TabPanel>
+                    <TabPanel>
+                        <Container flex='1 0 auto' flexDirection="column" pb={4}>
                             {this.props.loading && <Spinner />}
                             <Table columns={sellAdvertsColumns} rowComponent={SellAdvertRow} rowData={this.props.buyAdverts} />
-                        </TabPanel>
-                    </Tabs>
-                </Container>
+                        </Container>
+                    </TabPanel>
+                </Tabs>
                 <Promo />
             </div>
         );
