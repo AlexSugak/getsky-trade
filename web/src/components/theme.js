@@ -23,4 +23,8 @@ export default {
     introTabsHeight: 96,
     controlHeight: 40,
     logoSize: 30,
+    container: {
+        width: '90%',
+        maxWidth: '1280px',
+    }
 };

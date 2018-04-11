@@ -8,12 +8,17 @@ import Btn from './Button';
 const Button = styled(Btn) `
     color: ${props => props.theme.colors.buyGreen};
 `
-const BuyButton = ({ push }) => {
-    return <Button text={'Post a buyer advert'} onClick={() => push('postings/buy')} primary />
+const BuyButton = ({ push, text }) => {
+    return <Button text={text} onClick={() => push('postings/buy')} primary />
+};
+
+BuyButton.defaultProps = {
+    text: 'Post a buyer advert',
 };
 
 BuyButton.propTypes = {
-    push: PropTypes.func,
+    push: PropTypes.func.isRequired,
+    text: PropTypes.string,
 };
 
 export default connect(null, { push })(BuyButton);
