@@ -2,20 +2,29 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-import logo from './getSky-Logo.png';
+const WhiteText = styled.span`
+    color: ${props => props.theme.colors.white};
+    font-size: ${props => props.theme.logoSize}px;
+`
 
-const Logo = styled.img.attrs({
-    src: logo
-})`
+const BlueText = styled.span`
+    color: ${props => props.theme.colors.blue};
+    font-size: ${props => props.theme.logoSize}px;
+`
+
+const Brand = styled(Link) `
     display: block;
-    height: 96px;
-    width: auto;
-`;
-
-const Brand = styled(Link)`
-    display: block;    
+    transform: scale(1, 1.25);
+    -webkit-transform: scale(1, 1.25); /* Safari and Chrome */
+    -moz-transform: scale(1, 1.25); /* Firefox */
+    -ms-transform: scale(1, 1.25); /* IE 9+ */
+    -o-transform: scale(1, 1.25); /* Opera */
+    letter-spacing: 3px;
 `;
 
 export default () => (
-    <Brand to="/"><Logo className="logo" /></Brand>
+    <Brand to="/">
+        <WhiteText>BUY</WhiteText>
+        <BlueText>SKY</BlueText>
+    </Brand>
 );

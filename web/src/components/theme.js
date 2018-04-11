@@ -10,6 +10,7 @@ export default {
         success: '#00ff40',
         buyGreen: '#18B600',
         sellBlue: '#00A4B6',
+        blue: '#0072FF',
         darkBlue: '#07172E',
         grayBlue: "#687B93",
     },
@@ -19,4 +20,5 @@ export default {
     fontBold: '\'skycoin-bold\'',
     introTabsHeight: 70,
     controlHeight: 40,
+    logoSize: 30,
 };

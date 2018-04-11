@@ -18,19 +18,19 @@ const SubHeaderWrapper = styled(Flex) `
 `;
 
 const HeaderWrapper = styled.div`
-    background: ${props => props.theme.colors.black};
+    margin-top: 38px;
 `;
 
 const noAuthNavItems = [
-    { url: '/', name: 'Home' },
-    { url: '/search', name: 'Search' },
-    { url: '/register', name: 'Register' },
-    { url: '/login', name: 'Login' },
+    { url: '/', name: 'Home', border: false },
+    { url: '/search', name: 'Search', border: false },
+    { url: '/register', name: 'Sign Up', border: false },
+    { url: '/login', name: 'Log In', border: true },
 ];
 
 const authNavItems = [
-    { url: '/', name: 'Home' },
-    { url: '/search', name: 'Search' },
+    { url: '/', name: 'Home', border: false },
+    { url: '/search', name: 'Search', border: false },
 ];
 
 const Header = ({ authorized, userInfo, skyPrices, currencies, logout }) => (
@@ -41,8 +41,8 @@ const Header = ({ authorized, userInfo, skyPrices, currencies, logout }) => (
                 {authorized && <UserSubmenu userInfo={userInfo} logout={logout} />}
             </Container>
         </SubHeaderWrapper>
-        <HeaderWrapper className="header">
-            <Container alignItems="center" justifyContent="space-between" py={3}>
+        <HeaderWrapper style={{ position: 'absolute', width: '100%' }}>
+            <Container alignItems={'center'} justifyContent={'space-between'}>
                 <Brand />
                 <Nav navItems={authorized ? authNavItems : noAuthNavItems} />
             </Container>

@@ -19,24 +19,25 @@ import Spinner from 'components/layout/Spinner';
 import ActionButton from 'components/layout/Button/ActionButton';
 
 import { getAdverts } from './actions';
-import bgImage from './intro-bg.jpg';
+import bgImage from './intro-bg.png';
 
 const Intro = styled.div`
     background: ${props => props.theme.colors.black} url(${bgImage}) 50% 20% no-repeat;
     background-size: cover;
     padding: ${props => props.theme.spaces[8] * 2}px 0 ${props => props.theme.introTabsHeight + props.theme.spaces[8] * 2}px;
     color: ${props => props.theme.colors.white};
-    text-align: center;
     
     h1 {
-        font-family: ${props => props.theme.fontBold}
+        font-family: ${props => props.theme.fontBold};
+        font-size: 38px;
+        line-height: 44px;
+        padding-top: 10px;
     }
     
     p {
         max-width: 650px;
-        margin: auto;
-        font-size: ${props => props.theme.fontSizes[3]}px;
-        line-height: 1.4;
+        font-size: ${props => props.theme.fontSizes[2]}px;
+        line-height: 30px;
     }
 `;
 
@@ -63,7 +64,7 @@ const Tab = styled(UnstyledTab) `
     text-align: center;
     cursor: pointer;
     user-select: none;
-    
+
     strong {
         display: block;
         font-size: ${props => props.theme.fontSizes[4]}px;
