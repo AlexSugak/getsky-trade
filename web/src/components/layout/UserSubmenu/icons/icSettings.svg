@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>ic/icSettings</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.6">
+        <g id="getsky-ui-kit" transform="translate(-1255.000000, -3187.000000)">
+            <g id="ic/icSettings" transform="translate(1253.000000, 3185.000000)">
+                <g id="settings-2" fill-rule="evenodd" transform="translate(2.000000, 2.000000)" fill="#FFFFFF">
+                    <path d="M16,9.14 L16,6.86 L14.0625,5.9425 L13.7415,5.1685 L14.463,3.15 L12.85,1.537 L10.83,2.259 L10.0575,1.939 L9.14,0 L6.86,0 L5.942,1.939 L5.1695,2.259 L3.15,1.537 L1.537,3.15 L2.2585,5.169 L1.9375,5.943 L0,6.86 L0,9.14 L1.9375,10.0575 L2.2585,10.8315 L1.537,12.85 L3.15,14.463 L5.169,13.7415 L5.943,14.0625 L6.86,16 L9.14,16 L10.0575,14.0625 L10.8315,13.7415 L12.85,14.463 L14.463,12.85 L13.7415,10.831 L14.0625,10.057 L16,9.14 Z M13.3085,12.59 L12.591,13.3075 L10.805,12.6705 L9.3185,13.286 L8.5075,15 L7.4925,15 L6.6815,13.286 L5.195,12.6705 L3.409,13.3085 L2.6915,12.591 L3.3295,10.805 L2.714,9.3185 L1,8.5075 L1,7.4925 L2.714,6.6815 L3.3295,5.195 L2.6915,3.409 L3.409,2.6915 L5.196,3.33 L6.681,2.7155 L7.4925,1 L8.5075,1 L9.319,2.7155 L10.804,3.33 L12.591,2.6915 L13.3085,3.409 L12.6705,5.195 L13.286,6.6815 L15,7.4925 L15,8.5075 L13.286,9.3185 L12.6705,10.805 L13.3085,12.59 Z" id="Shape" fill-rule="nonzero"></path>
+                </g>
+                <circle id="Oval-3" stroke="#FFFFFF" cx="10" cy="10" r="3"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

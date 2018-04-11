@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="12px" viewBox="0 0 16 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>ic/icDashboard</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.6">
+        <g id="getsky-ui-kit" transform="translate(-1255.000000, -3154.000000)" fill="#FFFFFF">
+            <g id="ic/icDashboard" transform="translate(1253.000000, 3150.000000)">
+                <g id="Page-1" transform="translate(2.000000, 4.000000)">
+                    <path d="M0,12 L16,12 L16,0 L0,0 L0,12 Z M1,11 L15,11 L15,1 L1,1 L1,11 Z" id="Fill-1"></path>
+                    <polygon id="Fill-2" points="2.5 3.625 5.249 3.625 5.249 2.625 2.5 2.625"></polygon>
+                    <polygon id="Fill-3" points="6.625 3.625 9.375 3.625 9.375 2.625 6.625 2.625"></polygon>
+                    <polygon id="Fill-4" points="10.75 3.625 13.5 3.625 13.5 2.625 10.75 2.625"></polygon>
+                    <polygon id="Fill-5" points="2.469 6.781 13.469 6.781 13.469 5.781 2.469 5.781"></polygon>
+                    <polygon id="Fill-6" points="2.469 9.125 13.469 9.125 13.469 8.125 2.469 8.125"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
