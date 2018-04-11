@@ -20,7 +20,7 @@ const Tab = styled(UnstyledTab) `
     height: ${props => props.theme.introTabsHeight}px;
     width: 100%;
     background-color: ${props => props.selected ? props.theme.colors.white : 'transparent'};
-    color: ${props => props.selected ? props.theme.colors.deepBlack : props.theme.colors.mint};
+    color: ${props => props.selected ? props.theme.colors.black : props.theme.colors.mint};
     font-size: ${props => props.theme.fontSizes[1]}px;
     font-family: ${props => props.theme.fontBold};
     line-height: 32px;
