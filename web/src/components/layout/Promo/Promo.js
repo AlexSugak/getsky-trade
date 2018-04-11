@@ -3,14 +3,27 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Flex, Box } from 'grid-styled';
 
-
 import Container from 'components/layout/Container';
+import { H2 } from 'components/layout/Text';
 import { SellButton, BuyButton } from 'components/layout/Button';
 import bg from './bg.png';
 
-const Title = styled.h2`
+const SellBtn = styled(SellButton) `
+    width: 280px;
+    height: 70px;
+    font-size: 18px;
+    line-height: 18px;
+`;
+
+const BuyBtn = styled(BuyButton) `
+    width: 280px;
+    height: 70px;
+    font-size: 18px;
+    line-height: 18px;
+`;
+
+const Title = styled(H2) `
     margin-top: 90px;
-    font-size: 28px;
 `
 
 const Tip = styled.p`
@@ -35,8 +48,6 @@ const BgImg = styled.img`
 `
 
 const Promo = styled.section`
-    background-repeat: no-repeat;
-    background-position: center; 
     color: ${props => props.theme.colors.white};
     height: 400px;
     text-align: center;
@@ -51,10 +62,10 @@ export default () => (
             <ActionText>I want to advertise to</ActionText>
             <Flex justifyContent={'center'}>
                 <Box mr={'15px'}>
-                    <SellButton text={'Sell Skycoin'} />
+                    <BuyBtn text={'Buy Skycoin'} />
                 </Box>
                 <Box ml={'15px'}>
-                    <BuyButton text={'Buy Skycoin'} />
+                    <SellBtn text={'Sell Skycoin'} />
                 </Box>
             </Flex>
         </Promo>
