@@ -5,7 +5,6 @@ import { Flex, Box } from 'grid-styled';
 import Container from 'components/layout/Container';
 import Brand from 'components/layout/Brand';
 import { Link } from 'components/layout/Links';
-import SocialMenu from '../SocialLinks';
 
 const Background = styled(Box) `
     background: ${props => `linear-gradient(${props.theme.colors.darkBlue}, ${props.theme.colors.black})`};
@@ -16,6 +15,11 @@ const Background = styled(Box) `
 const LinksContainer = styled(Container) `
     border-bottom: 1px solid #979797;
     padding-bottom: 61px;
+`;
+
+const MicroText = styled(Box) `
+    color: ${props => props.theme.colors.grayBlue};
+    font-size: ${props => props.theme.fontSizes[1]}px;
 `;
 
 export default () => (
@@ -32,5 +36,11 @@ export default () => (
         <Flex justifyContent={'center'} my={'76px'}>
             <Brand />
         </Flex>
+        <Container justifyContent={'space-between'} alignContent={'center'} height={'74px'}>
+            <MicroText>Have you heard yet? Skycoin is the new Benjamin</MicroText>
+            <Box>
+            </Box>
+            <MicroText>©2018 GetSky.com. All rights reserved.</MicroText>
+        </Container>
     </Background>
 );
