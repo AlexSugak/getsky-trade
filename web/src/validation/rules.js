@@ -61,15 +61,15 @@ export const rangedRequired = value => {
         return 'The field is required';
     }
 
-    if (value.to === undefined) {
-        return value.from ? undefined : 'The field is required';
+    if (value.to === undefined || value.mode === 'SINGLE_MODE') {
+        return value.from && value.mode === 'SINGLE_MODE' ? undefined : 'The field is required';
     } else {
         return (value.from && value.to) ? undefined : 'The field is required';
     }
 };
 
 export const ranged = value =>
-    (value.to === undefined || (value.to >= value.from)) ? undefined : 'First value has to be bigger or same';
+    ((value.to === undefined || value.mode === 'SINGLE_MODE') || (value.to >= value.from)) ? undefined : 'First value has to be bigger or same';
 
 export const rangedMin = min => value =>
     (value.to === undefined && (value.from < min || value.to < min)) ? `The value can't be less than ${min}` : undefined;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import Container from 'components/layout/Container';
 import { SellAdvertRow, sellAdvertsColumns, BuyAdvertRow, buyAdvertsColumns } from 'components/routes/LatestAdverts';
@@ -42,7 +43,9 @@ class Dashboard extends React.Component {
             selectedAdvert: advert,
         });
     }
-
+    editAdvert = advert => {
+        this.props.push(`/edit-post/${advert.id}`);
+    }
     componentDidMount() {
         this.props.getAdverts();
     }
@@ -75,6 +78,7 @@ class Dashboard extends React.Component {
                     rowOperations={{
                         deleteAdvert: this.toggleDeleteConfirmation,
                         extendAdvert: this.toggleExtendConfirmation,
+                        editAdvert: this.editAdvert,
                     }}
                     title={'Your buyer adverts'}
                     adverts={buyAdverts}
@@ -87,6 +91,7 @@ class Dashboard extends React.Component {
                     rowOperations={{
                         deleteAdvert: this.toggleDeleteConfirmation,
                         extendAdvert: this.toggleExtendConfirmation,
+                        editAdvert: this.editAdvert,
                     }}
                     title={'Your seller adverts'}
                     adverts={sellAdverts}
@@ -127,4 +132,4 @@ const mapStateToProps = ({ app, dashboard }) => ({
     enquiriesToSellers: dashboard.enquiriesToSellers,
 });
 
-export default connect(mapStateToProps, { getAdverts, extendExpirationDate, deleteAdvert })(Dashboard);
+export default connect(mapStateToProps, { getAdverts, extendExpirationDate, deleteAdvert, push })(Dashboard);

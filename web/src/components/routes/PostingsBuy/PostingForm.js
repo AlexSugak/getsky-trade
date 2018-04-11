@@ -22,7 +22,7 @@ const rData = required(v => v ? v.data : v);
 const minData0 = min(0, v => v.data);
 const maxData9999 = max(9999, v => v.data);
 
-const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting, pristine, defaultCountry }) => (
+const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting, pristine, defaultCountry, editMode }) => (
     <Form onSubmit={handleSubmit} noValidate>
         <Box width={1 / 2}>
             <FormGroup>
@@ -31,10 +31,11 @@ const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting
                     component={FormRangedSingleInput}
                     placeholder={'SKY'}
                     label={'What is the amount of cash you will pay in SKY?'}
-                    parse={({ from, to }) => {
+                    parse={({ from, to, mode }) => {
                         return {
                             from: from !== '' ? new Decimal(from) : '',
                             to: (to && to !== '') ? new Decimal(to) : '',
+                            mode,
                         };
                     }}
                     isRequired
@@ -66,7 +67,7 @@ const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting
             </FormGroup>
             <LocationFormGroup states={states} countries={countries} showStates={shouldShowStates(country)} defaultCountry={defaultCountry} />
             <AdditionalInformationSample />
-            <Button type="submit" text="Next" primary />
+            <Button type="submit" text={editMode ? 'Save' : 'Next'} primary />
         </Box>
     </Form>
 );

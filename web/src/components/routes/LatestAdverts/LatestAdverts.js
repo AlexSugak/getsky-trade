@@ -98,6 +98,14 @@ export const BuyAdvertRow = ({ data, rowOperations }) => {
                         tip="Extend"
                         icon={<Icon name={IconMap.Clock} />} />
                     <ActionButton
+                        onClick={e => {
+                            e.nativeEvent.stopImmediatePropagation();
+                            e.stopPropagation();
+                            rowOperations.editAdvert(advert);
+                        }}
+                        tip="Edit"
+                        icon={<Icon name={IconMap.PencilSquare} />} />
+                    <ActionButton
                         isDanger={true}
                         onClick={e => {
                             e.nativeEvent.stopImmediatePropagation();
@@ -136,6 +144,14 @@ export const SellAdvertRow = ({ data, rowOperations }) => {
                         }}
                         tip="Extend"
                         icon={<Icon name={IconMap.Clock} />} />
+                    <ActionButton
+                        onClick={e => {
+                            e.nativeEvent.stopImmediatePropagation();
+                            e.stopPropagation();
+                            rowOperations.editAdvert(advert);
+                        }}
+                        tip="Edit"
+                        icon={<Icon name={IconMap.PencilSquare} />} />
                     <ActionButton
                         isDanger={true}
                         onClick={e => {

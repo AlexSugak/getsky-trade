@@ -21,7 +21,7 @@ export const setAdvertPreview = (formPreview, extraData) =>
         const preview = {
             additionalInfo: formPreview.additionalInfo,
             amountFrom: formPreview.cashAmount.from,
-            amountTo: formPreview.cashAmount.to,
+            amountTo: formPreview.cashAmount.to === '' ? undefined : formPreview.cashAmount.to,
             city: formPreview.city,
             countryCode: formPreview.countryCode,
             currency: 'USD',
@@ -35,7 +35,7 @@ export const setAdvertPreview = (formPreview, extraData) =>
             tradeMoneyOrderByMail: formPreview.acceptOptions.includes('tradeMoneyOrderByMail'),
             tradeOther: formPreview.acceptOptions.includes('tradeOther'),
             travelDistance: formPreview.distance.data,
-            travel: formPreview.distance.prefix,
+            travelDistanceUoM: formPreview.distance.prefix,
             ...extraData
         };
 

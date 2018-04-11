@@ -14,68 +14,54 @@ const SINGLE_MODE = 'SINGLE_MODE';
 const fullWidth = { width: '100%' };
 
 class RangedSingleInput extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.setMode = this.setMode.bind(this);
-        this.onChangeFrom = this.onChangeFrom.bind(this);
-        this.onChangeTo = this.onChangeTo.bind(this);
-        this.onChangeSingle = this.onChangeSingle.bind(this);
-
-        this.state = {
-            mode: RANGED_MODE,
-            from: '',
-            to: '',
-            single: '',
-        }
-    };
+    state = {
+        mode: RANGED_MODE,
+    }
 
     componentDidMount() {
         const { value } = this.props.input;
 
         if (value !== '') {
+            if (value.mode) {
+                this.setState({ ...this.state, mode: value.mode, });
+                return;
+            }
             if (value.from && value.to) {
-                this.setState({ ...this.state, mode: RANGED_MODE, from: value.from, to: value.to });
+                this.setState({ ...this.state, mode: RANGED_MODE, });
             } else if (value.from) {
-                this.setState({ ...this.state, mode: SINGLE_MODE, single: value.from });
+                this.setState({ ...this.state, mode: SINGLE_MODE, });
             }
         }
     }
 
-    setMode(mode) {
+    setMode = mode => {
         const { input: { onChange } } = this.props;
 
-        if (mode === SINGLE_MODE) {
-            onChange({ to: null, from: this.state.single });
-        } else {
-            onChange({ to: this.state.to, from: this.state.from });
-        }
+        onChange({ to: '', from: '', mode });
 
         this.setState({ ...this.state, mode });
     };
 
-    onChangeFrom(e) {
+    onChangeFrom = e => {
         const { input: { onChange, value } } = this.props;
 
-        const from = e.target.value !== '' ? parseFloat(e.target.value) : '';
-        this.setState({ ...this.state, from });
-        onChange({ from, to: value.to || '' });
+        const from = e.target.value;
+        onChange({ from, to: value.to || '', mode: this.state.mode });
     };
 
-    onChangeTo(e) {
+    onChangeTo = e => {
         const { input: { onChange, value } } = this.props;
 
-        const to = e.target.value !== '' ? parseFloat(e.target.value) : '';
-        this.setState({ ...this.state, to });
-        onChange({ from: value.from || '', to });
+        const to = e.target.value;
+        onChange({ from: value.from || '', to, mode: this.state.mode });
     };
 
-    onChangeSingle(e) {
+    onChangeSingle = e => {
         const { input: { onChange } } = this.props;
 
-        const single = e.target.value !== '' ? parseFloat(e.target.value) : '';
-        this.setState({ ...this.state, single });
-        onChange({ from: single });
+        const single = e.target.value;
+
+        onChange({ from: single, to: '', mode: this.state.mode });
     };
 
     render() {
@@ -91,14 +77,14 @@ class RangedSingleInput extends React.Component {
                 </Flex>
                 {this.state.mode === RANGED_MODE &&
                     <Flex mt={2} alignItems='center' >
-                        <ControlInput type="number" min={min} max={max} placeholder={placeholder} error={showError} onChange={this.onChangeFrom} value={this.state.from} />
+                        <ControlInput type="number" min={min} max={max} placeholder={placeholder} error={showError} onChange={this.onChangeFrom} value={this.props.input.value.from} />
                         <Box mx={2}>to</Box>
-                        <ControlInput type="number" min={min} max={max} placeholder={placeholder} error={showError} onChange={this.onChangeTo} value={this.state.to} />
+                        <ControlInput type="number" min={min} max={max} placeholder={placeholder} error={showError} onChange={this.onChangeTo} value={this.props.input.value.to} />
                     </Flex>
                 }
                 {this.state.mode === SINGLE_MODE &&
                     <Flex mt={2} alignItems='center' >
-                        <ControlInput type="number" min={min} max={max} placeholder={placeholder} error={showError} onChange={this.onChangeSingle} value={this.state.single} />
+                        <ControlInput type="number" min={min} max={max} placeholder={placeholder} error={showError} onChange={this.onChangeSingle} value={this.props.input.value.from} />
                     </Flex>
                 }
                 <Box mt={2}>
