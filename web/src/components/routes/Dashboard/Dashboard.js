@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import Container from 'components/layout/Container';
-import { SellAdvertRow, sellAdvertsColumns, BuyAdvertRow, buyAdvertsColumns } from 'components/routes/LatestAdverts';
+import { sellAdvertsColumns, buyAdvertsColumns } from 'components/routes/LatestAdverts';
+import { AdvertRow } from 'components/layout/TableAdverts';
 import DashboardTitle from './DashboardTitle';
 import Counters from './Counters';
 import AdvertsList, { RightCornerButton } from './AdvertsList';
@@ -84,7 +85,7 @@ class Dashboard extends React.Component {
                     adverts={buyAdverts}
                     noAdvertsMessage={'You have no active buyer adverts.'}
                     columns={buyAdvertsColumns}
-                    rowComponent={BuyAdvertRow}
+                    rowComponent={AdvertRow}
                     rightCorner={RightCornerButton.BUY}
                 />
                 <AdvertsList
@@ -97,7 +98,7 @@ class Dashboard extends React.Component {
                     adverts={sellAdverts}
                     noAdvertsMessage={'You have no active seller adverts.'}
                     columns={sellAdvertsColumns}
-                    rowComponent={SellAdvertRow}
+                    rowComponent={AdvertRow}
                     rightCorner={RightCornerButton.SELL}
                 />
                 <AdvertsList
@@ -105,7 +106,7 @@ class Dashboard extends React.Component {
                     adverts={buyEnquiries}
                     noAdvertsMessage={'There are no active buyer adverts you have made enquiries to.'}
                     columns={buyAdvertsColumns}
-                    rowComponent={BuyAdvertRow}
+                    rowComponent={AdvertRow}
                     rightCorner={RightCornerButton.NONE}
                 />
                 <AdvertsList
@@ -113,7 +114,7 @@ class Dashboard extends React.Component {
                     adverts={sellEnquiries}
                     noAdvertsMessage={'There are no active seller adverts you have made enquiries to.'}
                     columns={sellAdvertsColumns}
-                    rowComponent={SellAdvertRow}
+                    rowComponent={AdvertRow}
                     rightCorner={RightCornerButton.NONE}
                 />
             </Container>
