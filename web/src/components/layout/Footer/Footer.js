@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Flex, Box } from 'grid-styled';
+import { Box } from 'grid-styled';
 
 import Container from 'components/layout/Container';
 import Brand from 'components/layout/Brand';
 import { Link } from 'components/layout/Links';
+import SocialLinks from 'components/layout/SocialLinks';
 
 const Background = styled(Box) `
     background: ${props => `linear-gradient(${props.theme.colors.darkBlue}, ${props.theme.colors.black})`};
@@ -33,12 +34,13 @@ export default () => (
             <Link path={''} text={'Privacy'} />
             <Link path={''} text={'Terms'} />
         </LinksContainer>
-        <Flex justifyContent={'center'} my={'76px'}>
+        <Container justifyContent={'center'} my={'76px'}>
             <Brand />
-        </Flex>
-        <Container justifyContent={'space-between'} alignContent={'center'} height={'74px'}>
+        </Container>
+        <Container justifyContent={'space-between'} alignItems={'center'} height={'74px'} >
             <MicroText>Have you heard yet? Skycoin is the new Benjamin</MicroText>
             <Box>
+                <SocialLinks />
             </Box>
             <MicroText>©2018 GetSky.com. All rights reserved.</MicroText>
         </Container>

@@ -47,8 +47,8 @@ export const IconMap = {
     PencilSquare: faPencilSquare,
 }
 
-const Icon = ({ name, color }) => (
-    <FontAwesomeIcon icon={name} color={color} />
+const Icon = ({ name, color, size }) => (
+    <FontAwesomeIcon icon={name} color={color} size={size} />
 )
 
 Icon.propTypes = {
