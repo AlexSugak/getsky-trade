@@ -15,7 +15,7 @@ export default {
         blackAlpha7: '#525252',
         white: '#FFF',
 
-        red: '#f00',
+        red: '#EB5A6B',
         gray: '#424242',
         warning: '#ff6a00',
         warningLight: '#ffb887',

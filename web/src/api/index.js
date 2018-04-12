@@ -77,3 +77,6 @@ export const updateAdvertMessage = (messageId, message) =>
 
 export const extendExpirationDate = advertId =>
     axios.post(`${apiUrl}/postings/${advertId}/extend`, headers);
+
+export const sendFeedback = feedback =>
+    axios.post(`${apiUrl}/feedback`, feedback, headers);

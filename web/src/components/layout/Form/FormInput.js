@@ -3,8 +3,8 @@ import ControlInput from './ControlInput';
 import FormItem from './FormItem';
 
 const FormInput = (props) => {
-    const { label, placeholder, description, isRequired, type, maxLength, input, meta: { error, warning, touched } } = props;
-    const showError = !!(touched && (error || warning));
+    const { label, placeholder, description, isRequired, type, maxLength, input, meta: { error, warning, dirty } } = props;
+    const showError = !!(dirty && (error || warning));
 
     return (
         <FormItem name={input.name} label={label} isRequired={isRequired} description={description} showError={showError} error={error}>
