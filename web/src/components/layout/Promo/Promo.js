@@ -54,7 +54,7 @@ const Promo = styled.section`
 `;
 
 export default () => (
-    <Container flexDirection="column" py={4} style={{ zIndex: 10000 }} >
+    <Container flexDirection="column" style={{ zIndex: 10000 }} >
         <BgImg src={bg} />
         <Promo>
             <Title>Can't find the advert for you?</Title>

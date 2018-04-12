@@ -9,7 +9,6 @@ import pick from 'lodash/pick';
 import pickBy from 'lodash/pickBy';
 
 import Icon, { IconMap } from 'components/layout/Icon';
-import Promo from 'components/layout/Promo';
 import { NewMessageCount } from 'components/layout/Badge';
 import Container from 'components/layout/Container';
 import Table, { TableRow, TableCell } from 'components/layout/Table';
@@ -198,7 +197,6 @@ class LatestAdverts extends React.Component {
                         </Container>
                     </TabPanel>
                 </Tabs>
-                <Promo />
             </div>
         );
     }
