@@ -11,10 +11,7 @@ import { saveAdvert } from './actions';
 import { ADVERT_BUY, ADVERT_SELL } from 'components/routes/PostingsPreview/actions';
 
 import PostingBuyForm from '../PostingsBuy/PostingForm';
-import PostingBuyTitle from '../PostingsBuy/PostingTitle';
-
 import PostingSellForm from '../PostingsSell/PostingForm';
-import PostingSellTitle from '../PostingsSell/PostingTitle';
 
 const mapAcceptOptions = a => {
     return ['tradeCashByMail', 'tradeCashInPerson', 'tradeMoneyOrderByMail', 'tradeOther']
