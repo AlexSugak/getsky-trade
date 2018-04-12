@@ -11,7 +11,9 @@ const Button = styled(BaseButton) `
     font-family: ${props => props.primary ? props.theme.fontLight : props.theme.fontBold};
 
     &:hover {
-        opacity: 0.7;
+        background: ${props => props.primary ? props.theme.colors.blueAlpha7 : props.theme.colors.mintAlpha7};
+        color: ${props => props.primary ? props.theme.colors.white : props.theme.colors.blackAlpha7};
+        border-color: ${props => props.primary ? props.theme.colors.blueAlpha7 : props.theme.colors.mintAlpha7};
     }
 `;
 

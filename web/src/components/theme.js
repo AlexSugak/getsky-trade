@@ -1,14 +1,17 @@
 export default {
     colors: {
         blue: '#0072FF',
+        blueAlpha7: '#4c9dff',
         mint: '#38F0B8',
+        mintAlpha7: '#73f4ce',
         grayBlue: '#687B93',
         darkBlue: '#07172E',
         prussianBlue: '#001127',
         lightGray: '#B3BDCA',
         light: '#F3F5F7;',
         black: '#000',
-        white: '#fff',
+        blackAlpha7: '#525252',
+        white: '#FFF',
 
         red: '#f00',
         gray: '#424242',
