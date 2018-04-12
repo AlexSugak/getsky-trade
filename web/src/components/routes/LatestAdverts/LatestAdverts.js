@@ -182,8 +182,8 @@ class LatestAdverts extends React.Component {
                 </Intro>
                 <Tabs>
                     <TabList>
-                        <Tab><strong>Buy Skycoin</strong></Tab>
-                        <Tab><strong>Sell Skycoin</strong></Tab>
+                        <Tab tab={'first-tab'}><strong>Buy Skycoin</strong></Tab>
+                        <Tab tab={'second-tab'}><strong>Sell Skycoin</strong></Tab>
                     </TabList>
                     <TabPanel>
                         <Container flex='1 0 auto' flexDirection="column" pb={4}>

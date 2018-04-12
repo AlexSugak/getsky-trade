@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { Tab as UnstyledTab, Tabs, TabList as UnstyledTabList, TabPanel } from 'react-tabs';
 
-const LeftTabName = 'react-tabs-0';
-const isLeftTab = props => props.id === LeftTabName;
+const LeftTabName = 'first-tab';
+const isLeftTab = props => props.tab === LeftTabName;
 
 const TabList = styled(UnstyledTabList) `
     display: flex;
