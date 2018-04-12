@@ -1,21 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { Flex, Box } from 'grid-styled';
-import moment from 'moment';
-import keys from 'lodash/keys';
-import values from 'lodash/values';
-import pick from 'lodash/pick';
-import pickBy from 'lodash/pickBy';
+import { Box } from 'grid-styled';
 
-import Icon, { IconMap } from 'components/layout/Icon';
-import { NewMessageCount } from 'components/layout/Badge';
 import Container from 'components/layout/Container';
-import Table, { TableRow, TableCell } from 'components/layout/Table';
-import { TRADE_OPTIONS } from 'constants/index';
+import Table from 'components/layout/Table';
+import { AdvertRow } from 'components/layout/TableAdverts';
+
 import Spinner from 'components/layout/Spinner';
-import ActionButton from 'components/layout/Button/ActionButton';
 
 import { Tab, Tabs, TabList, TabPanel } from './Tabs';
 import { getAdverts } from './actions';
@@ -41,31 +33,6 @@ const Intro = styled.div`
     }
 `;
 
-const Author = styled.div`
-    .name {
-        display: block;
-        margin-bottom: ${props => props.theme.spaces[0]}px;
-        font-family: ${props => props.theme.fontBold};
-    }
-`;
-
-const getTradeOptionsText = advert => {
-    const advertOptions = pickBy(pick(advert, keys(TRADE_OPTIONS)), item => item);
-    return values(pick(TRADE_OPTIONS, keys(advertOptions))).join(', ');
-};
-
-const AuthorCell = ({ advert }) => (
-    <Author>
-        {advert.totalMessagesAmount !== undefined &&
-            <NewMessageCount newMessages={advert.newMessagesAmount} totalMessages={advert.totalMessagesAmount} />
-        }
-        <strong className="name">{advert.author}</strong>
-        {advert.countryCode}, <span>{advert.city} {advert.stateCode} {advert.postalCode}</span>
-    </Author>
-);
-
-const LinkedTableRow = withRouter(({ ...props, href, history }) => (<TableRow {...props} onClick={() => history.push(href)} />));
-
 export const buyAdvertsColumns = [
     { name: 'Seller' },
     { name: 'Will sell' },
@@ -73,92 +40,12 @@ export const buyAdvertsColumns = [
     { name: 'Expired' },
 ];
 
-export const BuyAdvertRow = ({ data, rowOperations }) => {
-    const advert = data;
-    return (
-        <LinkedTableRow href={`/post/${advert.id}`}>
-            <TableCell><AuthorCell advert={advert} /></TableCell>
-            <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} SKY</TableCell>
-            <TableCell>{getTradeOptionsText(advert)}</TableCell>
-            <TableCell>{moment(advert.expiredAt).format('DD MMMM YY')}</TableCell>
-            {rowOperations && (rowOperations.extendAdvert || rowOperations.deleteAdvert)
-                && <TableCell>
-                    <ActionButton
-                        onClick={e => {
-                            e.nativeEvent.stopImmediatePropagation();
-                            e.stopPropagation();
-                            rowOperations.extendAdvert(advert);
-                        }}
-                        tip="Extend"
-                        icon={<Icon name={IconMap.Clock} />} />
-                    <ActionButton
-                        onClick={e => {
-                            e.nativeEvent.stopImmediatePropagation();
-                            e.stopPropagation();
-                            rowOperations.editAdvert(advert);
-                        }}
-                        tip="Edit"
-                        icon={<Icon name={IconMap.PencilSquare} />} />
-                    <ActionButton
-                        isDanger={true}
-                        onClick={e => {
-                            e.nativeEvent.stopImmediatePropagation();
-                            e.stopPropagation();
-                            rowOperations.deleteAdvert(advert);
-                        }}
-                        tip="Delete"
-                        icon={<Icon name={IconMap.Trash} />} />
-                </TableCell>}
-        </LinkedTableRow>
-    );
-}
-
 export const sellAdvertsColumns = [
     { name: 'Buyer' },
     { name: 'Will pay' },
     { name: 'Trade options' },
     { name: 'Expired' },
 ];
-
-export const SellAdvertRow = ({ data, rowOperations }) => {
-    const advert = data;
-    return (
-        <LinkedTableRow href={`/post/${advert.id}`}>
-            <TableCell><AuthorCell advert={advert} /></TableCell>
-            <TableCell>{advert.amountFrom} {advert.amountTo ? `- ${advert.amountTo}` : ''} SKY</TableCell>
-            <TableCell>{getTradeOptionsText(advert)}</TableCell>
-            <TableCell>{moment(advert.expiredAt).format('DD MMMM YY')}</TableCell>
-            {rowOperations && (rowOperations.extendAdvert || rowOperations.deleteAdvert)
-                && <TableCell>
-                    <ActionButton
-                        onClick={e => {
-                            e.nativeEvent.stopImmediatePropagation();
-                            e.stopPropagation();
-                            rowOperations.extendAdvert(advert);
-                        }}
-                        tip="Extend"
-                        icon={<Icon name={IconMap.Clock} />} />
-                    <ActionButton
-                        onClick={e => {
-                            e.nativeEvent.stopImmediatePropagation();
-                            e.stopPropagation();
-                            rowOperations.editAdvert(advert);
-                        }}
-                        tip="Edit"
-                        icon={<Icon name={IconMap.PencilSquare} />} />
-                    <ActionButton
-                        isDanger={true}
-                        onClick={e => {
-                            e.nativeEvent.stopImmediatePropagation();
-                            e.stopPropagation();
-                            rowOperations.deleteAdvert(advert);
-                        }}
-                        tip="Delete"
-                        icon={<Icon name={IconMap.Trash} />} />
-                </TableCell>}
-        </LinkedTableRow>
-    );
-}
 
 class LatestAdverts extends React.Component {
     componentWillMount() {
@@ -182,13 +69,13 @@ class LatestAdverts extends React.Component {
                     <TabPanel>
                         <Container flex='1 0 auto' flexDirection="column" pt={'50px'}>
                             {this.props.loading && <Spinner />}
-                            <Table columns={buyAdvertsColumns} rowComponent={BuyAdvertRow} rowData={this.props.sellAdverts} />
+                            <Table columns={buyAdvertsColumns} rowComponent={AdvertRow} rowData={this.props.sellAdverts} />
                         </Container>
                     </TabPanel>
                     <TabPanel>
                         <Container flex='1 0 auto' flexDirection="column" pt={'50px'}>
                             {this.props.loading && <Spinner />}
-                            <Table columns={sellAdvertsColumns} rowComponent={SellAdvertRow} rowData={this.props.buyAdverts} />
+                            <Table columns={sellAdvertsColumns} rowComponent={AdvertRow} rowData={this.props.buyAdverts} />
                         </Container>
                     </TabPanel>
                 </Tabs>

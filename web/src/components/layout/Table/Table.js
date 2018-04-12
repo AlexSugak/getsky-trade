@@ -40,7 +40,9 @@ export const TableRow = styled.tr`
 
 export const TableCell = styled.td`
     padding: 24px 30px;
-    line-height: 1.4;
+    line-height: 26px;
+    font-size: 14px;
+    color: ${props => props.theme.colors.darkBlue};
 `;
 
 export default ({ columns, rowComponent: RowComponent, rowData, rowOperations }) => (

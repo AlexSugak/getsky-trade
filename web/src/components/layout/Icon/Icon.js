@@ -13,6 +13,8 @@ import faAngleDown from '@fortawesome/fontawesome-free-solid/faAngleDown';
 
 import faCaretUp from '@fortawesome/fontawesome-free-solid/faCaretUp';
 import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown';
+import faCaretLeft from '@fortawesome/fontawesome-free-solid/faCaretLeft';
+import faCaretRight from '@fortawesome/fontawesome-free-solid/faCaretRight';
 
 import faCheckCircle from '@fortawesome/fontawesome-free-solid/faCheckCircle';
 import faExclamationCircle from '@fortawesome/fontawesome-free-solid/faExclamationCircle';
@@ -35,6 +37,8 @@ export const IconMap = {
 
     CaretUp: faCaretUp,
     CaretDown: faCaretDown,
+    CaretLeft: faCaretLeft,
+    CaretRight: faCaretRight,
 
     ExclamationCircle: faExclamationCircle,
     CheckCircle: faCheckCircle,
