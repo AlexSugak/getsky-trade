@@ -23,15 +23,15 @@ const HeaderWrapper = styled(Flex) `
 `;
 
 const noAuthNavItems = [
-    { url: '/', name: 'Home', border: false },
     { url: '/search', name: 'Search', border: false },
-    { url: '/login', name: 'Log In', border: false },
-    { url: '/register', name: 'Sign Up', border: true },
+    { url: '/contact-us', name: 'Contact', border: false },
+    { url: '/register', name: 'Sign Up', border: false },
+    { url: '/login', name: 'Log In', border: true },
 ];
 
 const authNavItems = [
-    { url: '/', name: 'Home', border: false },
     { url: '/search', name: 'Search', border: false },
+    { url: '/contact-us', name: 'Contact', border: false },
 ];
 
 const HomePageStyle = { position: 'absolute', width: '100%' };
