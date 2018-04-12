@@ -25,7 +25,7 @@ const MicroText = styled(Box) `
 `;
 
 export default () => (
-    <Box>
+    <Box mt={'125px'}>
         <Promo />
         <Background>
             <LinksContainer justifyContent={'space-between'}>
