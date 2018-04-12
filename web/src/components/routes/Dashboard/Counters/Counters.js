@@ -15,7 +15,7 @@ const Counters = ({ buyAdverts, sellAdverts, buyEnquiries, sellEnquiries, newMes
             rightTitle={'as seller'}
             rightAmount={sellAdverts}
         />
-        <Box width={1 / 3} mx={1}>
+        <Box width={1 / 3} mx={'30px'}>
             <Card
                 title={'Enquiries'}
                 totalAmount={buyEnquiries + sellEnquiries}
