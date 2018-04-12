@@ -4,50 +4,64 @@ import PropTypes from 'prop-types';
 
 const Table = styled.table`
     width: 100%;
-    margin: 10px 0;
     border-collapse: collapse;
     table-layout: fixed;
     vertical-align: middle;
 `;
+
 const TableHead = styled.thead`
-    td, th {
-        border-bottom: 3px solid ${props => props.theme.colors.black};
-        font-family: ${props => props.theme.fontBold};
-        text-transform: capitalize;
+    font-family: ${props => props.theme.fontBold};
+    font-size: 14px;
+    background-color: ${props => props.theme.colors.lightGray};
+    color: ${props => props.theme.colors.grayBlue};
+    text-transform: capitalize;
+`;
+
+const TableRowHead = styled.tr``;
+
+const TableCellHead = styled.th`
+    height: 60px;
+    padding: 0px 30px;
+    text-align: left;
+    &:hover {
+        background-color: ${props => props.theme.colors.lightGray};
+        cursor: default;
     }
 `;
-const TableBody = styled.tbody`
-    td {
-        border-bottom: 1px solid ${props => props.theme.colors.black};
+
+const TableBody = styled.tbody``;
+
+export const TableRow = styled.tr`
+    &:hover {
+        background-color: ${props => props.theme.colors.lightBlue};
+        cursor: pointer;
     }
 `;
-export const TableRow = styled.tr``;
+
 export const TableCell = styled.td`
-    padding: 10px 15px;
+    padding: 24px 30px;
     line-height: 1.4;
 `;
 
 export default ({ columns, rowComponent: RowComponent, rowData, rowOperations }) => (
-    <div className="table-container">
-        <Table>
-            <TableHead>
-                <TableRow>
-                    {columns.map((col, i) => <TableCell key={i}>{col.name}</TableCell>)}
-                    {rowOperations && <TableCell></TableCell>}
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {rowData.map((item, i) => <RowComponent key={i} data={item} rowOperations={rowOperations} />)}
-            </TableBody>
-        </Table>
-    </div>
+    <Table>
+        <TableHead>
+            <TableRowHead>
+                {columns.map((col, i) => <TableCellHead key={i}>{col.name}</TableCellHead>)}
+                {rowOperations && <TableCellHead></TableCellHead>}
+            </TableRowHead>
+        </TableHead>
+        <TableBody>
+            {rowData.map((item, i) => <RowComponent key={i} data={item} rowOperations={rowOperations} />)}
+        </TableBody>
+    </Table>
 );
 
 
 Table.propTypes = {
-    name: PropTypes.string,
-};
-
-Table.defaultProps = {
-    name: '',
+    columns: PropTypes.arrayOf(PropTypes.shape({
+        name: PropTypes.string.isRequired
+    })).isRequired,
+    rowData: PropTypes.array.isRequired,
+    rowOperations: PropTypes.array,
 };

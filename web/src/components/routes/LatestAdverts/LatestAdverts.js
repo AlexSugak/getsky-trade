@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
+import { Flex, Box } from 'grid-styled';
 import moment from 'moment';
 import keys from 'lodash/keys';
 import values from 'lodash/values';
@@ -63,13 +64,7 @@ const AuthorCell = ({ advert }) => (
     </Author>
 );
 
-const LinkedTableRow = styled(withRouter(({ ...props, href, history }) =>
-    (<TableRow {...props} onClick={() => history.push(href)} />))) `
-        &:hover {
-            cursor: pointer;
-            background-color: rgba(0,0,0, 0.1);
-        }
-    `;
+const LinkedTableRow = withRouter(({ ...props, href, history }) => (<TableRow {...props} onClick={() => history.push(href)} />));
 
 export const buyAdvertsColumns = [
     { name: 'Seller' },
@@ -172,7 +167,7 @@ class LatestAdverts extends React.Component {
 
     render() {
         return (
-            <div>
+            <Box>
                 <Intro className="intro">
                     <Container flexDirection="column">
                         <h1>Buy and sell Skycoin <br />person-to-person with cash, by mail,<br /> money order & more…</h1>
@@ -185,19 +180,19 @@ class LatestAdverts extends React.Component {
                         <Tab tab={'second-tab'}><strong>Sell Skycoin</strong></Tab>
                     </TabList>
                     <TabPanel>
-                        <Container flex='1 0 auto' flexDirection="column" pb={4}>
+                        <Container flex='1 0 auto' flexDirection="column" pt={'50px'}>
                             {this.props.loading && <Spinner />}
                             <Table columns={buyAdvertsColumns} rowComponent={BuyAdvertRow} rowData={this.props.sellAdverts} />
                         </Container>
                     </TabPanel>
                     <TabPanel>
-                        <Container flex='1 0 auto' flexDirection="column" pb={4}>
+                        <Container flex='1 0 auto' flexDirection="column" pt={'50px'}>
                             {this.props.loading && <Spinner />}
                             <Table columns={sellAdvertsColumns} rowComponent={SellAdvertRow} rowData={this.props.buyAdverts} />
                         </Container>
                     </TabPanel>
                 </Tabs>
-            </div>
+            </Box>
         );
     }
 }
