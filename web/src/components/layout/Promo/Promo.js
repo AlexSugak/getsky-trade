@@ -12,6 +12,10 @@ const SellBtn = styled(SellButton) `
     height: 70px;
     font-size: 18px;
     line-height: 18px;
+    background: ${props => props.theme.colors.white};
+    border-color: ${props => props.theme.colors.white};
+    color: ${props => props.theme.colors.black};
+    font-family: ${props => props.theme.fontBold};
 `;
 
 const BuyBtn = styled(BuyButton) `

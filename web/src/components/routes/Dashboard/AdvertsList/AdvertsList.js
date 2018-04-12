@@ -7,7 +7,7 @@ import { H1 } from 'components/layout/Text';
 import Table from 'components/layout/Table';
 
 export const RightCornerButton = {
-    BUY: <BuyButton />,
+    BUY: <BuyButton primary />,
     SELL: <SellButton />,
     NONE: null,
 };

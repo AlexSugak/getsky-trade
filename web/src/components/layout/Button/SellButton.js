@@ -6,11 +6,8 @@ import { push } from 'react-router-redux'
 
 import Button from './PrimaryButton';
 
-const Btn = styled(Button) `
-    background: ${props => props.theme.colors.white};
-    border-color: ${props => props.theme.colors.white};
-    color: ${props => props.theme.colors.black};
-    font-family: ${props => props.theme.fontBold};
+const Btn = styled(Button)`
+    font-family: ${props => props.theme.fontLight };
 `;
 
 const SellButton = ({ push, text, className }) => (
@@ -18,7 +15,6 @@ const SellButton = ({ push, text, className }) => (
         text={text}
         className={className}
         onClick={() => push('postings/sell')}
-        primary
     />
 );
 
