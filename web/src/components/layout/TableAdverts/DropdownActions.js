@@ -1,10 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Flex, Box } from 'grid-styled';
 
 import Expander from 'components/layout/Expander';
-import { Span } from 'components/layout/Text';
 import Icon, { IconMap } from 'components/layout/Icon';
 
 const ContentContainer = styled.div`
@@ -18,7 +16,6 @@ const ContentContainer = styled.div`
 
 const Item = styled(Flex) `
     padding: 5px 12px;
-
     color: ${props => props.theme.colors.black};
 
     &:hover {

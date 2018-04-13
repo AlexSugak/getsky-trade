@@ -12,7 +12,6 @@ import theme from 'components/theme';
 import Icon, { IconMap } from 'components/layout/Icon';
 import { NewMessageCount } from 'components/layout/Badge';
 import { TableRow, TableCell } from 'components/layout/Table';
-import ActionButton from 'components/layout/Button/ActionButton';
 import { TRADE_OPTIONS } from 'constants/index';
 
 import DropdownActions from './DropdownActions';
