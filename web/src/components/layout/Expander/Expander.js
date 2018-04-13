@@ -5,6 +5,7 @@ import { Flex } from 'grid-styled';
 import Icon, { IconMap } from 'components/layout/Icon';
 
 const ExpanderLabel = styled(Flex) `
+    z-index: 1000;
     &:hover {
         opacity: 0.75;
         cursor: pointer;
@@ -15,13 +16,14 @@ const TextLabel = styled.span`
     margin-right: 10px;
 `;
 
-const hiddenStyle = { display: 'none' };
-const visibleStyle = { display: 'block' };
+const hiddenStyle = { display: 'none', position: 'absolute' };
+const visibleStyle = { display: 'block', position: 'absolute' };
 
 export default class extends React.Component {
     static propTypes = {
         children: PropTypes.any,
         label: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
+        iconName: PropTypes.any,
     }
     state = {
         visible: false,
@@ -45,13 +47,18 @@ export default class extends React.Component {
     }
     render() {
         const { visible } = this.state;
+        const { iconName } = this.props
 
         return (
             <div>
-                <ExpanderLabel onClick={() => this.toggleExpander(!visible)}>
+                <ExpanderLabel onClick={e => {
+                    e.nativeEvent.stopImmediatePropagation();
+                    e.stopPropagation();
+                    this.toggleExpander(!visible);
+                }}>
                     <TextLabel>{this.props.label}</TextLabel>
-                    {visible && <Icon name={IconMap.CaretUp} color={'white'} />}
-                    {!visible && <Icon name={IconMap.CaretDown} color={'white'} />}
+                    {visible && <Icon name={iconName || IconMap.CaretUp} color={'white'} />}
+                    {!visible && <Icon name={iconName || IconMap.CaretDown} color={'white'} />}
                 </ExpanderLabel>
                 <div style={visible ? visibleStyle : hiddenStyle}>
                     {this.props.children}

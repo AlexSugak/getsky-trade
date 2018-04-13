@@ -55,7 +55,16 @@ class Dashboard extends React.Component {
     }
 
     render() {
-        const { userName, buyAdverts, sellAdverts, buyEnquiries, sellEnquiries, newMessages, enquiriesToBuyers, enquiriesToSellers } = this.props;
+        const {
+            userName,
+            buyAdverts,
+            sellAdverts,
+            buyEnquiries,
+            sellEnquiries,
+            newMessages,
+            enquiriesToBuyers,
+            enquiriesToSellers
+        } = this.props;
 
         return (
             <Container flex='1 0 auto' flexDirection="column">

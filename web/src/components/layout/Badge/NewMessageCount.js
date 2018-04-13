@@ -28,14 +28,16 @@ const NewMessageCount = ({ newMessages, totalMessages }) => (
     <NewMessageCountContainer justifyContent={'center'}>
         <Flex ml={'10px'}>
             <Icon name={IconMap.Envelope} />
-            <CircleContainer>
-                <RedCircle />
-            </CircleContainer>
+            {newMessages > 0 &&
+                <CircleContainer>
+                    <RedCircle />
+                </CircleContainer>
+            }
         </Flex>
         <Flex justifyContent={'center'} alignItems={'center'}>
             {newMessages > 0 &&
                 <NewMessagesContainer>
-                    {newMessages }
+                    {newMessages}
                 </NewMessagesContainer>
             }
             {newMessages > 0 ? `/ ${totalMessages}` : totalMessages}

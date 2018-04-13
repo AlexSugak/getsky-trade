@@ -60,7 +60,7 @@ export const IconMap = {
 
     Dashboard: icDashboard,
     Trash: icDelete,
-    PencilSquare: icEdit,
+    Edit: icEdit,
     Error: icError,
     Extend: icExtend,
     Logout: icLogout,

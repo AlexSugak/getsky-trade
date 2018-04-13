@@ -64,7 +64,7 @@ TableComponent.propTypes = {
         style: PropTypes.object,
     })).isRequired,
     rowData: PropTypes.array.isRequired,
-    rowOperations: PropTypes.array,
+    rowOperations: PropTypes.object,
     rowComponent: PropTypes.any,
 };
 

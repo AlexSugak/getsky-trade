@@ -15,6 +15,8 @@ import { TableRow, TableCell } from 'components/layout/Table';
 import ActionButton from 'components/layout/Button/ActionButton';
 import { TRADE_OPTIONS } from 'constants/index';
 
+import DropdownActions from './DropdownActions';
+
 const DoubleCellTitle = styled.div`
     color: ${props => props.theme.colors.blue};
     font-size: 18px;
@@ -60,37 +62,11 @@ export const AdvertRow = ({ data, rowOperations }) => {
             <TableCell>
                 <Flex justifyContent={'space-between'} alignItems={'center'}>
                     {moment(advert.expiredAt).format('DD MMMM YY')}
-                    <Icon name={IconMap.CaretRight} color={theme.colors.blue} size={'xs'} />
+                    {rowOperations
+                        ? <DropdownActions advert={advert} operations={rowOperations} />
+                        : <Icon name={IconMap.CaretRight} color={theme.colors.blue} size={'xs'} />}
                 </Flex>
             </TableCell>
-            {rowOperations && (rowOperations.extendAdvert || rowOperations.deleteAdvert)
-                && <TableCell>
-                    <ActionButton
-                        onClick={e => {
-                            e.nativeEvent.stopImmediatePropagation();
-                            e.stopPropagation();
-                            rowOperations.extendAdvert(advert);
-                        }}
-                        tip="Extend"
-                        icon={<Icon name={IconMap.Clock} />} />
-                    <ActionButton
-                        onClick={e => {
-                            e.nativeEvent.stopImmediatePropagation();
-                            e.stopPropagation();
-                            rowOperations.editAdvert(advert);
-                        }}
-                        tip="Edit"
-                        icon={<Icon name={IconMap.PencilSquare} />} />
-                    <ActionButton
-                        isDanger={true}
-                        onClick={e => {
-                            e.nativeEvent.stopImmediatePropagation();
-                            e.stopPropagation();
-                            rowOperations.deleteAdvert(advert);
-                        }}
-                        tip="Delete"
-                        icon={<Icon name={IconMap.Trash} />} />
-                </TableCell>}
         </LinkedTableRow>
     );
 }
