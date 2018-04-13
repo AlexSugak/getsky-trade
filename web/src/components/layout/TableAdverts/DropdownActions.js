@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Flex, Box } from 'grid-styled';
 
@@ -15,7 +16,7 @@ const ContentContainer = styled.div`
 `;
 
 const Item = styled(Flex) `
-    padding: 5px 12px;
+    padding: 2px 12px;
     color: ${props => props.theme.colors.black};
 
     &:hover {
@@ -66,7 +67,8 @@ const DropdownActions = ({ advert, operations }) => {
 };
 
 DropdownActions.propTypes = {
-
+    advert: PropTypes.object,
+    operations: PropTypes.object,
 };
 
 export default DropdownActions;

@@ -47,7 +47,7 @@ export default class extends React.Component {
     }
     render() {
         const { visible } = this.state;
-        const { iconName } = this.props
+        const { iconName, openedColor, closedColor } = this.props
 
         return (
             <div>
@@ -56,9 +56,9 @@ export default class extends React.Component {
                     e.stopPropagation();
                     this.toggleExpander(!visible);
                 }}>
-                    <TextLabel>{this.props.label}</TextLabel>
-                    {visible && <Icon name={iconName || IconMap.CaretUp} color={'white'} />}
-                    {!visible && <Icon name={iconName || IconMap.CaretDown} color={'white'} />}
+                    {this.props.label && <TextLabel>{this.props.label}</TextLabel>}
+                    {visible && <Icon name={iconName || IconMap.CaretUp} color={openedColor || 'white'} />}
+                    {!visible && <Icon name={iconName || IconMap.CaretDown} color={closedColor || 'white'} />}
                 </ExpanderLabel>
                 <div style={visible ? visibleStyle : hiddenStyle}>
                     {this.props.children}
