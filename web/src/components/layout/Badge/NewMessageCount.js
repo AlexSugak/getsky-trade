@@ -1,33 +1,46 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Box } from 'grid-styled';
+import { Flex, Box } from 'grid-styled';
 
 import Icon, { IconMap } from 'components/layout/Icon';
-import { Span } from 'components/layout/Text';
 import RedCircle from './RedCircle';
 
-const NewMessageContainer = styled(({ hasNewMessages, ...props }) => <Box {...props} />) `
-    Span {
-        padding-top: 1px;
-        margin-left: 10px;
-    }
+const NewMessageCountContainer = styled(Box) `
+    color: ${props => props.theme.colors.grayBlue};
+    font-size: 12px;
+    line-height: 13px;
+    text-align: center;
 `;
 
-const getLabel = (newMessages, totalMessages) => {
-    if (newMessages && newMessages > 0) {
-        return `${newMessages} new / ${totalMessages}`;
-    }
+const CircleContainer = styled.div`
+    position: relative;
+    top: -1px;
+    right: 5px;
+`;
 
-    return `${totalMessages}`
-};
+const NewMessagesContainer = styled.div`
+    color: ${props => props.theme.colors.red};
+    margin-right: 3px;
+`;
 
 const NewMessageCount = ({ newMessages, totalMessages }) => (
-    <Box>
-        <Icon name={IconMap.Envelope} />
-        <RedCircle />
-        <Box>{getLabel(newMessages, totalMessages)}</Box>
-    </Box>
+    <NewMessageCountContainer justifyContent={'center'}>
+        <Flex ml={'10px'}>
+            <Icon name={IconMap.Envelope} />
+            <CircleContainer>
+                <RedCircle />
+            </CircleContainer>
+        </Flex>
+        <Flex justifyContent={'center'} alignItems={'center'}>
+            {newMessages > 0 &&
+                <NewMessagesContainer>
+                    {newMessages }
+                </NewMessagesContainer>
+            }
+            {newMessages > 0 ? `/ ${totalMessages}` : totalMessages}
+        </Flex>
+    </NewMessageCountContainer>
 );
 
 NewMessageCount.propTypes = {
