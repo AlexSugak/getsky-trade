@@ -79,7 +79,7 @@ const Icon = ({ name, color, size }) => {
 };
 
 Icon.propTypes = {
-    name: PropTypes.object.isRequired,
+    name: PropTypes.any.isRequired,
     color: PropTypes.string,
 };
 
