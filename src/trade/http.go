@@ -10,6 +10,7 @@ import (
 	"github.com/AlexSugak/getsky-trade/src/auth"
 	"github.com/AlexSugak/getsky-trade/src/board"
 	"github.com/AlexSugak/getsky-trade/src/geo"
+	"github.com/AlexSugak/getsky-trade/src/mail"
 	"github.com/AlexSugak/getsky-trade/src/messages"
 	"github.com/AlexSugak/getsky-trade/src/skycoinPrice"
 	"github.com/AlexSugak/getsky-trade/src/user"
@@ -23,6 +24,7 @@ import (
 // HTTPServer holds http server info
 type HTTPServer struct {
 	serverTime     ServerTime
+	mailer         mail.IMailer
 	skycoinPrices  *skycoinPrice.SkycoinPrices
 	checkRecaptcha auth.RecaptchaChecker
 	binding        string
@@ -39,10 +41,11 @@ type HTTPServer struct {
 }
 
 // NewHTTPServer creates new http server
-func NewHTTPServer(recaptchaSecret string, binding string, board board.Board, users user.Users, a auth.Authenticator, log logrus.FieldLogger, g geo.Geo, messages messages.Messages) *HTTPServer {
+func NewHTTPServer(recaptchaSecret string, binding string, board board.Board, users user.Users, a auth.Authenticator, log logrus.FieldLogger, g geo.Geo, messages messages.Messages, mailer mail.IMailer) *HTTPServer {
 	return &HTTPServer{
 		checkRecaptcha: auth.InitRecaptchaChecker(recaptchaSecret),
 		skycoinPrices:  skycoinPrice.NewSkycoinPrices(),
+		mailer:         mailer,
 		binding:        binding,
 		board:          board,
 		users:          users,
@@ -131,6 +134,8 @@ func (s *HTTPServer) setupRouter(Secure Secure) http.Handler {
 	r.Handle("/api/states", httputil.ErrorHandler(s.log, AvailableStatesHandler(s))).Methods("GET")
 
 	r.Handle("/api/users", API(RegisterHandler)).Methods("POST")
+	r.Handle("/api/feedback", API(FeedbackHandler)).Methods("POST")
+
 	r.Handle("/api/users/authenticate", API(AuthenticateHandler)).Methods("POST")
 	r.Handle("/api/me", Secure(API(MeHandler))).Methods("GET")
 	r.Handle("/api/me/settings", Secure(API(UpdateUserSettingsHandler))).Methods("POST")

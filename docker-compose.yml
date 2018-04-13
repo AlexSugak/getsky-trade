@@ -24,12 +24,14 @@ services:
     environment:
       TRADE_MYSQL: "mysql:3306"
       RECAPTCHA_SECRET: ${RECAPTCHA_SECRET}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
     volumes:
       - ./cmd:/usr/local/go/src/github.com/AlexSugak/getsky-trade/cmd
       - ./db:/usr/local/go/src/github.com/AlexSugak/getsky-trade/db
       - ./src:/usr/local/go/src/github.com/AlexSugak/getsky-trade/src
       - ./vendor:/usr/local/go/src/github.com/AlexSugak/getsky-trade/vendor
-    command: /bin/bash -c 'cd /usr/local/go/src/github.com/AlexSugak/getsky-trade/cmd/trade/ && go run ./trade.go -binding=0.0.0.0:8081 -mysql=mysql:3306 -recaptchaSecret=${RECAPTCHA_SECRET}'
+    command: /bin/bash -c 'cd /usr/local/go/src/github.com/AlexSugak/getsky-trade/cmd/trade/ && go run ./trade.go -binding=0.0.0.0:8081 -mysql=mysql:3306 -recaptchaSecret=${RECAPTCHA_SECRET} -mailUsername=${MAIL_USERNAME} -mailPassword=${MAIL_PASSWORD} -feedbackAddress=${MAIL_USERNAME}'
   web:
     image: nginx
     restart: always

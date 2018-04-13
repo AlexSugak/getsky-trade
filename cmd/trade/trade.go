@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/AlexSugak/getsky-trade/db"
+	"github.com/AlexSugak/getsky-trade/src/mail"
 	"github.com/AlexSugak/getsky-trade/src/trade"
 	"github.com/AlexSugak/getsky-trade/src/util/logger"
 	_ "github.com/go-sql-driver/mysql"
@@ -15,6 +16,11 @@ func main() {
 	bindingFlag := flag.String("binding", "0.0.0.0:8081", "HTTP server binding")
 	mysqlFlag := flag.String("mysql", "0.0.0.0:3306", "HTTP server binding")
 	recaptchaSecret := flag.String("recaptchaSecret", "6LdTKksUAAAAAAMgKNhOcxgWYYCDRrgx8YoEH5qX", "HTTP server binding")
+
+	mailHost := flag.String("mailHost", "smtp.gmail.com:587", "HTTP server binding")
+	mailUsername := flag.String("mailUsername", "test@email.com", "HTTP server binding")
+	mailPassword := flag.String("mailPassword", "password", "HTTP server binding")
+	feedbackAddress := flag.String("feedbackAddress", "test2@email.com", "HTTP server binding")
 
 	flag.Parse()
 
@@ -30,8 +36,9 @@ func main() {
 	users := db.NewUsers(sqlDb)
 	geo := db.NewGeo(sqlDb)
 	messages := db.NewMessages(sqlDb)
+	mailer := mail.NewMailer(*mailHost, *mailUsername, *mailPassword, *feedbackAddress)
 
-	server := trade.NewHTTPServer(*recaptchaSecret, *bindingFlag, storage, users, auth, log, geo, messages)
+	server := trade.NewHTTPServer(*recaptchaSecret, *bindingFlag, storage, users, auth, log, geo, messages, mailer)
 
 	if err := server.Run(); err != nil {
 		panic(err.Error())

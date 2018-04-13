@@ -23,6 +23,8 @@ git push deploy master
 # start updated services
 ssh $RUN_USER@$IP -p $PORT <<EOF
   export RECAPTCHA_SECRET=$RECAPTCHA_SECRET
+  export MAIL_USERNAME=$MAIL_USERNAME
+  export MAIL_PASSWORD=$MAIL_PASSWORD
   cd $DEPLOY_DIR
   sudo service docker restart # restart docker service to prevent "timeout" errors (https://github.com/docker/compose/issues/3633#issuecomment-254194717)
   make run-docker
