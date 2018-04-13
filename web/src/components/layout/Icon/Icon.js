@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import SVGImage from 'react-svg';
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faFacebook from '@fortawesome/fontawesome-free-brands/faFacebook';
@@ -18,12 +19,22 @@ import faCaretRight from '@fortawesome/fontawesome-free-solid/faCaretRight';
 
 import faCheckCircle from '@fortawesome/fontawesome-free-solid/faCheckCircle';
 import faExclamationCircle from '@fortawesome/fontawesome-free-solid/faExclamationCircle';
-import faEnvelope from '@fortawesome/fontawesome-free-solid/faEnvelope';
 
 import faUser from '@fortawesome/fontawesome-free-solid/faUserCircle';
 import faClock from '@fortawesome/fontawesome-free-solid/faClock';
-import faTrash from '@fortawesome/fontawesome-free-solid/faTrash';
-import faPencilSquare from '@fortawesome/fontawesome-free-solid/faPenSquare';
+
+import icDashboard from './svg/icDashboard.svg';
+import icDelete from './svg/icDelete.svg';
+import icEdit from './svg/icEdit.svg';
+import icError from './svg/icError.svg';
+import icExtend from './svg/icExtend.svg';
+import icLogout from './svg/icLogout.svg';
+import icMenu from './svg/icMenu.svg';
+import icMessages from './svg/icMessages.svg';
+import icOk from './svg/icOk.svg';
+import icRequired from './svg/icRequired.svg';
+import icRequiredCopy from './svg/icRequiredCopy.svg';
+import icSettings from './svg/icSettings.svg';
 
 export const IconMap = {
     Facebook: faFacebook,
@@ -44,16 +55,28 @@ export const IconMap = {
     CheckCircle: faCheckCircle,
 
     User: faUser,
-    Envelope: faEnvelope,
 
     Clock: faClock,
-    Trash: faTrash,
-    PencilSquare: faPencilSquare,
+
+    Dashboard: icDashboard,
+    Trash: icDelete,
+    PencilSquare: icEdit,
+    Error: icError,
+    Extend: icExtend,
+    Logout: icLogout,
+    Menu: icMenu,
+    Envelope: icMessages,
+    Ok: icOk,
+    Required: icRequired,
+    RequiredCopy: icRequiredCopy,
+    Settings: icSettings,
 }
 
-const Icon = ({ name, color, size }) => (
-    <FontAwesomeIcon icon={name} color={color} size={size} />
-)
+const Icon = ({ name, color, size }) => {
+    return typeof name === 'string'
+        ? <SVGImage path={name} style={{ height: size, width: size }} />
+        : <FontAwesomeIcon icon={name} color={color} size={size} />;
+};
 
 Icon.propTypes = {
     name: PropTypes.object.isRequired,

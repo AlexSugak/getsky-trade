@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>ic/icExtend</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0 0 18 0 18 17.999982 0 17.999982"></polygon>
+    </defs>
+    <g id="ic/icExtend" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Page-1" transform="translate(1.000000, 1.000000)">
+            <g id="Group-3">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Clip-2"></g>
+                <path d="M9,16.842042 C4.67586,16.842042 1.15794,13.324122 1.15794,8.999982 C1.15794,4.675842 4.67586,1.157922 9,1.157922 C13.32414,1.157922 16.84206,4.675842 16.84206,8.999982 C16.84206,13.324122 13.32414,16.842042 9,16.842042 M9,-1.8e-05 C4.0374,-1.8e-05 0,4.037382 0,8.999982 C0,13.962582 4.0374,17.999982 9,17.999982 C13.9626,17.999982 18,13.962582 18,8.999982 C18,4.037382 13.9626,-1.8e-05 9,-1.8e-05" id="Fill-1" fill="#687B93" mask="url(#mask-2)"></path>
+            </g>
+            <polygon id="Fill-4" fill="#687B93" points="9.579024 4.210488 8.421084 4.210488 8.421084 9.309888 11.414304 12.240108 12.224304 11.412828 9.579024 8.822988"></polygon>
+        </g>
+    </g>
+</svg>
