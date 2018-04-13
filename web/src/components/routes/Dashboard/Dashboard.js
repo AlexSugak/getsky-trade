@@ -14,6 +14,9 @@ import { getAdverts, extendExpirationDate, deleteAdvert } from './actions';
 
 const lengthOrZero = collection => collection ? collection.length : 0;
 
+const sellColumns = [{ name: 'Messages', style: { width: '100px' } }, ...sellAdvertsColumns];
+const buyColumns = [{ name: 'Messages', style: { width: '100px' } }, ...buyAdvertsColumns];
+
 class Dashboard extends React.Component {
     state = {
         extendConfirmationVisible: false,
@@ -84,7 +87,7 @@ class Dashboard extends React.Component {
                     title={'Your buyer adverts'}
                     adverts={buyAdverts}
                     noAdvertsMessage={'You have no active buyer adverts.'}
-                    columns={buyAdvertsColumns}
+                    columns={buyColumns}
                     rowComponent={AdvertRow}
                     rightCorner={RightCornerButton.BUY}
                 />
@@ -97,7 +100,7 @@ class Dashboard extends React.Component {
                     title={'Your seller adverts'}
                     adverts={sellAdverts}
                     noAdvertsMessage={'You have no active seller adverts.'}
-                    columns={sellAdvertsColumns}
+                    columns={sellColumns}
                     rowComponent={AdvertRow}
                     rightCorner={RightCornerButton.SELL}
                 />
@@ -105,7 +108,7 @@ class Dashboard extends React.Component {
                     title={'Enquiries you\'ve made to buyers'}
                     adverts={buyEnquiries}
                     noAdvertsMessage={'There are no active buyer adverts you have made enquiries to.'}
-                    columns={buyAdvertsColumns}
+                    columns={buyColumns}
                     rowComponent={AdvertRow}
                     rightCorner={RightCornerButton.NONE}
                 />
@@ -113,7 +116,7 @@ class Dashboard extends React.Component {
                     title={'Enquiries you\'ve made to sellers'}
                     adverts={sellEnquiries}
                     noAdvertsMessage={'There are no active seller adverts you have made enquiries to.'}
-                    columns={sellAdvertsColumns}
+                    columns={sellColumns}
                     rowComponent={AdvertRow}
                     rightCorner={RightCornerButton.NONE}
                 />

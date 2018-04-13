@@ -49,7 +49,7 @@ export default ({ columns, rowComponent: RowComponent, rowData, rowOperations })
     <Table>
         <TableHead>
             <TableRowHead>
-                {columns.map((col, i) => <TableCellHead key={i}>{col.name}</TableCellHead>)}
+                {columns.map((col, i) => <TableCellHead key={i} style={col.style} >{col.name}</TableCellHead>)}
                 {rowOperations && <TableCellHead></TableCellHead>}
             </TableRowHead>
         </TableHead>
@@ -62,7 +62,8 @@ export default ({ columns, rowComponent: RowComponent, rowData, rowOperations })
 
 Table.propTypes = {
     columns: PropTypes.arrayOf(PropTypes.shape({
-        name: PropTypes.string.isRequired
+        name: PropTypes.string.isRequired,
+        style: PropTypes.object,
     })).isRequired,
     rowData: PropTypes.array.isRequired,
     rowOperations: PropTypes.array,

@@ -10,6 +10,7 @@ import pickBy from 'lodash/pickBy';
 
 import theme from 'components/theme';
 import Icon, { IconMap } from 'components/layout/Icon';
+import { NewMessageCount } from 'components/layout/Badge';
 import { TableRow, TableCell } from 'components/layout/Table';
 import ActionButton from 'components/layout/Button/ActionButton';
 import { TRADE_OPTIONS } from 'constants/index';
@@ -44,6 +45,11 @@ export const AdvertRow = ({ data, rowOperations }) => {
     const advert = data;
     return (
         <LinkedTableRow href={`post/${advert.id}`}>
+            {data.totalMessagesAmount !== undefined &&
+                <TableCell>
+                    <NewMessageCount newMessages={data.newMessagesAmount} totalMessages={data.totalMessagesAmount} />
+                </TableCell>
+            }
             <TableCell>
                 <DoubleCell title={advert.author} body={getFullAddress(advert)} />
             </TableCell>
