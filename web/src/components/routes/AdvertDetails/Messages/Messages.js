@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Flex, Box } from 'grid-styled';
@@ -143,7 +144,7 @@ const ShowMoreLinkContainer = styled.div`
     text-align: center;
 `;
 
-const Author = ({ backToUsers, selectedAuthor, messages }) => (
+const Author = ({ backToUsers, selectedAuthor, messages, showAllMessages }) => (
     <AuthorInfo>
         <BackLink onClick={backToUsers}>
             <Icon name={IconMap.AngleLeft} />
@@ -161,7 +162,7 @@ const Author = ({ backToUsers, selectedAuthor, messages }) => (
             </MessagesInfo>
         </UsernameContainer>
         <ShowMoreLinkContainer>
-            <ShowMoreLink onClick={() => { }}>Show more </ShowMoreLink>
+            <ShowMoreLink onClick={showAllMessages}>Show more </ShowMoreLink>
         </ShowMoreLinkContainer>
     </AuthorInfo>
 );
@@ -273,24 +274,77 @@ const Message = ({ m, userInfo }) => {
     );
 }
 
-const MessagesContainer = ({
-    advert,
-    userInfo,
+const ScrollToBottom = styled.button`
+    cursor: pointer;
+    position: fixed;
+    right: 50px;
+    bottom: 100px;
+    width: 32px;
+    height: 32px;
+    background-color: ${props => props.theme.colors.white};
+    border: 1px solid ${props => props.theme.colors.white};
+    border-radius: 100px;
+    box-shadow: 0 2px 7px 1px rgba(0,114,255,0.5);
+    outline: none;
+    z-index: 10;
 
-    messages,
-    selectedAuthor,
+    &:hover {
+        box-shadow: 0 2px 7px 1px rgba(0, 114, 255, 1);
+    }
 
-    messageText,
-    onChange,
+    &:active {
+        opacity: 0.5;
+    }
 
-    sendMessage,
-    backToUsers, }) => (
-        <div>
-            {selectedAuthor && <Author backToUsers={backToUsers} selectedAuthor={selectedAuthor} messages={messages} />}
-            {messages.map((m, i) => (<Message key={i} m={m} userInfo={userInfo} />))}
-            <MessagesInputForm onChange={onChange} messageText={messageText} sendMessage={sendMessage} />
-        </div>
-    );
+    svg {
+        color: ${props => props.theme.colors.blue};
+    }
+`;
+
+class MessagesContainer extends React.Component {
+    scrollToBottom = () => {
+        const inputForm = ReactDOM.findDOMNode(this.inputForm)
+        window.scrollTo(0, inputForm.offsetTop - inputForm.clientHeight);
+    }
+    render() {
+        const {
+            advert,
+            userInfo,
+
+            messages,
+            messagesToShow,
+            selectedAuthor,
+
+            messageText,
+            onChange,
+
+            sendMessage,
+            backToUsers,
+            showAllMessages, } = this.props;
+
+        return (
+            <div>
+                {selectedAuthor
+                    && <Author
+                        backToUsers={backToUsers}
+                        showAllMessages={showAllMessages}
+                        selectedAuthor={selectedAuthor}
+                        messages={messages} />}
+                {messagesToShow.map((m, i) => (<Message key={i} m={m} userInfo={userInfo} />))}
+                <div
+                    ref={e => { this.inputForm = e; }}>
+                    <MessagesInputForm
+                        onChange={onChange}
+                        messageText={messageText}
+                        sendMessage={sendMessage} />
+                </div>
+                <ScrollToBottom onClick={this.scrollToBottom}>
+                    <Icon name={IconMap.AngleDown} />
+                </ScrollToBottom>
+            </div>
+        );
+    }
+}
 
 const UserSection = styled(Section) `
     border-bottom: 1px solid ${props => props.theme.colors.separator};
@@ -322,7 +376,9 @@ const MessageText = styled.div`
 `;
 
 const ArrowIcon = styled(Box) `
-
+    svg {
+        color: ${props => props.theme.colors.blue};
+    }
 `;
 
 const MessageInner = styled(Flex)`
@@ -352,12 +408,14 @@ const UsersList = ({ authors, selectAuthor, userInfo }) => (
                     <MessageInner flexDirection="column" px={2} justifyContent="space-between">
                         <Flex justifyContent="space-between">
                             <Focused> {a.author} </Focused>
-                            <DateView >
-                                {dateToString(new Date(a.lastMessageTime))}
-                            </DateView>
-                            {/* <ArrowIcon ml={1}>
-                                <Icon name={IconMap.AngleRight} />
-                            </ArrowIcon> */}
+                            <Flex alignItems="center">
+                                <DateView >
+                                    {dateToString(new Date(a.lastMessageTime))}
+                                </DateView>
+                                <ArrowIcon ml={1}>
+                                    <Icon name={IconMap.AngleRight} />
+                                </ArrowIcon>
+                            </Flex>
                         </Flex>
                         <MessageText>
                             {a.lastMessage}
@@ -368,8 +426,8 @@ const UsersList = ({ authors, selectAuthor, userInfo }) => (
     </div>);
 
 const Container = styled.div`
-                    width: 100%;
-                `;
+    width: 100%;
+`;
 
 export default connect(
     ({
@@ -390,6 +448,9 @@ export default connect(
     }
 )(
     class extends React.Component {
+        state = {
+            allMessagesVisible: false,
+        }
         async componentDidMount() {
             const { setMessagesState, getMessages, advert, userInfo, getMessagesAuthors, markMessageAsRead } = this.props;
 
@@ -402,6 +463,12 @@ export default connect(
                     .filter(m => !m.isRead && m.author !== userInfo.username)
                     .forEach(m => markMessageAsRead(m.id));
             }
+        }
+        showAllMessages = () => {
+            this.setState({ ...this.state, allMessagesVisible: true });
+        }
+        hideMessages = () => {
+            this.setState({ ...this.state, allMessagesVisible: false });
         }
         sendMessage = () => {
             const {
@@ -443,6 +510,7 @@ export default connect(
             postMessage(message);
         }
         backToUsers = () => {
+            this.hideMessages();
             this.props.selectAuthor(null);
             this.props.setMessagesState(messageStates.users);
         }
@@ -458,6 +526,10 @@ export default connect(
 
             const state = messages.state || (userInfo.username === advert.author ? messageStates.users : messageStates.messages)
 
+            const messagesToShow = this.state.allMessagesVisible
+                ? messages.messages
+                : messages.messages.slice(Math.max(messages.messages.length - 5, 1));
+
             return (
                 <Container>
                     {state === messageStates.messages
@@ -467,9 +539,11 @@ export default connect(
                             onChange={setMessageText}
                             selectedAuthor={messages.selectedAuthor}
                             messages={messages.messages}
+                            messagesToShow={messagesToShow}
                             messageText={messages.messageText}
                             backToUsers={this.backToUsers}
-                            sendMessage={messages.selectedAuthor ? this.reply : this.sendMessage} />}
+                            sendMessage={messages.selectedAuthor ? this.reply : this.sendMessage}
+                            showAllMessages={this.showAllMessages} />}
                     {state === messageStates.users
                         && <UsersList
                             authors={messages.authors}
