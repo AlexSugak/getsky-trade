@@ -175,6 +175,7 @@ const getAuthorInitials = author => {
 };
 
 const UserInitials = styled.div`
+    flex-shrink: 0;
     background-color: ${props => props.isMyMessage ? props.theme.colors.blue : props.theme.colors.lightPink};
     color: ${props => props.theme.colors.white};
     width: 44px;
@@ -324,6 +325,11 @@ const ArrowIcon = styled(Box) `
 
 `;
 
+const MessageInner = styled(Flex)`
+    flex-grow: 1;
+    overflow: hidden;
+`;
+
 const UsersList = ({ authors, selectAuthor, userInfo }) => (
     <div>
         <Flex justifyContent="space-between" mb={4}>
@@ -338,12 +344,12 @@ const UsersList = ({ authors, selectAuthor, userInfo }) => (
                 <UserSection
                     key={i}
                     alignItems="center"
-                    flexWrap="wrap"
+                    flexWrap="nowrap"
                     onClick={() => selectAuthor(a.author)}>
                     <UserInitials isRead={a.newMessages === 0}>
                         {getAuthorInitials(a.author)}
                     </UserInitials>
-                    <Flex flexDirection="column" w={0.9} ml={2} justifyContent="space-between">
+                    <MessageInner flexDirection="column" px={2} justifyContent="space-between">
                         <Flex justifyContent="space-between">
                             <Focused> {a.author} </Focused>
                             <DateView >
@@ -356,7 +362,7 @@ const UsersList = ({ authors, selectAuthor, userInfo }) => (
                         <MessageText>
                             {a.lastMessage}
                         </MessageText>
-                    </Flex>
+                    </MessageInner>
                 </UserSection>
             ))}
     </div>);

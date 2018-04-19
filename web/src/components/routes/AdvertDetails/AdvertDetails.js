@@ -209,7 +209,7 @@ export default connect(
         return (
             <Container flexDirection="row" flexWrap="wrap">
                 <h2>Advert summary</h2>
-                <Flex>
+                <Flex w={1}>
                     <Box width={[1, 1 / 2]}>
                         <AdvertSummary
                             details={advertDetails}
