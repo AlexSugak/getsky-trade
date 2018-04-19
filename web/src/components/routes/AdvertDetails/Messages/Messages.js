@@ -380,7 +380,7 @@ const ArrowIcon = styled(Box) `
     }
 `;
 
-const MessageInner = styled(Flex)`
+const MessageInner = styled(Flex) `
     flex-grow: 1;
     overflow: hidden;
 `;
@@ -527,7 +527,7 @@ export default connect(
 
             const messagesToShow = this.state.allMessagesVisible
                 ? messages.messages
-                : messages.messages.slice(Math.max(messages.messages.length - 5, 1));
+                : messages.messages.slice(Math.max(messages.messages.length - 5, 0));
 
             return (
                 <Container>
