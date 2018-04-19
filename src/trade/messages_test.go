@@ -266,7 +266,7 @@ func TestGetMessageAuthors(t *testing.T) {
 			contentType:    "application/json",
 			url:            "/api/postings/{advertID}/messages-authors",
 			expectedStatus: http.StatusOK,
-			expectedBody:   `[{"author":"bob","totalMessages":1,"newMessages":0,"lastMessageTime":"2018-03-06T00:00:00Z"},{"author":"sam","totalMessages":1,"newMessages":1,"lastMessageTime":"2018-03-06T00:00:00Z"}]`,
+			expectedBody:   `[{"author":"bob","totalMessages":1,"newMessages":0,"lastMessage":"message_body_2","lastMessageTime":"2018-03-06T00:00:00Z"},{"author":"sam","totalMessages":1,"newMessages":1,"lastMessage":"message_body","lastMessageTime":"2018-03-06T00:00:00Z"}]`,
 		},
 	}
 
