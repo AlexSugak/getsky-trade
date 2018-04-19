@@ -184,6 +184,18 @@ const UserInitials = styled.div`
     border: 1px solid ${props => props.isMyMessage ? props.theme.colors.blue : props.theme.colors.lightPink};
     border-radius: 100px;
     font-size: ${props => props.theme.fontSizes[3]}px;
+
+    &:after {
+        position: absolute;
+        margin-left: 3px;
+        margin-top: -3px;
+        width: ${props => props.isRead ? '0' : '10'}px;
+        height: ${props => props.isRead ? '0' : '10'}px;
+        background-color: ${props => props.theme.colors.red};
+        border: ${props => props.isRead ? '0' : '1'}px solid ${props => props.theme.colors.red};
+        border-radius: 100px;
+        content: '';
+    }
 `;
 
 const UsernameLabel = styled.span`
@@ -223,14 +235,14 @@ const MessageBody = styled(SectionPart) `
 const Message = ({ m, userInfo }) => {
     const isMyMessage = m.author === userInfo.username;
     return (<Section flexDirection="column" flexWrap="wrap">
-        <UsernameSectionPart w={1} isRead={isMyMessage || m.isRead}>
+        <UsernameSectionPart w={1}>
             {!isMyMessage && <Flex alignItems="flex-start" justifyContent="space-between">
                 <Flex>
                     <Flex alignItems="flex-end">
-                        <UserInitials isMyMessage={isMyMessage}>
+                        <UserInitials isMyMessage={false} isRead={m.isRead}>
                             {getAuthorInitials(m.author)}
                         </UserInitials>
-                        <Triangle isMyMessage={isMyMessage} />
+                        <Triangle isMyMessage={false} />
                     </Flex>
                     <UsernameLabel>{m.author}</UsernameLabel>
                 </Flex>
@@ -245,8 +257,8 @@ const Message = ({ m, userInfo }) => {
                 <Flex>
                     <UsernameLabel>{m.author}</UsernameLabel>
                     <Flex alignItems="flex-end">
-                        <ReverseTriangle isMyMessage={isMyMessage} />
-                        <UserInitials isMyMessage={isMyMessage}>
+                        <ReverseTriangle isMyMessage={true} />
+                        <UserInitials isMyMessage={true} isRead={true}>
                             {getAuthorInitials(m.author)}
                         </UserInitials>
                     </Flex>
@@ -286,11 +298,11 @@ const UserSection = styled(Section) `
     cursor: pointer;
 `;
 
-const getTotalNewMessages = authors => {
-    return authors.reduce((acc, a) => (acc + a.newMessages), 0);
+const getTotalNewMessages = (authors, userInfo) => {
+    return authors.filter(a => a.author !== userInfo.username).reduce((acc, a) => (acc + a.newMessages), 0);
 };
 
-const getTotalMessages = authors => {
+const getTotalMessages = (authors, userInfo) => {
     return authors.reduce((acc, a) => (acc + a.totalMessages), 0);
 };
 
@@ -298,9 +310,18 @@ const Focused = styled.div`
     color: ${props => props.theme.colors.blue};
 `;
 
-const MessageText = styled.p`
+const MessageText = styled.div`
+    overflow: hidden;
+    max-width: 300px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
     margin:0;
     font-size: ${props => props.theme.fontSizes[1]}px;
+`;
+
+const ArrowIcon = styled(Box) `
+
 `;
 
 const UsersList = ({ authors, selectAuthor, userInfo }) => (
@@ -309,7 +330,7 @@ const UsersList = ({ authors, selectAuthor, userInfo }) => (
             <Heading>Messages</Heading>
             <MessagesInfo>
                 <Icon name={IconMap.Envelope} />
-                <NewMessagesInfo> {getTotalNewMessages(authors)} new </NewMessagesInfo> / {getTotalMessages(authors)}
+                <NewMessagesInfo> {getTotalNewMessages(authors, userInfo)} new </NewMessagesInfo> / {getTotalMessages(authors, userInfo)}
             </MessagesInfo>
         </Flex>
         {authors.filter(a => a.author !== userInfo.username)
@@ -319,18 +340,21 @@ const UsersList = ({ authors, selectAuthor, userInfo }) => (
                     alignItems="center"
                     flexWrap="wrap"
                     onClick={() => selectAuthor(a.author)}>
-                    <UserInitials>
+                    <UserInitials isRead={a.newMessages === 0}>
                         {getAuthorInitials(a.author)}
                     </UserInitials>
-                    <Flex flexDirection="column" w={0.9} ml={2}>
+                    <Flex flexDirection="column" w={0.9} ml={2} justifyContent="space-between">
                         <Flex justifyContent="space-between">
                             <Focused> {a.author} </Focused>
                             <DateView >
                                 {dateToString(new Date(a.lastMessageTime))}
                             </DateView>
+                            {/* <ArrowIcon ml={1}>
+                                <Icon name={IconMap.AngleRight} />
+                            </ArrowIcon> */}
                         </Flex>
                         <MessageText>
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem…
+                            {a.lastMessage}
                         </MessageText>
                     </Flex>
                 </UserSection>

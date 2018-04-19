@@ -63,6 +63,7 @@ type AdvertMessagesInfo struct {
 	Author          string    `json:"author" db:"Author"`
 	TotalMessages   int       `json:"totalMessages" db:"TotalMessages"`
 	NewMessages     int       `json:"newMessages" db:"NewMessages"`
+	LastMessage     string    `json:"lastMessage" db:"LastMessage"`
 	LastMessageTime time.Time `json:"lastMessageTime" db:"LastMessageTime"`
 }
 
@@ -76,13 +77,20 @@ func (m Messages) GetAdvertMessageAuthors(advertID int64) ([]AdvertMessagesInfo,
 		`INNER JOIN Adverts A ON A.Id = M2.AdvertId ` +
 		`WHERE M2.AdvertId = ? AND M2.Author = U.Id AND M2.IsRead = 0 AND M2.Author <> A.Author) AS NewMessages, ` +
 
-		`MAX(M.CreatedAt) AS LastMessageTime ` +
+		`MAX(M.CreatedAt) AS LastMessageTime, ` +
+		`(SELECT LM.Body ` +
+		`FROM Messages LM ` +
+		`WHERE LM.Id = (SELECT LM2.Id ` +
+		`FROM Messages LM2 ` +
+		`WHERE LM2.AdvertId = ? AND LM2.Author=U.Id ` +
+		`ORDER BY LM2.CreatedAt DESC ` +
+		`LIMIT 1)) AS LastMessage ` +
 
 		`FROM Messages M ` +
 		`INNER JOIN Users U ON U.Id = M.Author AND M.AdvertId = ? ` +
 		`GROUP BY UserName ASC`
 
-	if err := m.DB.Select(&res, cmd, advertID, advertID); err != nil {
+	if err := m.DB.Select(&res, cmd, advertID, advertID, advertID); err != nil {
 		return nil, err
 	}
 
