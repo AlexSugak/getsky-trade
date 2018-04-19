@@ -367,7 +367,6 @@ const Focused = styled.div`
 
 const MessageText = styled.div`
     overflow: hidden;
-    max-width: 300px;
     text-overflow: ellipsis;
     white-space: nowrap;
 
