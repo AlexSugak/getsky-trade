@@ -144,7 +144,7 @@ const ShowMoreLinkContainer = styled.div`
     text-align: center;
 `;
 
-const Author = ({ backToUsers, selectedAuthor, messages, showAllMessages }) => (
+const Author = ({ backToUsers, selectedAuthor, messages, userInfo, allMessagesVisible, showAllMessages }) => (
     <AuthorInfo>
         <BackLink onClick={backToUsers}>
             <Icon name={IconMap.AngleLeft} />
@@ -158,12 +158,12 @@ const Author = ({ backToUsers, selectedAuthor, messages, showAllMessages }) => (
             <Heading>Messages from {selectedAuthor}</Heading>
             <MessagesInfo>
                 <Icon name={IconMap.Envelope} />
-                <NewMessagesInfo> {messages.filter(m => !m.isRead).length} new </NewMessagesInfo> / {messages.length}
+                <NewMessagesInfo> {messages.filter(m => m.author !== userInfo.username && !m.isRead).length} new </NewMessagesInfo> / {messages.length}
             </MessagesInfo>
         </UsernameContainer>
-        <ShowMoreLinkContainer>
+        {!allMessagesVisible && <ShowMoreLinkContainer>
             <ShowMoreLink onClick={showAllMessages}>Show more </ShowMoreLink>
-        </ShowMoreLinkContainer>
+        </ShowMoreLinkContainer>}
     </AuthorInfo>
 );
 
@@ -326,16 +326,22 @@ class MessagesContainer extends React.Component {
 
             sendMessage,
             backToUsers,
-            showAllMessages, } = this.props;
+
+            showAllMessages,
+            allMessagesVisible, } = this.props;
 
         return (
             <div>
                 {selectedAuthor
                     && <Author
                         backToUsers={backToUsers}
-                        showAllMessages={showAllMessages}
                         selectedAuthor={selectedAuthor}
-                        messages={messages} />}
+
+                        messages={messages}
+                        userInfo={userInfo}
+
+                        showAllMessages={showAllMessages}
+                        allMessagesVisible={allMessagesVisible} />}
                 {messagesToShow.map((m, i) => (<Message key={i} m={m} userInfo={userInfo} />))}
                 <div
                     ref={e => { this.inputForm = e; }}>
@@ -415,7 +421,9 @@ const UsersList = ({ authors, selectAuthor, userInfo }) => (
                     alignItems="center"
                     flexWrap="nowrap"
                     onClick={() => selectAuthor(a.author)}>
-                    <UserInitials color={USER_INITIAL_COLORS[i % USER_INITIAL_COLORS.length]}>
+                    <UserInitials
+                        isRead={a.newMessages === 0}
+                        color={USER_INITIAL_COLORS[i % USER_INITIAL_COLORS.length]}>
                         {getAuthorInitials(a.author)}
                     </UserInitials>
                     <MessageInner flexDirection="column" px={2} justifyContent="space-between">
@@ -472,10 +480,18 @@ export default connect(
                 getMessagesAuthors(advert.id);
             } else {
                 const messages = await getMessages(advert.id, userInfo.username);
-                messages
-                    .filter(m => !m.isRead && m.author !== userInfo.username)
-                    .forEach(m => markMessageAsRead(m.id));
+
+                this.readMessages(messages);
             }
+        }
+        readMessages = messages => {
+            const { userInfo, markMessageAsRead } = this.props;
+            if (messages.length <= 5) {
+                this.showAllMessages();
+            }
+            messages
+                .filter(m => !m.isRead && m.author !== userInfo.username)
+                .forEach(m => markMessageAsRead(m.id));
         }
         showAllMessages = () => {
             this.setState({ ...this.state, allMessagesVisible: true });
@@ -502,9 +518,7 @@ export default connect(
             const messages = await this.props.getMessages(this.props.advert.id, author);
             this.props.selectAuthor(author);
 
-            messages
-                .filter(m => !m.isRead && m.author !== this.props.userInfo.username)
-                .forEach(m => this.props.markMessageAsRead(m.id));
+            this.readMessages(messages);
         }
         reply = () => {
             const {
@@ -556,7 +570,8 @@ export default connect(
                             messageText={messages.messageText}
                             backToUsers={this.backToUsers}
                             sendMessage={messages.selectedAuthor ? this.reply : this.sendMessage}
-                            showAllMessages={this.showAllMessages} />}
+                            showAllMessages={this.showAllMessages}
+                            allMessagesVisible={this.state.allMessagesVisible} />}
                     {state === messageStates.users
                         && <UsersList
                             authors={messages.authors}
