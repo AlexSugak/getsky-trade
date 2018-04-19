@@ -70,10 +70,12 @@ const SectionPart = styled(Box) `
         margin-right: ${props => props.theme.spaces[0]}px;
     }
 `;
+
 const UsernameSectionPart = styled(({ isRead, children, ...rest }) => <SectionPart {...rest}>{children}</SectionPart>) `
     color: ${props => props.isRead ? props.theme.colors.gray : props.theme.colors.red};
     margin-bottom: 0;
 `;
+
 const DateView = styled(SectionPart) `
     color: ${props => props.theme.colors.grayBlue};
     font-size: ${props => props.theme.fontSizes[0]}px;
@@ -101,7 +103,7 @@ const BackLink = styled(BaseLink) `
     font-size: ${props => props.theme.fontSizes[1]}px;
 `;
 
-const Username = styled(Box) `
+const Heading = styled(Box) `
     margin: 0;
     font-weight: bold;
     font-size: ${props => props.theme.fontSizes[3]}px;
@@ -152,7 +154,7 @@ const Author = ({ backToUsers, selectedAuthor, messages }) => (
             justifyContent="space-between"
             alignItems="flex-end"
             mt={2} pb={4} mb={4}>
-            <Username>Messages from {selectedAuthor}</Username>
+            <Heading>Messages from {selectedAuthor}</Heading>
             <MessagesInfo>
                 <Icon name={IconMap.Envelope} />
                 <NewMessagesInfo> {messages.filter(m => !m.isRead).length} new </NewMessagesInfo> / {messages.length}
@@ -280,35 +282,64 @@ const MessagesContainer = ({
 const UserSection = styled(Section) `
     border-bottom: 1px solid ${props => props.theme.colors.separator};
     border-top: 1px solid ${props => props.theme.colors.separator};
+    padding: ${props => props.theme.spaces[4]}px 0px;
     cursor: pointer;
+`;
+
+const getTotalNewMessages = authors => {
+    return authors.reduce((acc, a) => (acc + a.newMessages), 0);
+};
+
+const getTotalMessages = authors => {
+    return authors.reduce((acc, a) => (acc + a.totalMessages), 0);
+};
+
+const Focused = styled.div`
+    color: ${props => props.theme.colors.blue};
+`;
+
+const MessageText = styled.p`
+    margin:0;
+    font-size: ${props => props.theme.fontSizes[1]}px;
 `;
 
 const UsersList = ({ authors, selectAuthor, userInfo }) => (
     <div>
+        <Flex justifyContent="space-between" mb={4}>
+            <Heading>Messages</Heading>
+            <MessagesInfo>
+                <Icon name={IconMap.Envelope} />
+                <NewMessagesInfo> {getTotalNewMessages(authors)} new </NewMessagesInfo> / {getTotalMessages(authors)}
+            </MessagesInfo>
+        </Flex>
         {authors.filter(a => a.author !== userInfo.username)
             .map((a, i) => (
                 <UserSection
                     key={i}
-                    flexDirection="row"
+                    alignItems="center"
                     flexWrap="wrap"
                     onClick={() => selectAuthor(a.author)}>
-                    <SectionPart w={1}>
-                        <Icon name={IconMap.Envelope} />
-                        {a.newMessages} new / {a.totalMessages} messages
-                    </SectionPart>
-                    <UsernameSectionPart w={1} isRead={true}>
-                        From <strong> {a.author} </strong>
-                    </UsernameSectionPart>
-                    <DateView w={1}>
-                        Last message on {dateToString(new Date(a.lastMessageTime))}
-                    </DateView>
+                    <UserInitials>
+                        {getAuthorInitials(a.author)}
+                    </UserInitials>
+                    <Flex flexDirection="column" w={0.9} ml={2}>
+                        <Flex justifyContent="space-between">
+                            <Focused> {a.author} </Focused>
+                            <DateView >
+                                {dateToString(new Date(a.lastMessageTime))}
+                            </DateView>
+                        </Flex>
+                        <MessageText>
+                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem…
+                        </MessageText>
+                    </Flex>
                 </UserSection>
             ))}
     </div>);
 
 const Container = styled.div`
-    width: 100%;
-`;
+                    width: 100%;
+                `;
 
 export default connect(
     ({
