@@ -175,15 +175,21 @@ const getAuthorInitials = author => {
     return author[0].toString().toUpperCase();
 };
 
+const getUserInitialsColor = props => {
+    if (props.color) return props.color;
+    return props.isMyMessage ? props.theme.colors.blue : props.theme.colors.lightPink;
+};
+
+
 const UserInitials = styled.div`
     flex-shrink: 0;
-    background-color: ${props => props.isMyMessage ? props.theme.colors.blue : props.theme.colors.lightPink};
+    background-color: ${props => (getUserInitialsColor(props))};
     color: ${props => props.theme.colors.white};
     width: 44px;
     height: 44px;
     line-height: 44px;
     text-align: center;
-    border: 1px solid ${props => props.isMyMessage ? props.theme.colors.blue : props.theme.colors.lightPink};
+    border: 1px solid ${props => (getUserInitialsColor(props))};
     border-radius: 100px;
     font-size: ${props => props.theme.fontSizes[3]}px;
 
@@ -347,10 +353,12 @@ class MessagesContainer extends React.Component {
 }
 
 const UserSection = styled(Section) `
-    border-bottom: 1px solid ${props => props.theme.colors.separator};
     border-top: 1px solid ${props => props.theme.colors.separator};
     padding: ${props => props.theme.spaces[4]}px 0px;
     cursor: pointer;
+    &:last-child {
+        border-bottom: 1px solid ${props => props.theme.colors.separator};
+    }
 `;
 
 const getTotalNewMessages = (authors, userInfo) => {
@@ -385,6 +393,12 @@ const MessageInner = styled(Flex) `
     overflow: hidden;
 `;
 
+const USER_INITIAL_COLORS = [
+    '#5CC5E6',
+    '#C681D5',
+    '#FDAE70',
+];
+
 const UsersList = ({ authors, selectAuthor, userInfo }) => (
     <div>
         <Flex justifyContent="space-between" mb={4}>
@@ -401,7 +415,7 @@ const UsersList = ({ authors, selectAuthor, userInfo }) => (
                     alignItems="center"
                     flexWrap="nowrap"
                     onClick={() => selectAuthor(a.author)}>
-                    <UserInitials isRead={a.newMessages === 0}>
+                    <UserInitials color={USER_INITIAL_COLORS[i % USER_INITIAL_COLORS.length]}>
                         {getAuthorInitials(a.author)}
                     </UserInitials>
                     <MessageInner flexDirection="column" px={2} justifyContent="space-between">
